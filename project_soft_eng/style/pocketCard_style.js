@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const PocketCardStyle = StyleSheet.create({
+export const myStyle = StyleSheet.create({
     card : {
         width : '46%',
         height : 145,

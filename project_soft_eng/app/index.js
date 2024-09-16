@@ -3,6 +3,7 @@ import { myStyle } from '../style/index_style';
 import { LinearGradient } from 'expo-linear-gradient';
 import PocketCard from '../components/pocketCard';
 import { useEffect, useState } from 'react';
+import BottomBar from '../components/bottomBar';
 
 export default function Main() {
     const [pockets,setPockets] = useState([
@@ -57,6 +58,7 @@ export default function Main() {
                 </ScrollView>
 
                 {/* bottom bar */}
+                <BottomBar/>
             </LinearGradient>
         </View>
         
