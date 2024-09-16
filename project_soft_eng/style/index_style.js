@@ -49,6 +49,6 @@ export const myStyle = StyleSheet.create({
         flexDirection : "row",
         flexWrap : "wrap",
         justifyContent : "space-between",
-        marginBottom : 100
+        marginBottom : 100               
     }
 })

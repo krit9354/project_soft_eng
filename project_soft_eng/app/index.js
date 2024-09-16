@@ -1,9 +1,25 @@
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, FlatList } from 'react-native';
 import { myStyle } from '../style/index_style';
 import { LinearGradient } from 'expo-linear-gradient';
 import PocketCard from '../components/pocketCard';
+import { useEffect, useState } from 'react';
 
 export default function Main() {
+    const [pockets,setPockets] = useState([
+        {pocket_name:"food",money:2000,have_target:false,target:0},
+        {pocket_name:"saving",money:3000,have_target:true,target:5000},
+        {pocket_name:"car",money:10000,have_target:true,target:20000},
+        {pocket_name:"cat",money:3000,have_target:false,target:0},
+        {pocket_name:"snack",money:100,have_target:false,target:0},
+        {pocket_name:"cat",money:3000,have_target:false,target:0},
+        {pocket_name:"snack",money:100,have_target:false,target:0}
+    ])
+    
+    const pockets_element = pockets.map((pocket,index)=>{
+        return <PocketCard key={index} props={pocket}/>
+    });
+
+
     return (
         <View style={myStyle.bg}>
             <LinearGradient
@@ -35,20 +51,7 @@ export default function Main() {
                     </View>
 
                     <View style={myStyle.grid}>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
-                        <PocketCard/>
+                        {pockets_element}
                     </View>
                 
                 </ScrollView>
