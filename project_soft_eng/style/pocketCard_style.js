@@ -8,10 +8,11 @@ export const myStyle = StyleSheet.create({
         alignItems : 'center', 
         marginBottom : 20,
         borderRadius : 30,
-        overflow: 'hidden'
     },
     image : {
-        height : "50%"
+        height : "50%",
+        borderTopEndRadius: 30,
+        borderTopStartRadius : 30
     },
     container : {
         width : "100%",
