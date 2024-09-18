@@ -4,6 +4,10 @@ import { myStyle } from '../style/pocketCard_style';
 export default function PocketCard(item) {
   console.log(item)
   const items = item.props
+  var target = ""
+  if (items.have_target){
+    target = "/ " + String(items.target)
+  }
   return (
     <View style={myStyle.card}>
       <Image 
@@ -12,7 +16,7 @@ export default function PocketCard(item) {
       />
       <View style={myStyle.container}>
         <Text>{items.pocket_name}</Text>
-        <Text>{items.money} $</Text>
+        <Text>{items.money} {target} $</Text>
         {items.have_target && <View style={myStyle.bg_bar}>
           <View style={{
             backgroundColor : "#38E298", 
