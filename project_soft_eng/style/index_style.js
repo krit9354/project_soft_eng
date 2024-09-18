@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const myStyle = StyleSheet.create({
     bg : {
-        height: "103%",
+        height: "100%",
     },
     top_bar : {
         height : 100,
