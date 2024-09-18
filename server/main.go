@@ -6,25 +6,29 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type album struct {
-	ID     string  `json:"id"`
-	Title  string  `json:"title"`
-	Artist string  `json:"artist"`
-	Price  float64 `json:"price"`
+type pocket struct {
+	Pocket_name string `json:"pocket_name"`
+	Money       int    `json:"money"`
+	Have_target bool   `json:"have_target"`
+	Target      int    `json:"target"`
 }
 
-var albums = []album{
-	{ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
-	{ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
-	{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
+var pockets = []pocket{
+	{Pocket_name: "food", Money: 2000, Have_target: false, Target: 0},
+	{Pocket_name: "saving", Money: 3000, Have_target: true, Target: 5000},
+	{Pocket_name: "car", Money: 10000, Have_target: true, Target: 20000},
+	{Pocket_name: "cat", Money: 3000, Have_target: false, Target: 0},
+	{Pocket_name: "snack", Money: 100, Have_target: false, Target: 0},
+	{Pocket_name: "cat", Money: 3000, Have_target: false, Target: 0},
+	{Pocket_name: "snack", Money: 100, Have_target: false, Target: 0},
 }
 
-func getAlbums(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, "albums")
+func getPockets(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, pockets)
 }
 
 func main() {
 	router := gin.Default()
-	router.GET("/albums", getAlbums)
+	router.GET("/albums", getPockets)
 	router.Run("localhost:8080")
 }
