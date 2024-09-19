@@ -33,6 +33,10 @@ export const myStyle = StyleSheet.create({
             shadowOpacity: 0.25,
             shadowRadius: 2,
             elevation: 4, 
+    },
+    icon : {
+        width : 50,
+        height : 50
     }
-
+    
 })
