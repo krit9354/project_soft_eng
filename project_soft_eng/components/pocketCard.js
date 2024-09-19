@@ -3,10 +3,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { myStyle } from '../style/pocketCard_style';
 export default function PocketCard(item) {
   const items = item.props
-  var target = ""
-  if (items.have_target){
-    target = "/ " + String(items.target)
-  }
   return (
     <View style={myStyle.card}>
       <Image 
@@ -15,7 +11,12 @@ export default function PocketCard(item) {
       />
       <View style={myStyle.container}>
         <Text>{items.pocket_name}</Text>
-        <Text>{items.money} {target} $</Text>
+        <View style={{flexDirection : 'row',alignItems:"center"}}>
+          <Text>{items.money}</Text>
+          {items.have_target && <Text style={{fontSize:12}}> / {items.target}</Text>}
+          <Text> ฿</Text>
+        </View>
+        
         {items.have_target && <View style={myStyle.bg_bar}>
           <View style={{
             backgroundColor : "#38E298", 

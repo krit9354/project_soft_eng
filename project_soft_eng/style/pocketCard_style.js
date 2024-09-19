@@ -8,6 +8,10 @@ export const myStyle = StyleSheet.create({
         alignItems : 'center', 
         marginBottom : 20,
         borderRadius : 30,
+        shadowOffset: {},
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 4, 
     },
     image : {
         height : "50%",

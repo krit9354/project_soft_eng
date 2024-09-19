@@ -27,11 +27,15 @@ export const myStyle = StyleSheet.create({
         justifyContent : 'space-between',
         alignItems : 'center',
         paddingLeft : 40,
-        paddingRight : 40
+        paddingRight : 40,
+        
     },
     main_content_box : {
         marginHorizontal:"auto",
         width:"80%",
+        overflow : 'visible',
+        position : 'relative',
+        zIndex : -1
     },
     main_pocket : {
         position : 'relative',
@@ -43,7 +47,13 @@ export const myStyle = StyleSheet.create({
         justifyContent : "space-around",
         alignItems : "center",
         marginVertical : 25,
-        
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 4, 
     },
     grid : {
         width : "100%",

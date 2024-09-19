@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, FlatList } from 'react-native';
-import { myStyle } from '../style/index_style';
+import { myStyle } from '../style/home_style';
 import { LinearGradient } from 'expo-linear-gradient';
 import PocketCard from '../components/pocketCard';
 import { useEffect, useState } from 'react';
@@ -71,7 +71,7 @@ export default function HomeScreen() {
                 
                 <View style={myStyle.main_pocket}>
                     <Image source={require("../assets/images/dollar.png")}/>
-                    <Text> 152,552.30</Text>
+                    <Text style={{fontSize : 20}}> 2,552.30</Text>
                     <View style={{alignItems :'center'}}>
                         <Image source={require("../assets/images/transfer.png")}/>
                         <Text>transfer</Text>
