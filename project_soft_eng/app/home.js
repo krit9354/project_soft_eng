@@ -5,22 +5,42 @@ import PocketCard from '../components/pocketCard';
 import { useEffect, useState } from 'react';
 import BottomBar from '../components/bottomBar';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios'
 
 export default function HomeScreen() {
     const navigation = useNavigation();
     const [pockets,setPockets] = useState([
         {pocket_name:"food",money:2000,have_target:false,target:0},
-        {pocket_name:"saving",money:3000,have_target:true,target:5000},
-        {pocket_name:"car",money:10000,have_target:true,target:20000},
-        {pocket_name:"cat",money:3000,have_target:false,target:0},
-        {pocket_name:"snack",money:100,have_target:false,target:0},
-        {pocket_name:"cat",money:3000,have_target:false,target:0},
-        {pocket_name:"snack",money:100,have_target:false,target:0}
+        // {pocket_name:"saving",money:3000,have_target:true,target:5000},
+        // {pocket_name:"car",money:10000,have_target:true,target:20000},
+        // {pocket_name:"cat",money:3000,have_target:false,target:0},
+        // {pocket_name:"snack",money:100,have_target:false,target:0},
+        // {pocket_name:"cat",money:3000,have_target:false,target:0},
+        // {pocket_name:"snack",money:100,have_target:false,target:0}
     ])
+    const [pockets_element,setPockets_element] = useState()
+
+
+        useEffect(() => {
+            // ฟังก์ชันในการดึงข้อมูลจาก API
+            const fetchData = async () => {
+              try {
+                const res = await axios.get('http://192.168.1.107:8080/pockets');
+                setPockets(res.data);
+              } catch (err) {
+                console.log("err :",err.message)
+              }
+            };
+        
+            fetchData();
+          }, []);
+
+    useEffect(() => {
+        setPockets_element(pockets.map((pocket,index)=>{
+            return <PocketCard key={index} props={pocket}/>
+        }))
+    },[pockets])
     
-    const pockets_element = pockets.map((pocket,index)=>{
-        return <PocketCard key={index} props={pocket}/>
-    });
 
 
     return (

@@ -11,6 +11,7 @@ export const myStyle = StyleSheet.create({
     },
     image : {
         height : "50%",
+        width : "100%",
         borderTopEndRadius: 30,
         borderTopStartRadius : 30
     },

@@ -2,7 +2,6 @@ import { View, Text, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { myStyle } from '../style/pocketCard_style';
 export default function PocketCard(item) {
-  console.log(item)
   const items = item.props
   var target = ""
   if (items.have_target){
@@ -11,7 +10,7 @@ export default function PocketCard(item) {
   return (
     <View style={myStyle.card}>
       <Image 
-      source={require("../assets/images/test_image.png")} 
+       source={{ uri: items.image}}
       style={myStyle.image}
       />
       <View style={myStyle.container}>
