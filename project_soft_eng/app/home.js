@@ -5,6 +5,7 @@ import PocketCard from '../components/pocketCard';
 import { useEffect, useState } from 'react';
 import BottomBar from '../components/bottomBar';
 import { useNavigation } from '@react-navigation/native';
+import { ip } from '../config';
 import axios from 'axios'
 
 export default function HomeScreen() {
@@ -19,13 +20,13 @@ export default function HomeScreen() {
         // {pocket_name:"snack",money:100,have_target:false,target:0}
     ])
     const [pockets_element,setPockets_element] = useState()
-
+    
 
         useEffect(() => {
             // ฟังก์ชันในการดึงข้อมูลจาก API
             const fetchData = async () => {
               try {
-                const res = await axios.get('http://192.168.1.107:8080/pockets');
+                const res = await axios.get('http://'+ip+':8080/pockets');
                 setPockets(res.data);
               } catch (err) {
                 console.log("err :",err.message)
