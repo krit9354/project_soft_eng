@@ -1,10 +1,12 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image,TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import { myStyle } from '../style/pocketCard_style';
 export default function PocketCard(item) {
   const items = item.props
-  return (
-    <View style={myStyle.card}>
+  const navigation = useNavigation();
+  return (<TouchableOpacity  style={myStyle.card} onPress={() => navigation.navigate('pocket')} >
+    
       <Image 
        source={{ uri: items.image}}
       style={myStyle.image}
@@ -27,6 +29,7 @@ export default function PocketCard(item) {
           </View>
           </View>}
       </View>
-    </View>
+
+    </TouchableOpacity>
   );
 }
