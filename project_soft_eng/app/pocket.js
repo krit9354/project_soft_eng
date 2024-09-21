@@ -62,7 +62,7 @@ export default function Pocket() {
 
             {/* main content */}
             <ScrollView showsVerticalScrollIndicator={false}  style={myStyle.main_content_box}>
-                <View style={myStyle.main_content_box}>
+                <View>
                     {pockets_element}
                 </View>
             
