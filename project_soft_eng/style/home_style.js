@@ -3,8 +3,11 @@ import { StyleSheet } from "react-native";
 export const myStyle = StyleSheet.create({
     bg : {
         height: "100%",
+        position : 'relative',
     },
     top_bar : {
+        position : 'relative',
+        zIndex : 3,
         height : 100,
         width : "100%",
         justifyContent: 'center', 
@@ -34,8 +37,7 @@ export const myStyle = StyleSheet.create({
         marginHorizontal:"auto",
         width:"80%",
         overflow : 'visible',
-        position : 'relative',
-        zIndex : -1
+        zIndex : 0
     },
     main_pocket : {
         position : 'relative',

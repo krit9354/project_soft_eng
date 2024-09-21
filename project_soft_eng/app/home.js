@@ -56,8 +56,8 @@ export default function HomeScreen() {
             <View style={myStyle.top_bar}>
                 <View style={myStyle.top_bar_content}>
                     <View style={{flexDirection : 'row', alignItems:'center'}}>
-                        <Image source={require("../assets/images/nongP.jpg")} style={{width : 70,height:70,borderRadius:"50%"}}/>
-                        <Text style={{fontSize : "20px",marginLeft:10}}>Milanoob</Text>
+                        <Image source={require("../assets/images/nongP.jpg")} style={{width : 70,height:70,borderRadius:35}}/>
+                        <Text style={{fontSize : 20,marginLeft:10}}>Milanoob</Text>
                     </View>
                     
                     <View  style={{alignItems :'center'}} >
@@ -87,7 +87,7 @@ export default function HomeScreen() {
 
             {/* bottom bar */}
             <View style={myStyle.add_pocket}>
-                <Text style={{fontSize:"16px",color:"white"}} onPress={() => navigation.navigate('Test')}>Add Pocket</Text>
+                <Text style={{fontSize:16,color:"white"}} onPress={() => navigation.navigate('Test')}>Add Pocket</Text>
             </View>
             <BottomBar/>
         </LinearGradient>

@@ -18,7 +18,7 @@ export const myStyle = StyleSheet.create({
             elevation: 4, 
     },
     add : {
-        borderRadius : "50%",
+        borderRadius : 50,
         alignItems : "center",
         justifyContent : "center",
         bottom : 20,
