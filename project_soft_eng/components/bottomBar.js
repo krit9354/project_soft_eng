@@ -3,10 +3,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { PocketCardStyle } from '../style/pocketCard_style';
 import { myStyle } from '../style/bottomBar_style';
 import { useState } from 'react';
-
+import { useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 export default function BottomBar() {
   const [adding,setAdding] = useState(false)
-
+  const navigation = useNavigation();
   const pressAdd = () => {
     setAdding(!adding)
   }
@@ -14,7 +15,11 @@ export default function BottomBar() {
   return (
     <View style={myStyle.bottom_bar}>
       <View>
-        {!adding && <Image  style={myStyle.icon} source={require("../assets/images/summary.png")}/>}
+      <TouchableOpacity onPress={() => navigation.navigate('Summary')}>
+        {!adding && (
+          <Image style={myStyle.icon} source={require('../assets/images/summary.png')} />
+        )}
+      </TouchableOpacity>
         {adding && <Image  style={myStyle.icon} source={require("../assets/images/positive.png")}/>}
       </View>
       <TouchableOpacity  style={myStyle.add} onPress={pressAdd}>
