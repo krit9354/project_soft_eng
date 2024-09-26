@@ -1,17 +1,30 @@
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { Picker } from "@react-native-picker/picker";
 import { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { myStyle } from '../style/summary_style';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import dayjs from 'dayjs';
-
+import { BarChart } from 'react-native-chart-kit';
 
 
 export default function Summary() {
   const moneyIn = 2000
   const moneyOut = 1000
   const [selectedGroup, setSelectedGroup] = useState("");
+
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
+  const chartConfig = {
+    backgroundColor: '#333333', // สีพื้นหลังของกราฟ
+    backgroundGradientFrom: '#6e6e6e', // ไล่สีจากเทาเข้ม
+    backgroundGradientTo: '#c6c6c6',   // ไล่สีถึงเทาอ่อน
+
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false // optional
+  };
 
   const [dateStart, setDateStart] = useState(new Date());
   const [isDateStartPickerVisible, setDateStartPickerVisibility] = useState(false);
@@ -43,7 +56,14 @@ export default function Summary() {
     >
       {/* main content */}
       <ScrollView showsVerticalScrollIndicator={false} style={myStyle.main_content_box} >
-        <View style={myStyle.main_pocket}>
+        <View style={myStyle.main_pocket}
+          onLayout={(event) => {
+            const { width } = event.nativeEvent.layout; // ดึงค่าความกว้างที่แท้จริงของ container
+            setContainerWidth(width);
+            const { height } = event.nativeEvent.layout; // ดึงค่าความกว้างที่แท้จริงของ container
+            setContainerHeight(height);
+          }}
+        >
           <Text style={{ fontSize: 30, fontWeight: 'bold', margin: 20 }}>Summary</Text>
           <View style={myStyle.containerInput}>
             <View style={myStyle.pickerContainer}>
@@ -89,8 +109,34 @@ export default function Summary() {
               <TouchableOpacity style={myStyle.button}>
                 <Text style={myStyle.buttonText}>Clear</Text>
               </TouchableOpacity>
-
             </View>
+
+
+            <BarChart
+              data={{
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [
+                  {
+                    data: [20, 45, 28, 80, 99, 43, 2000],
+                  },
+                ],
+              }}
+              width={containerWidth*0.95}
+              height={containerHeight*0.4}
+              // yAxisLabel={'Rs'}
+              yAxisLabel="$"
+              chartConfig={chartConfig}
+              style={{
+                marginVertical: 8,
+                borderRadius: 10,
+              }}
+            />
+
+
+
+
+
+
             <View style={myStyle.containerShow}>
               <View style={myStyle.box}>
                 <Text style={{ fontSize: 15 }}>รวมเงินเข้า (บาท)</Text>

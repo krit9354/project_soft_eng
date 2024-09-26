@@ -14,7 +14,7 @@ export const myStyle = StyleSheet.create({
     },
     main_content_box: {
         marginHorizontal: "auto",
-        width: "80%",
+        width: "90%",
         height: "90%",
         overflow: "visible",
         zIndex: 0,
