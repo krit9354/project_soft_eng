@@ -151,7 +151,7 @@ export default function Summary() {
                 </View>
               </View>
               <View style={myStyle.box}>
-                <Text style={{ fontSize: 15 }}>รวมเป็นออก (บาท)</Text>
+                <Text style={{ fontSize: 15 }}>รวมเงินออก (บาท)</Text>
                 <Text style={{ fontSize: 15 }}>{moneyOut}</Text>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
                   <Text style={{ fontSize: 12 }}>รายการ</Text>
