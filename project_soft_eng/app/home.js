@@ -26,7 +26,7 @@ export default function HomeScreen() {
             // ฟังก์ชันในการดึงข้อมูลจาก API
             const fetchData = async () => {
               try {
-                const res = await axios.get('http://'+ip+':8080/pockets');
+                const res = await axios.get('http://'+ip+':8080/pockets'); 
                 setPockets(res.data);
               } catch (err) {
                 console.log("err :",err.message)
