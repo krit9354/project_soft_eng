@@ -87,7 +87,7 @@ export default function HomeScreen() {
 
             {/* bottom bar */}
             <View style={myStyle.add_pocket}>
-                <Text style={{fontSize:16,color:"white"}} onPress={() => navigation.navigate('Test')}>Add Pocket</Text>
+                <Text style={{fontSize:16,color:"white"}} onPress={() => navigation.navigate('Slip')}>Add Pocket</Text>
             </View>
             <BottomBar/>
         </LinearGradient>
