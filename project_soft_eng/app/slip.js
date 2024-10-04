@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Button, Image, View, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
+
+
+
 const Slip = () => {
   const [selectedImage, setSelectedImage] = useState(null);
-
   const pickImage = async () => {
 
-    let result = await ImagePicker.launchImageLibraryAsync({
+  let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       quality: 1,
@@ -15,20 +17,28 @@ const Slip = () => {
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0]);
+      console.log(result.assets[0])
     }
   };
 
-  const uploadImage = async () => {
 
+  const uploadImage = async () => {
+    console.log(decodeQR())
     const formData = new FormData();
-    formData.append("files",selectedImage);
+    formData.append("data","")
+    
+    console.log("formdata :",formData)
+    // formData.append("files",{
+    //   uri: selectedImage.uri,
+    //   type: selectedImage.type,
+    //   name: selectedImage.fileName,
+    // });
 
     try {
       const response = await fetch("https://api.slipok.com/api/line/apikey/30772", {
         method: "POST",
         headers: {
           "x-authorization": "SLIPOKPR1FEHV",
-          "Content-Type": "multipart/form-data",
         },
         body: formData,
       });
@@ -50,6 +60,7 @@ const Slip = () => {
     }
   };
 
+
   return (
     <View style={styles.container}>
       <Button title="Pick an image from gallery" onPress={pickImage} />
@@ -60,6 +71,7 @@ const Slip = () => {
         />
       )}
       <Button title="Upload Image" onPress={uploadImage} />
+
     </View>
   );
 };

@@ -2,15 +2,10 @@ import React, { useState } from "react";
 import { Button, Image, View, StyleSheet, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-const SlipV1 = () => {
+const Slipv1 = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Permission required", "We need camera roll permissions to make this work!");
-      return;
-    }
 
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -20,17 +15,19 @@ const SlipV1 = () => {
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0]);
+      console.log(result.assets[0])
     }
   };
 
   const uploadImage = async () => {
-    if (!selectedImage) {
-      Alert.alert("No image selected", "Please select an image first.");
-      return;
-    }
 
     const formData = new FormData();
-    formData.append("files", {selectedImage});
+    formData.append("files",new Blob([JSON.stringify(selectedImage)]))
+    // formData.append("files",{
+    //   uri: selectedImage.uri,
+    //   type: selectedImage.type,
+    //   name: selectedImage.fileName,
+    // });
 
     try {
       const response = await fetch("https://api.slipok.com/api/line/apikey/30772", {
@@ -86,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SlipV1;
+export default Slipv1;
