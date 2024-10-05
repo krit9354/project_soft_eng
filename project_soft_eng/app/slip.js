@@ -1,15 +1,28 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from "react";
-import { Button, Image, View, StyleSheet, Alert } from "react-native";
+import { Button, Image, View, StyleSheet, Alert, Text } from "react-native";
+import {launchImageLibrary} from 'react-native-image-picker';
 import * as ImagePicker from "expo-image-picker";
 
 
 
-
 const Slip = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const pickImage = async () => {
+  const [selectedImage, setSelectedImage] = useState("");
+  const [data, setData] = useState('');
+  const option = {
+    title : 'select Image',
+    type : 'library',
+    options : {
+      selectionlimit : 1,
+      mediaType : 'photo',
+      includeBase64 : false,
+    },
+  }
 
-  let result = await ImagePicker.launchImageLibraryAsync({
+  
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       quality: 1,
@@ -21,29 +34,27 @@ const Slip = () => {
     }
   };
 
+  
+
 
   const uploadImage = async () => {
-    console.log(decodeQR())
     const formData = new FormData();
-    formData.append("data","")
-    
-    console.log("formdata :",formData)
-    // formData.append("files",{
-    //   uri: selectedImage.uri,
-    //   type: selectedImage.type,
-    //   name: selectedImage.fileName,
-    // });
-
+    formData.append("files",{
+      uri : selectedImage.uri,
+      type : selectedImage.mimeType,
+      name : "image.png",
+      fileName : "image"
+    })
     try {
       const response = await fetch("https://api.slipok.com/api/line/apikey/30772", {
         method: "POST",
         headers: {
           "x-authorization": "SLIPOKPR1FEHV",
+          "Content-Type": "multipart/form-data"
         },
         body: formData,
       });
 
-      // ตรวจสอบสถานะการตอบกลับ
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Upload failed:", errorData);
@@ -51,8 +62,9 @@ const Slip = () => {
         return;
       }
 
-      const data = await response.json();
-      console.log("Upload successful:", data);
+      const res = await response.json();
+      console.log("Upload successful:", res.data);
+      setData(res.data)
       Alert.alert("Upload successful", "Your image has been uploaded successfully!");
     } catch (error) {
       console.error("Error:", error.message);
@@ -71,7 +83,7 @@ const Slip = () => {
         />
       )}
       <Button title="Upload Image" onPress={uploadImage} />
-
+      {data && (<Text>{data.sender.displayName} send to {data.receiver.displayName} {data.amount} bath</Text>)}
     </View>
   );
 };
