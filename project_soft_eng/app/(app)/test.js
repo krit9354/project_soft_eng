@@ -10,12 +10,12 @@ import {
   ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { myStyle } from "../style/addincome";
+import { myStyle } from "../../style/addincome";
 import { LinearGradient } from "expo-linear-gradient";
-import PocketCard from "../components/pocketCard";
-import BottomBar from "../components/bottomBar";
+import PocketCard from "../../components/pocketCard";
+import BottomBar from "../../components/bottomBar";
 import { useNavigation } from "@react-navigation/native";
-import { ip } from "../config";
+import { ip } from "../../config";
 import axios from "axios";
 
 const NewIncomeScreen = () => {
@@ -74,7 +74,7 @@ const NewIncomeScreen = () => {
             <Text style={myStyle.label}>รูป</Text>
             <TouchableOpacity style={myStyle.imagePlaceholder}>
               <Image
-                source={require("../assets/images/photoicon.png")} // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
+                source={require("../../assets/images/photoicon.png")} // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
                 style={myStyle.image}
               />
             </TouchableOpacity>

@@ -2,7 +2,7 @@ import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Dimensions 
 import { Picker } from "@react-native-picker/picker";
 import { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { myStyle } from '../style/summary_style';
+import { myStyle } from '../../style/summary_style';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import dayjs from 'dayjs';
 import { BarChart } from 'react-native-chart-kit';
