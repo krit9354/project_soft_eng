@@ -23,6 +23,7 @@ export default function Register() {
         if (password != confirm_password) {
           return Alert.alert("Passwords don't match");
         }
+        console.log("REGISTERING!!!")
         await signUp(email, username, password, confirm_password);
       } catch (err) {
         console.log("err_register :",err.message)
@@ -65,7 +66,7 @@ export default function Register() {
                   Register</Text>
               </TouchableOpacity>
               <TouchableOpacity >
-                <Text onPress={() => navigation.goBack()} >Cancle</Text>
+                <Text onPress={() => router.back()} >Cancel</Text>
               </TouchableOpacity>
             </View>
         </LinearGradient>

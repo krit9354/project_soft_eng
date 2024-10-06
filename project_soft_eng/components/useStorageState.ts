@@ -43,14 +43,14 @@ export function useStorageState(key: string): UseStateHook<User> {
     if (Platform.OS === 'web') {
       try {
         if (typeof localStorage !== 'undefined') {
-          setState(JSON.parse(localStorage.getItem(key) ?? "{}"));
+          setState(JSON.parse(localStorage.getItem(key) ?? "null"));
         }
       } catch (e) {
         console.error('Local storage is unavailable:', e);
       }
     } else {
       SecureStore.getItemAsync(key).then(value => {
-        setState(JSON.parse(value ?? "{}"));
+        setState(JSON.parse(value ?? "null"));
       });
     }
   }, [key]);

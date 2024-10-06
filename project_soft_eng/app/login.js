@@ -8,7 +8,7 @@ import { ip } from '../config';
 import axios from 'axios'
 import * as SecureStore from 'expo-secure-store';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Link} from 'expo-router';
 import { useSession } from '../components/ctx'
 import { router, Redirect } from 'expo-router';
@@ -20,6 +20,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
 
   async function login() {
+    console.log("login")
     try {
       await signIn(email, password);
 
@@ -29,9 +30,12 @@ export default function Login() {
     }
   };
   
-  if (session) return (
-    <Redirect href="home" />
-  );
+  if (session) {
+    console.log("REDIRECTING TO HOME!");
+    return (
+      <Redirect href="home" />
+    );
+  }
   else if (isLoading) return (
     <Text>LOADING...</Text>
   );
