@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from "react";
 import { Button, Image, View, StyleSheet, Alert, Text } from "react-native";
-import {launchImageLibrary} from 'react-native-image-picker';
 import * as ImagePicker from "expo-image-picker";
 
 
