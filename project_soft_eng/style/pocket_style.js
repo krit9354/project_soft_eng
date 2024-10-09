@@ -36,7 +36,7 @@ export const myStyle = StyleSheet.create({
     main_content_box : {
         marginHorizontal:"auto",
         width:"80%",
-        overflow : 'visible',
+
         zIndex : 0
     },
     main_pocket : {

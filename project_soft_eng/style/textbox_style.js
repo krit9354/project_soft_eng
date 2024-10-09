@@ -47,12 +47,5 @@ export const myStyle = StyleSheet.create({
         height : 10,
         borderRadius : 20
     },
-    userMessage: {
-        backgroundColor: '#e1ffc7',
-        alignSelf: 'flex-end', // ข้อความของผู้ใช้จะอยู่ทางขวา
-      },
-      systemMessage: {
-        backgroundColor: '#c7e1ff',
-        alignSelf: 'flex-start', // ข้อความจากระบบจะอยู่ทางซ้าย
-      },
+   
 })
