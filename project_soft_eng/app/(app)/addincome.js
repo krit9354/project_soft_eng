@@ -10,19 +10,43 @@ import {
   ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { myStyle } from "../style/addincome";
+import { myStyle } from "../../style/addincome_style";
 import { LinearGradient } from "expo-linear-gradient";
-import PocketCard from "../components/pocketCard";
-import BottomBar from "../components/bottomBar";
+import PocketCard from "../../components/pocketCard";
+import BottomBar from "../../components/bottomBar";
 import { useNavigation } from "@react-navigation/native";
-import { ip } from "../config";
+import { ip } from "../../config";
 import axios from "axios";
+import { Dropdown } from "react-native-element-dropdown";
+
+const data = [
+  { label: "Item 1", value: "1" },
+  { label: "Item 2", value: "2" },
+  { label: "Item 3", value: "3" },
+  { label: "Item 4", value: "4" },
+  { label: "Item 5", value: "5" },
+  { label: "Item 6", value: "6" },
+  { label: "Item 7", value: "7" },
+  { label: "Item 8", value: "8" },
+];
 
 const NewIncomeScreen = () => {
   const [amount, setAmount] = useState("");
   const [selectedPocket, setSelectedPocket] = useState("");
   const [details, setDetails] = useState("");
+  const [value, setValue] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
 
+  const renderLabel = () => {
+    if (value || isFocus) {
+      return (
+        <Text style={[styles.label, isFocus && { color: "blue" }]}>
+          Dropdown label
+        </Text>
+      );
+    }
+    return null;
+  };
   return (
     <LinearGradient
       colors={["#CDFADB", "#38E298"]}
@@ -50,15 +74,23 @@ const NewIncomeScreen = () => {
 
             <Text style={myStyle.label}>Pocket</Text>
             <View style={myStyle.pickerContainer}>
-              <Picker
-                selectedValue={selectedPocket}
-                onValueChange={(itemValue) => setSelectedPocket(itemValue)}
-                style={myStyle.picker}
-              >
-                <Picker.Item label="เลือก pocket" value="" />
-                <Picker.Item label="Pocket 1" value="pocket1" />
-                <Picker.Item label="Pocket 2" value="pocket2" />
-              </Picker>
+              <Dropdown style={myStyle.pickerContainer}
+                data={data}
+                
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? "Select item" : "..."}
+
+                value={value}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={(item) => {
+                  setValue(item.value);
+                  setIsFocus(false);
+                }}
+
+              />
             </View>
 
             <Text style={myStyle.label}>รายละเอียด</Text>
@@ -74,12 +106,10 @@ const NewIncomeScreen = () => {
             <Text style={myStyle.label}>รูป</Text>
             <TouchableOpacity style={myStyle.imagePlaceholder}>
               <Image
-                source={require("../assets/images/photoicon.png")} // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
+                source={require("../../assets/images/photoicon.png")} // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
                 style={myStyle.image}
               />
             </TouchableOpacity>
-
-          
           </View>
         </View>
       </ScrollView>
@@ -87,9 +117,9 @@ const NewIncomeScreen = () => {
       {/* bottom bar */}
       <View style={myStyle.bottom_barkub}>
         <View>
-        <TouchableOpacity style={myStyle.button}>
-              <Text style={myStyle.buttonText}>ยืนยัน</Text>
-            </TouchableOpacity>
+          <TouchableOpacity style={myStyle.button}>
+            <Text style={myStyle.buttonText}>ยืนยัน</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </LinearGradient>

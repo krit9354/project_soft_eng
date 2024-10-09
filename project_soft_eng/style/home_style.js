@@ -3,28 +3,22 @@ import { StyleSheet } from "react-native";
 export const myStyle = StyleSheet.create({
     bg : {
         height: "100%",
-        position : 'relative',
     },
     top_bar : {
-        position : 'relative',
-        zIndex : 3,
         height : 100,
         width : "100%",
-        justifyContent: 'center', 
-        alignItems: 'center',  
         backgroundColor : "#FFF",
         shadowColor: '#000', 
         shadowOffset: {
             width: 0,
-            height: 4,
+            height: 2,
         },
-            shadowOpacity: 0.25,
-            shadowRadius: 4,
-            elevation: 4, 
+        shadowOpacity: 0.25,
+        shadowRadius: 4, 
 
     },
     top_bar_content : {
-        height : "100%",
+        height: "100%",
         width : "100%",
         flexDirection : 'row',
         justifyContent : 'space-between',
@@ -33,10 +27,9 @@ export const myStyle = StyleSheet.create({
         paddingRight : 40,
         
     },
-    main_content_box : {
-        marginHorizontal:"auto",
-        width:"80%",
-        overflow : 'visible',
+    main_content_box : {        
+        paddingHorizontal: "10%",
+
         zIndex : 0
     },
     main_pocket : {
@@ -59,7 +52,7 @@ export const myStyle = StyleSheet.create({
     },
     grid : {
         width : "100%",
-        height : "200%",
+        height : "100%",
         flexDirection : "row",
         flexWrap : "wrap",
         justifyContent : "space-between",
