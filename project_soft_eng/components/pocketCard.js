@@ -8,23 +8,23 @@ export default function PocketCard(item) {
   return (<TouchableOpacity  style={myStyle.card} onPress={() => navigation.navigate('pocket')} >
     
       <Image 
-       source={{ uri: items.image}}
+       source={{ uri: items.Image}}
       style={myStyle.image}
       />
       <View style={myStyle.container}>
-        <Text>{items.pocket_name}</Text>
+        <Text>{items.Pocket_name}</Text>
         <View style={{flexDirection : 'row',alignItems:"center"}}>
-          <Text>{items.money}</Text>
-          {items.have_target && <Text style={{fontSize:12}}> / {items.target}</Text>}
+          <Text>{items.Money}</Text>
+          {items.Have_target && <Text style={{fontSize:12}}> / {items.Target}</Text>}
           <Text> ฿</Text>
         </View>
         
-        {items.have_target && <View style={myStyle.bg_bar}>
+        {items.Have_target && <View style={myStyle.bg_bar}>
           <View style={{
             backgroundColor : "#38E298", 
             height : 10,
             borderRadius : 20,
-            width : items.money/items.target*100
+            width : items.Money/items.Target*100
             }}>
           </View>
           </View>}
