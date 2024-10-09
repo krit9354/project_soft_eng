@@ -87,7 +87,7 @@ export default function HomeScreen() {
             </ScrollView>
             {/* bottom bar */}
             <View style={myStyle.add_pocket}>
-                <Text style={{ fontSize: 16, color: "white" }} onPress={() => router.push("test")}>Add Pocket</Text>
+                <Text style={{ fontSize: 16, color: "white" }} onPress={() => router.push("addincome")}>Add Pocket</Text>
             </View>
             <BottomBar />
         </LinearGradient>
