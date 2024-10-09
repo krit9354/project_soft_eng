@@ -57,10 +57,11 @@ export const myStyle = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 20,
     flex: 1,
+    overflow: "hidden",
   },
   image: {
-    height: 50,
-    width: 50,
+    width: "100%",
+    height : "100%",
   },
   button: {
     backgroundColor: "#38E298",
