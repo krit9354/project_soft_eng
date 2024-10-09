@@ -71,7 +71,7 @@ app.post('/register', async (req, res) => {
   );
   if (error) {
     console.log(error);
-    res.send('Error!');
+    throw error
   } else {
     console.log(data);
     res.send(data);
