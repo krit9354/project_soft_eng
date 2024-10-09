@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+
 import React, { useState } from "react";
 import { Button, Image, View, StyleSheet, Alert, Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 300,
-    height: 300,
+    height: 400,
     marginVertical: 10,
   },
 });
