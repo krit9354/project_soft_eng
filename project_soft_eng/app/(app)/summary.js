@@ -1,14 +1,60 @@
 import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { Picker } from "@react-native-picker/picker";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { myStyle } from '../../style/summary_style';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import dayjs from 'dayjs';
 import { BarChart } from 'react-native-chart-kit';
-
+import axios from 'axios';
+import { useSession } from '../../components/ctx';
+import { Use } from 'react-native-svg';
+import { ip } from '../../config';
 
 export default function Summary() {
+  const {session} = useSession();
+  const [SumIncome, setSumIncome] = useState(0);
+  const [SumExpense, setSumExpense] = useState(0);
+  const [CountIncome, setCountIncome] = useState(0);
+  const [CountExpense, setCountExpense] = useState(0);
+  useEffect(() => {
+    
+    const SendID = async () => {
+      console.log(session.id)
+      console.log(ip)
+      try {
+        // console.log("use SendID")
+        const res = await axios.post('http://' + ip + ':8080/summary',{
+          id : session.id
+        });
+        console.log(res.data);
+        setSumIncome(res.data.SumIncome);
+        setSumExpense(res.data.SumExpense)
+        setCountIncome(res.data.CountIncome);
+        setCountExpense(res.data.CountExpense);
+        // setSumIncome(res.data.SumIncome);
+        // setSumExpense(res.data.SumExpense);
+        // console.log(res.data);
+      } catch (err) {
+        console.log("err :", err.message)
+      }
+  
+        // try {
+        //     const res = await axios.get('http://' + ip + ':8080/summary');
+        //     console.log(res.data);
+        // } catch (err) {
+        //     console.log("err :", err.message)
+        // }
+   
+
+    }
+    SendID();
+    console.log("use finish")
+  }
+  ,[])
+  
+
+
   const moneyIn = 2000
   const moneyOut = 1000
   const [selectedGroup, setSelectedGroup] = useState("");
@@ -140,10 +186,10 @@ export default function Summary() {
             <View style={myStyle.containerShow}>
               <View style={myStyle.box}>
                 <Text style={{ fontSize: 15 }}>รวมเงินเข้า (บาท)</Text>
-                <Text style={{ fontSize: 15 }}>{moneyIn}</Text>
+                <Text style={{ fontSize: 15 }}>{SumIncome ?? 'Error'}</Text>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
                   <Text style={{ fontSize: 12 }}>รายการ</Text>
-                  <Text style={{ fontSize: 12 }}>113</Text>
+                  <Text style={{ fontSize: 12 }}>{CountIncome ?? 'Error'}</Text>
                 </View>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
                   <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
@@ -152,10 +198,10 @@ export default function Summary() {
               </View>
               <View style={myStyle.box}>
                 <Text style={{ fontSize: 15 }}>รวมเงินออก (บาท)</Text>
-                <Text style={{ fontSize: 15 }}>{moneyOut}</Text>
+                <Text style={{ fontSize: 15 }}>{SumExpense ?? "Error"}</Text>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
                   <Text style={{ fontSize: 12 }}>รายการ</Text>
-                  <Text style={{ fontSize: 12 }}>113</Text>
+                  <Text style={{ fontSize: 12 }}>{CountExpense ?? 'Error'}</Text>
                 </View>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
                   <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
