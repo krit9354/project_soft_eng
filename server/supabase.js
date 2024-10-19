@@ -80,15 +80,13 @@ app.post('/register', async (req, res) => {
 
 app.post('/summary',async(req,res)=>{
   const id = req.body.id
-  console.log(id)
-
-  
+  console.log(req.body)
   const { data: IncomeData, error : IncomeError } = await supabase
   .from('transaction')
   .select('money, is_income, pocket!inner(user_id)',{count:'exact'}) 
   .eq('is_income', true) 
   .eq('pocket.user_id', id);
-  console.log(IncomeData)
+  // console.log(IncomeData)
   if (IncomeError) {
     console.log(IncomeError);
     throw IncomeError
@@ -98,27 +96,27 @@ app.post('/summary',async(req,res)=>{
   .select('money, is_income, pocket!inner(user_id)') 
   .eq('is_income', false) 
   .eq('pocket.user_id', id);
-  console.log(ExpenseData)
+  // console.log(ExpenseData)
   if (ExpenseError) {
     console.log(ExpenseError);
     throw ExpenseError
   }
-
   const { count : CountIncome, error : CountIncomeError } = await supabase
   .from('transaction')
   .select('money, is_income, pocket!inner(user_id)',{ count: 'exact'}) 
   .eq('is_income', true) 
   .eq('pocket.user_id', id);
-  console.log(CountIncome)
+  // console.log(CountIncome)
   const { count : CountExpense, error : CountExpenseError } = await supabase
   .from('transaction')
   .select('money, is_income, pocket!inner(user_id)',{ count: 'exact'}) 
   .eq('is_income', false) 
   .eq('pocket.user_id', id);
-  console.log(CountExpense)
+  // console.log(CountExpense)
 
   
-  
+
+
   const data = {
     SumIncome : IncomeData.reduce((sum,row)=>sum+row.money,0),
     SumExpense : ExpenseData.reduce((sum,row)=>sum+row.money,0),
