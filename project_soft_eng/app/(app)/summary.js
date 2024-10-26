@@ -5,9 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { myStyle } from '../../style/summary_style';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import dayjs from 'dayjs';
-// import { BarChart } from 'react-native-chart-kit';
 import { BarChart } from "react-native-gifted-charts";
-// import { BarChart } from '@mui/x-charts/BarChart';
 import axios from 'axios';
 import { useSession } from '../../components/ctx';
 import { Use } from 'react-native-svg';
@@ -19,8 +17,8 @@ export default function Summary() {
   const [SumExpense, setSumExpense] = useState(0);
   const [CountIncome, setCountIncome] = useState(0);
   const [CountExpense, setCountExpense] = useState(0);
-
-
+  const [Search, setSearch] = useState(false);
+  const [Clear, setClear] = useState(false);
   const barData = [
     {
       value: 40,
@@ -133,7 +131,27 @@ export default function Summary() {
   ];
 
 
+  useEffect(() => {
+    if (Search) {
+      fetchData();
+    }
+    setSearch(false);
+  }, [Search]); // Runs only when Search changes to true
 
+  const handlePressSearch = () => {
+    setSearch(true);
+  };
+  useEffect(() => {
+    if (Clear) {
+      fetchData();
+    }
+    setClear(false);
+  }, [Clear]); // Runs only when Search changes to true
+
+  const handlePressClear = () => {
+    setClear(true);
+    setSearch(false);
+  };
 
 
   const fetchData = async () => {
@@ -141,19 +159,21 @@ export default function Summary() {
     console.log(dateEnd)
     console.log(session.id)
     console.log(ip)
-
+    console.log(Search)
     try {
       const res = await axios.post('http://' + ip + ':8080/summary', {
         id: session.id,
         selectedGroup: selectedGroup,
         dateStart: dayjs(dateStart).format('YYYY-MM-DD'),
-        dateEnd: dayjs(dateEnd).format('YYYY-MM-DD')
+        dateEnd: dayjs(dateEnd).format('YYYY-MM-DD'),
+        Search: Search
       });
       console.log(res.data);
       setSumIncome(res.data.SumIncome);
       setSumExpense(res.data.SumExpense)
       setCountIncome(res.data.CountIncome);
       setCountExpense(res.data.CountExpense);
+      console.log(Search)
     } catch (err) {
       console.log("err :", err.message)
     }
@@ -168,7 +188,7 @@ export default function Summary() {
 
   const moneyIn = 2000
   const moneyOut = 1000
-  const [selectedGroup, setSelectedGroup] = useState("in_out");
+  const [selectedGroup, setSelectedGroup] = useState("");
 
   const [containerWidth, setContainerWidth] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
@@ -223,17 +243,20 @@ export default function Summary() {
         >
           <Text style={{ fontSize: 30, fontWeight: 'bold', margin: 20 }}>Summary</Text>
           <View style={myStyle.containerInput}>
-            <View style={myStyle.pickerContainer}>
+            {/* <View style={myStyle.pickerContainer}>
               <Picker
                 selectedValue={selectedGroup}
                 onValueChange={(itemValue) => setSelectedGroup(itemValue)}
                 style={myStyle.picker}
               >
+              
+
+                <Picker.Item label="เลือกหมวดหมู่" value="" />
                 <Picker.Item label="รายรับ-รายจ่าย" value="in_out" />
                 <Picker.Item label="รายรับ" value="in" />
                 <Picker.Item label="รายจ่าย" value="out" />
               </Picker>
-            </View>
+            </View> */}
             <View style={myStyle.containerDate}>
 
               <TouchableOpacity onPress={showDateStartPicker} style={myStyle.inputDate}>
@@ -260,10 +283,16 @@ export default function Summary() {
               />
             </View>
             <View style={myStyle.containerButtonFilter} >
-              <TouchableOpacity style={myStyle.button} onPress={() => fetchData()}>
+              <TouchableOpacity
+                style={myStyle.button}
+                onPress={handlePressSearch}
+              >
                 <Text style={myStyle.buttonText}>Search</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={myStyle.button}>
+              <TouchableOpacity 
+                style={myStyle.button}
+                onPress={handlePressClear}
+              >
                 <Text style={myStyle.buttonText}>Clear</Text>
               </TouchableOpacity>
             </View>
@@ -323,36 +352,37 @@ export default function Summary() {
                 maxValue={75}
               />
             </View> */}
-           
-    <View style={{
-      paddingTop: 10,
-      backgroundColor: '#FFFFFF',
-      borderRadius: 10,
-      // paddingHorizontal: 10,
-      // paddingBottom: 40,
-      height: containerHeight*0.4,
-    }}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={true}
-        contentContainerStyle={{ flexDirection: 'row' }}
-      >
-        <BarChart
-          data={barData}
-          barWidth={8}
-          spacing={24}
-          roundedTop
-          roundedBottom
-          hideRules
-          xAxisThickness={0}
-          yAxisThickness={0}
-          yAxisTextStyle={{ color: 'gray' }}
-          noOfSections={3}
-          maxValue={100}
-          style={{ width: 1500, height: 20 }} // ขนาดกราฟ
-        />
-      </ScrollView>
-    </View>
+
+            <View style={{
+              paddingTop: 10,
+              backgroundColor: '#FFFFFF',
+              borderRadius: 10,
+              // paddingHorizontal: 10,
+              // paddingBottom: 40,
+              height: containerHeight * 0.4,
+            }}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={true}
+                contentContainerStyle={{ flexDirection: 'row' }}
+              >
+                <BarChart
+                  data={barData}
+                  barWidth={8}
+                  spacing={24}
+                  roundedTop
+                  roundedBottom
+                  hideRules
+                  xAxisThickness={0}
+                  yAxisThickness={0}
+                  yAxisTextStyle={{ color: 'gray' }}
+                  noOfSections={3}
+                  maxValue={100}
+                  style={{ width: 1500, height: 20 }} // ขนาดกราฟ
+                />
+
+              </ScrollView>
+            </View>
             <View style={myStyle.containerShow}>
               <View style={myStyle.box}>
                 <Text style={{ fontSize: 15 }}>รวมเงินเข้า (บาท)</Text>
