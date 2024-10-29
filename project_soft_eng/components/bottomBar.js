@@ -25,7 +25,9 @@ export default function BottomBar() {
       <Image source={require("../assets/images/Add.png")}/>
       </TouchableOpacity>
       <View>
+      <TouchableOpacity onPress={() => router.push("setting")}>
       <Image  style={myStyle.icon} source={require("../assets/images/setting.png")}/>
+      </TouchableOpacity>
       </View>
     </View>
   );
