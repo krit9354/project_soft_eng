@@ -1,3 +1,4 @@
+import { red } from "@mui/material/colors";
 import { StyleSheet } from "react-native";
 
 export const myStyle = StyleSheet.create({
@@ -61,6 +62,7 @@ export const myStyle = StyleSheet.create({
         alignItems: 'center',
     },
     containerShow: {
+        backgroundColor: 'white',
         height: "20%",
         width: "95%",
         borderRadius: 20,
