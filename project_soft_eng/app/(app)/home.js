@@ -62,10 +62,10 @@ export default function HomeScreen() {
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image source={require("../../assets/images/nongP.jpg")} style={{ width: 70, height: 70, borderRadius: 35 }} />
                         <Text style={{ fontSize: 20, marginLeft: 10 }}>{ session?.user_metadata?.username ?? "ERROR" }</Text>
-                        <Text onPress={() => {
-                            // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
+                        {/* <Text onPress={() => {
+                            
                             signOut();
-                        }}>Sign out</Text>
+                        }}>Sign out</Text> */}
                     </View>
                     <View style={{ alignItems: 'center' }} >
                         <Image source={require("../../assets/images/history.png")} style={{ width: 30, height: 30, overflow: 'visible' }} />
