@@ -29,6 +29,7 @@ export default function HomeScreen() {
             try {
                 const res = await axios.get('http://' + ip + ':8080/pockets');
                 setPockets(res.data);
+                console.log(res.data);
             } catch (err) {
                 console.log("err :", err.message)
             }
