@@ -11,15 +11,8 @@ import { useSession } from '../../components/ctx';
 import { router, Redirect } from 'expo-router';
 export default function HomeScreen() {
     const { signOut, session } = useSession();
-    const [pockets, setPockets] = useState([
-        { pocket_name: "food", money: 2000, have_target: false, target: 0 },
-        {pocket_name:"saving",money:3000,have_target:true,target:5000},
-        {pocket_name:"car",money:10000,have_target:true,target:20000},
-        {pocket_name:"cat",money:3000,have_target:false,target:0},
-        {pocket_name:"snack",money:100,have_target:false,target:0},
-        {pocket_name:"cat",money:3000,have_target:false,target:0},
-        {pocket_name:"snack",money:100,have_target:false,target:0}
-    ])
+    const [pockets, setPockets] = useState([])
+    const [total, setTotal] = useState([])
     const [pockets_element, setPockets_element] = useState()
 
 
@@ -27,14 +20,23 @@ export default function HomeScreen() {
         // ฟังก์ชันในการดึงข้อมูลจาก API
         const fetchData = async () => {
             try {
-                const res = await axios.get('http://' + ip + ':8080/pockets');
+                const res = await axios.post('http://' + ip + ':8080/pockets',{userId : session.id});
                 setPockets(res.data);
+                console.log(res.data);
+            } catch (err) {
+                console.log("err :", err.message)
+            }
+            try {
+                const res = await axios.post('http://' + ip + ':8080/total_money',{userId : session.id});
+                setTotal(res.data.total);
+                console.log(res.data);
             } catch (err) {
                 console.log("err :", err.message)
             }
         };
-        console.log(session);
 
+
+        console.log(session);
         fetchData();
     }, []);
 
@@ -75,7 +77,7 @@ export default function HomeScreen() {
             <ScrollView showsVerticalScrollIndicator={false} style={myStyle.main_content_box}>
                 <View style={myStyle.main_pocket}>
                     <Image source={require("../../assets/images/dollar.png")} />
-                    <Text style={{ fontSize: 20 }}> 2,552.30</Text>
+                    <Text style={{ fontSize: 20 }}> {total}</Text>
                     <View style={{ alignItems: 'center' }}>
                         <Image source={require("../../assets/images/transfer.png")} />
                         <Text>transfer</Text>
