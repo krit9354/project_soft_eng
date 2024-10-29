@@ -38,25 +38,31 @@ export const myStyle = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 20,
     backgroundColor: "#DDDDDD",
-    flex: 0.3,
+    // flex: 0.3,
+    height: 50,
   },
   picker: {
-    height: 50,
+    height: 70,
     width: "100%",
     flex: 1,
+    padding: 10, // ระยะห่างภายใน
+    borderWidth: 0, // ทำให้ขอบหายไป
+    
+    borderRadius: 50,
   },
   textArea: {
     height: 100,
     borderRadius: 20,
+    
   },
   imagePlaceholder: {
-    height: 300,
+    height: 100,
     backgroundColor: "#DDDDDD",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
     borderRadius: 20,
-    // flex: 1,
+    flex: 1,
     overflow: "hidden",
   },
   image: {
@@ -85,6 +91,7 @@ export const myStyle = StyleSheet.create({
     height: "90%",
     overflow: "visible",
     zIndex: 0,
+    flex: 1
   },
   main_pocket: {
     position: "relative",
@@ -104,14 +111,23 @@ export const myStyle = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
-  rowcheckbox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  goallabel: {
-    fontSize: 16,
-    color: '#333',
+  moneyamount: {
+    position: "relative",
+    backgroundColor: "white",
+    width: "100%",
+    height: "13%",
+    borderRadius: 20,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginVertical: 25,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
   },
   bottom_barkub : {
     width : '100%',

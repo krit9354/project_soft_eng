@@ -77,8 +77,8 @@ export default function HomeScreen() {
                     <Image source={require("../../assets/images/dollar.png")} />
                     <Text style={{ fontSize: 20 }}> 2,552.30</Text>
                     <View style={{ alignItems: 'center' }}>
-                        <Image source={require("../../assets/images/transfer.png")} />
-                        <Text>transfer</Text>
+                        <Image onPress={() => router.push("newpocket")} source={require("../../assets/images/transfer.png") } />
+                        <Text onPress={() => router.push("transfermoney")}>transfer</Text>
                     </View>
                 </View>
                 <View style={myStyle.grid}>
@@ -87,7 +87,7 @@ export default function HomeScreen() {
             </ScrollView>
             {/* bottom bar */}
             <View style={myStyle.add_pocket}>
-                <Text style={{ fontSize: 16, color: "white" }} onPress={() => router.push("addincome")}>Add Pocket</Text>
+                <Text style={{ fontSize: 16, color: "white" }} onPress={() => router.push("newpocket")}>Add Pocket</Text>
             </View>
             <BottomBar />
         </LinearGradient>

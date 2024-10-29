@@ -21,10 +21,10 @@ export default function BottomBar() {
         {!adding && (
           <Image style={myStyle.icon} source={require('../assets/images/summary.png')} />
         )}
-      </TouchableOpacity>
+      </TouchableOpacity >
         {adding && <Image  style={myStyle.icon} source={require("../assets/images/positive.png")}/>}
       </View>
-      <TouchableOpacity  style={myStyle.add} onPress={pressAdd}>
+      <TouchableOpacity  style={myStyle.add} onPress={() => router.push("addincome")}>
       <Image source={require("../assets/images/Add.png")}/>
       </TouchableOpacity>
       <View>

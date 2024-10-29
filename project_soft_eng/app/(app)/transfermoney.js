@@ -8,11 +8,12 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Alert,KeyboardAvoidingView,
+  Alert,
+  KeyboardAvoidingView,
   Platform 
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { myStyle } from "../../style/addincome_style";
+import { myStyle } from "../../style/transfermoney_style";
 import { LinearGradient } from "expo-linear-gradient";
 import PocketCard from "../../components/pocketCard";
 import BottomBar from "../../components/bottomBar";
@@ -34,7 +35,8 @@ const data = [
   { label: "Item 8", value: "8" },
 ];
 
-const NewIncomeScreen = () => {
+const transfermoney = () => {
+  
   const [amount, setAmount] = useState("");
   const [selectedPocket, setSelectedPocket] = useState("");
   const [details, setDetails] = useState("");
@@ -68,43 +70,7 @@ const NewIncomeScreen = () => {
   };
 
   
-  const uploadImage = async (img) => {
-    const formData = new FormData();
-    formData.append("files",{
-      uri : img.uri,
-      type : img.mimeType,
-      name : "image.png",
-      fileName : "image"
-    })
-    try {
-      const response = await fetch("https://api.slipok.com/api/line/apikey/30772", {
-        method: "POST",
-        headers: {
-          "x-authorization": "SLIPOKPR1FEHV",
-          "Content-Type": "multipart/form-data"
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Upload failed:", errorData);
-        Alert.alert("Upload failed", errorData.message || "Something went wrong.");
-        return;
-      }
-
-      const res = await response.json();
-      console.log("Upload successful:", res.data);
-      console.log("Upload :", res.data.amount);
-      setResdata(res.data)
-      setAmount(String(res.data.amount))
-      Alert.alert("Upload successful", "Your image has been uploaded successfully!");
-    } catch (error) {
-      console.error("Error:", error.message);
-      Alert.alert("Upload error", error.message || "An error occurred while uploading.");
-    }
-  };
-
+ 
 
   const renderLabel = () => {
     if (value || isFocus) {
@@ -141,7 +107,14 @@ const NewIncomeScreen = () => {
                 source= 
                 style={myStyle.image}
               /> */}
-            <Text style={myStyle.bigtext}>รายรับใหม่</Text>
+            <Text style={myStyle.bigtext}>Transfer money</Text>
+            <View style={myStyle.moneyamount}>
+                    <Image source={require("../../assets/images/dollar.png")} />
+                    <Text style={{ fontSize: 20 }}> 2,552.30</Text>
+                    <View style={{ alignItems: 'center' }}>
+
+                    </View>
+                </View>
             <Text style={myStyle.label}>ยอดเงิน</Text>
             <TextInput
               style={myStyle.input}
@@ -155,12 +128,15 @@ const NewIncomeScreen = () => {
             <View style={myStyle.pickerContainer}>
               <Dropdown style={myStyle.picker}
                 data={data}
-                
+                textStyle={{
+                    marginLeft: 10, // ระยะห่างของข้อความจากขอบซ้าย
+                  }}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? "Select item" : "..."}
-
+                placeholder={!isFocus ? "เลือก Pocket" : "..."}
+                placeholderStyle={{ color: "gray" }} 
+                selectedTextStyle={{ color: "black" }} 
                 value={value}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
@@ -183,7 +159,7 @@ const NewIncomeScreen = () => {
             />
 
             <Text style={myStyle.label}>รูป</Text>
-            <TouchableOpacity style={myStyle.imagePlaceholder}>
+            <TouchableOpacity style={myStyle.imagePlaceholder} onPress={pickImage}>
               <Image
                 source={selectedImage ? { uri: selectedImage } : require('../../assets/images/photoicon.png')} // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
                 style={selectedImage ? myStyle.image:myStyle.image_icon}
@@ -196,13 +172,14 @@ const NewIncomeScreen = () => {
       {/* bottom bar */}
       <View style={myStyle.bottom_barkub}>
         <View>
-          <TouchableOpacity style={myStyle.button} onPress={pickImage}>
+          <TouchableOpacity style={myStyle.button} >
             <Text style={myStyle.buttonText}>ยืนยัน</Text>
           </TouchableOpacity>
         </View>
       </View>
+      
     </LinearGradient>
   );
 };
 
-export default NewIncomeScreen;
+export default transfermoney;
