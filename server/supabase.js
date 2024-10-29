@@ -168,10 +168,10 @@ app.post('/summary', async (req, res) => {
       .lte('created_at', `${dateEnd} 23:59:59`);
     CountExpenseSearch = CountExpenseSearchResult;
   }
-  console.log('Income Search', IncomeDataSearch)
-  console.log('Expense Search', ExpenseDataSearch)
-  console.log('Count Income Search', CountIncomeSearch)
-  console.log('Count Expense Search', CountExpenseSearch)
+  // console.log('Income Search', IncomeDataSearch)
+  // console.log('Expense Search', ExpenseDataSearch)
+  // console.log('Count Income Search', CountIncomeSearch)
+  // console.log('Count Expense Search', CountExpenseSearch)
 
   // const groupedData = IncomeDataSearch.reduce((acc, transaction) => {
   //   // สร้าง key ที่รวมเดือนและปีจาก created_at
@@ -199,7 +199,7 @@ app.post('/summary', async (req, res) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
       if (!acc[yearMonth]) {
-        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0, type: 'income' };
       }
       acc[yearMonth].sumMoney += transaction.money;
       return acc;
@@ -210,7 +210,7 @@ app.post('/summary', async (req, res) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
       if (!acc[yearMonth]) {
-        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0, type: 'expense' };
       }
       acc[yearMonth].sumMoney += transaction.money;
       return acc;
@@ -228,7 +228,9 @@ app.post('/summary', async (req, res) => {
       SumExpense: ExpenseDataSearch.reduce((sum, row) => sum + row.money, 0),
       CountIncome: CountIncomeSearch,
       CountExpense: CountExpenseSearch,
-      average_money: average_money
+      average_money: average_money,
+      Income_each_month: groupedArrayIncome,
+      Expense_each_month: groupedArrayExpense
     }
     res.send(data)
   } else {
@@ -236,7 +238,7 @@ app.post('/summary', async (req, res) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
       if (!acc[yearMonth]) {
-        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0, type:'income' };
       }
       acc[yearMonth].sumMoney += transaction.money;
       return acc;
@@ -247,7 +249,7 @@ app.post('/summary', async (req, res) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
       if (!acc[yearMonth]) {
-        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0 ,type:'expense'};
       }
       acc[yearMonth].sumMoney += transaction.money;
       return acc;
@@ -263,7 +265,9 @@ app.post('/summary', async (req, res) => {
       SumExpense: ExpenseData.reduce((sum, row) => sum + row.money, 0),
       CountIncome: CountIncome,
       CountExpense: CountExpense,
-      average_money: average_money
+      average_money: average_money,
+      Income_each_month: groupedArrayIncome,
+      Expense_each_month: groupedArrayExpense
     }
     res.send(data)
   }

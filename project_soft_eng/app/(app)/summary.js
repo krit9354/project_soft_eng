@@ -21,129 +21,167 @@ export default function Summary() {
   const [AvgExpense, setAvgExpense] = useState(0);
   const [Search, setSearch] = useState(false);
   const [Clear, setClear] = useState(false);
+  const [GraphData, setGraphData] = useState([]);
+  const [maxValueGraph, setMaxValueGraph] = useState(0);
   const mapping_month = {
-    '01' : 'Jan',
-    '02' : 'Feb',
-    '03' : 'Mar',
-    '04' : 'Apr',
-    '05' : 'May',
-    '06' : 'Jun',
-    '07' : 'Jul',
-    '08' : 'Aug',
-    '09' : 'Sep',
-    '10' : 'Oct',
-    '11' : 'Nov',
-    '12' : 'Dec',
+    '01': 'Jan',
+    '02': 'Feb',
+    '03': 'Mar',
+    '04': 'Apr',
+    '05': 'May',
+    '06': 'Jun',
+    '07': 'Jul',
+    '08': 'Aug',
+    '09': 'Sep',
+    '10': 'Oct',
+    '11': 'Nov',
+    '12': 'Dec',
   }
   const barData = [
     {
-      value: 40,
-      label: 'Jan',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 40,
+      "label": "Jan",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
     },
-    { value: 20, frontColor: '#ED6665' },
     {
-      value: 50,
-      label: 'Feb',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 20,
+      "frontColor": "#ED6665"
     },
-    { value: 40, frontColor: '#ED6665' },
     {
-      value: 75,
-      label: 'Mar',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 50,
+      "label": "Feb",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
     },
-    { value: 25, frontColor: '#ED6665' },
     {
-      value: 30,
-      label: 'Apr',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 40,
+      "frontColor": "#ED6665"
     },
-    { value: 20, frontColor: '#ED6665' },
     {
-      value: 60,
-      label: 'May',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 75,
+      "label": "Mar",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
     },
-    { value: 40, frontColor: '#ED6665' },
     {
-      value: 65,
-      label: 'Jun',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 25,
+      "frontColor": "#ED6665"
     },
-    { value: 30, frontColor: '#ED6665' },
     {
-      value: 50,
-      label: 'Jul',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 30,
+      "label": "Apr",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
     },
-    { value: 35, frontColor: '#ED6665' },
     {
-      value: 80,
-      label: 'Aug',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 20,
+      "frontColor": "#ED6665"
     },
-    { value: 45, frontColor: '#ED6665' },
     {
-      value: 70,
-      label: 'Sep',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 60,
+      "label": "May",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
     },
-    { value: 40, frontColor: '#ED6665' },
     {
-      value: 85,
-      label: 'Oct',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 40,
+      "frontColor": "#ED6665"
     },
-    { value: 50, frontColor: '#ED6665' },
     {
-      value: 95,
-      label: 'Nov',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 65,
+      "label": "Jun",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
     },
-    { value: 60, frontColor: '#ED6665' },
     {
-      value: 100,
-      label: 'Dec',
-      spacing: 2,
-      labelWidth: 30,
-      labelTextStyle: { color: 'gray' },
-      frontColor: '#177AD5',
+      "value": 30,
+      "frontColor": "#ED6665"
     },
-    { value: 55, frontColor: '#ED6665' },
+    {
+      "value": 50,
+      "label": "Jul",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
+    },
+    {
+      "value": 35,
+      "frontColor": "#ED6665"
+    },
+    {
+      "value": 80,
+      "label": "Aug",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
+    },
+    {
+      "value": 45,
+      "frontColor": "#ED6665"
+    },
+    {
+      "value": 70,
+      "label": "Sep",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
+    },
+    {
+      "value": 40,
+      "frontColor": "#ED6665"
+    },
+    {
+      "value": 85,
+      "label": "Oct",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
+    },
+    {
+      "value": 50,
+      "frontColor": "#ED6665"
+    },
+    {
+      "value": 95,
+      "label": "Nov",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
+    },
+    {
+      "value": 60,
+      "frontColor": "#ED6665"
+    },
+    {
+      "value": 100,
+      "label": "Dec",
+      "spacing": 2,
+      "labelWidth": 30,
+      "labelTextStyle": { "color": "gray" },
+      "frontColor": "#177AD5"
+    },
+    {
+      "value": 55,
+      "frontColor": "#ED6665"
+    }
   ];
 
 
@@ -168,7 +206,56 @@ export default function Summary() {
     setClear(true);
     setSearch(false);
   };
+  const createBarData = (expenseData, incomeData) => {
+    const monthData = {};
 
+    // รวมข้อมูลรายจ่ายและรายได้ในแต่ละเดือน
+    [...expenseData, ...incomeData].forEach(data => {
+      const [year, month] = data.month.split("-");
+      const type = data.type;
+      const key = `${year}-${month}`; // ใช้ปีและเดือนเป็น key
+
+      // สร้างโครงสร้างข้อมูลสำหรับเดือนนี้ถ้ายังไม่มี
+      if (!monthData[key]) {
+        monthData[key] = { year, month, expense: 0, income: 0 };
+      }
+
+      // ใส่ค่า sumMoney ในประเภทที่ถูกต้อง (income หรือ expense)
+      monthData[key][type] = data.sumMoney;
+    });
+
+    // จัดเรียงข้อมูลตามปีและเดือน
+    const sortedMonths = Object.values(monthData).sort((a, b) => {
+      if (a.year !== b.year) {
+        return a.year.localeCompare(b.year);
+      }
+      return a.month.localeCompare(b.month);
+    });
+
+    // สร้าง barData ที่มีข้อมูลทั้ง income และ expense
+    const barData = [];
+    let maxValue = 0;
+    sortedMonths.forEach(data => {
+      maxValue = Math.max(maxValue, data.income, data.expense);
+      setMaxValueGraph(maxValue);
+      barData.push(
+        {
+          value: data.income,
+          label: mapping_month[data.month],
+          spacing: 2,
+          labelWidth: 30,
+          labelTextStyle: { color: 'gray' },
+          frontColor: '#177AD5', // สีน้ำเงินสำหรับ income
+        },
+        {
+          value: data.expense,
+          frontColor: '#ED6665', // สีแดงสำหรับ expense
+        }
+      );
+    });
+
+    return barData;
+  };
 
   const fetchData = async () => {
     console.log(dateStart)
@@ -191,6 +278,13 @@ export default function Summary() {
       setCountExpense(res.data.CountExpense);
       setAvgIncome(res.data.average_money.Income);
       setAvgExpense(res.data.average_money.Expense);
+      const barData = createBarData(res.data.Expense_each_month, res.data.Income_each_month);
+      console.log(barData);
+      setGraphData(barData);
+
+
+
+
       console.log(Search)
     } catch (err) {
       console.log("err :", err.message)
@@ -239,7 +333,68 @@ export default function Summary() {
     hideDateEndPicker();
   }
 
-
+  const renderTitle = () => {
+    return (
+      <View style={{ marginTop:0,height:0,paddingBottom:20 }}>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 20,
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}>
+          Chart title goes here
+        </Text>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+          
+            backgroundColor: 'yellow',
+          }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+              style={{
+                height: 12,
+                width: 12,
+                borderRadius: 6,
+                backgroundColor: '#177AD5',
+                marginRight: 8,
+              }}
+            />
+            <Text
+              style={{
+                width: 60,
+                height: 16,
+                color: 'black',
+              }}>
+              รายรับ
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+              style={{
+                height: 12,
+                width: 12,
+                borderRadius: 6,
+                backgroundColor: '#ED6665',
+                marginRight: 8,
+              }}
+            />
+            <Text
+              style={{
+                width: 60,
+                height: 16,
+                color: 'black',
+              }}>
+              รายจ่าย
+            </Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
   return (
 
     <LinearGradient
@@ -307,97 +462,42 @@ export default function Summary() {
               >
                 <Text style={myStyle.buttonText}>Search</Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={myStyle.button}
                 onPress={handlePressClear}
               >
                 <Text style={myStyle.buttonText}>Clear</Text>
               </TouchableOpacity>
             </View>
-
-
-            {/* <BarChart
-              data={{
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                  {
-                    data: [20, 45, 28, 80, 99, 43, 2000],
-                  },
-                ],
-              }}
-              width={containerWidth*0.95}
-              height={containerHeight*0.4}
-              // yAxisLabel={'Rs'}
-              yAxisLabel="$"
-              chartConfig={chartConfig}
-              style={{
-                marginVertical: 8,
-                borderRadius: 10,
-              }}
-            /> */}
-            {/* {renderTitle()}
-            <BarChart
-          data={barData}
-          barWidth={10}
-          spacing={24}
-          roundedTop
-          roundedBottom
-          hideRules
-          xAxisThickness={0}
-          yAxisThickness={0}
-          yAxisTextStyle={{color: 'gray'}}
-          noOfSections={3}
-          maxValue={75}
-        /> */}
-            {/* best */}
-            {/* <View
-              style={{
-                backgroundColor: '#FFFFFF',
-                // paddingBottom: 40,
-                borderRadius: 10,
-              }}>
-              <BarChart
-                data={barData}
-                barWidth={8}
-                spacing={24}
-                roundedTop
-                roundedBottom
-                hideRules
-                xAxisThickness={0}
-                yAxisThickness={0}
-                yAxisTextStyle={{ color: 'gray' }}
-                noOfSections={3}
-                maxValue={75}
-              />
-            </View> */}
-
             <View style={{
-              paddingTop: 10,
+              paddingTop: 30,
               backgroundColor: '#FFFFFF',
               borderRadius: 10,
               // paddingHorizontal: 10,
               // paddingBottom: 40,
-              height: containerHeight * 0.4,
+              height: containerHeight * 0.45,
             }}>
+               {renderTitle()}
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={true}
                 contentContainerStyle={{ flexDirection: 'row' }}
               >
-                <BarChart
-                  data={barData}
-                  barWidth={8}
-                  spacing={24}
-                  roundedTop
-                  roundedBottom
-                  hideRules
-                  xAxisThickness={0}
-                  yAxisThickness={0}
-                  yAxisTextStyle={{ color: 'gray' }}
-                  noOfSections={3}
-                  maxValue={100}
-                  style={{ width: 1500, height: 20 }} // ขนาดกราฟ
-                />
+             
+              <BarChart
+                data={GraphData}
+                barWidth={8}
+                spacing={24}
+                roundedTop
+                roundedBottom
+                // hideRules
+                // xAxisThickness={0}
+                // yAxisThickness={0}
+                yAxisTextStyle={{ color: 'gray' }}
+                noOfSections={3}
+                maxValue={maxValueGraph}
+                style={{ width: 1500, height: 20 }} // ขนาดกราฟ
+              />
 
               </ScrollView>
             </View>
