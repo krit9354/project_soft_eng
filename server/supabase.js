@@ -195,44 +195,75 @@ app.post('/summary', async (req, res) => {
   // console.log("Dataที่กรุ๊ป",groupedArray);
   // console.log(data)
   if (Search == true) {
-    // console.log("Data beforeTru",IncomeDataSearch)
+    const groupedDataIncome = IncomeDataSearch.reduce((acc, transaction) => {
+      const date = new Date(transaction.created_at);
+      const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+      if (!acc[yearMonth]) {
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+      }
+      acc[yearMonth].sumMoney += transaction.money;
+      return acc;
+    }, {});
+    const groupedArrayIncome = Object.values(groupedDataIncome);
+    const average_moneyIncome = groupedArrayIncome.reduce((sum, row) => sum + row.sumMoney, 0) / groupedArrayIncome.length;
+    const groupedDataExpense = ExpenseDataSearch.reduce((acc, transaction) => {
+      const date = new Date(transaction.created_at);
+      const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+      if (!acc[yearMonth]) {
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+      }
+      acc[yearMonth].sumMoney += transaction.money;
+      return acc;
+    }, {});
+    const groupedArrayExpense = Object.values(groupedDataExpense);
+    const average_moneyExpense = groupedArrayExpense.reduce((sum, row) => sum + row.sumMoney, 0) / groupedArrayExpense.length;
+    const average_money = { 
+      Income: Math.trunc(average_moneyIncome), 
+      Expense: Math.trunc(average_moneyExpense) 
+    };
+    console.log(groupedArrayIncome);
+    console.log(groupedArrayExpense);
     const data = {
       SumIncome: IncomeDataSearch.reduce((sum, row) => sum + row.money, 0),
       SumExpense: ExpenseDataSearch.reduce((sum, row) => sum + row.money, 0),
       CountIncome: CountIncomeSearch,
-      CountExpense: CountExpenseSearch
+      CountExpense: CountExpenseSearch,
+      average_money: average_money
     }
     res.send(data)
   } else {
-    console.log("Data before",IncomeData)
-    const groupedData = IncomeData.reduce((acc, transaction) => {
-      // สร้าง key ที่รวมเดือนและปีจาก created_at
+    const groupedDataIncome = IncomeData.reduce((acc, transaction) => {
       const date = new Date(transaction.created_at);
-      console.log(date)
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-  
-      // ถ้าไม่มีข้อมูลของ month/year นี้ใน acc ให้เริ่มต้นค่า sumMoney เป็น 0
       if (!acc[yearMonth]) {
         acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
       }
-  
-      // บวกค่า money ของ transaction ปัจจุบันเข้ากับ month/year ที่กำลังสะสม
       acc[yearMonth].sumMoney += transaction.money;
-  
       return acc;
     }, {});
-  
-    // เปลี่ยนข้อมูลเป็น array เพื่อความสะดวกในการใช้งาน
-    const groupedArray = Object.values(groupedData);
-  
-    console.log("Dataที่กรุ๊ป",groupedArray);
-
-
+    const groupedArrayIncome = Object.values(groupedDataIncome);
+    const average_moneyIncome = groupedArrayIncome.reduce((sum, row) => sum + row.sumMoney, 0) / groupedArrayIncome.length;
+    const groupedDataExpense = ExpenseData.reduce((acc, transaction) => {
+      const date = new Date(transaction.created_at);
+      const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+      if (!acc[yearMonth]) {
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+      }
+      acc[yearMonth].sumMoney += transaction.money;
+      return acc;
+    }, {});
+    const groupedArrayExpense = Object.values(groupedDataExpense);
+    const average_moneyExpense = groupedArrayExpense.reduce((sum, row) => sum + row.sumMoney, 0) / groupedArrayExpense.length;
+    const average_money = { 
+      Income: Math.trunc(average_moneyIncome), 
+      Expense: Math.trunc(average_moneyExpense) 
+    };
     const data = {
       SumIncome: IncomeData.reduce((sum, row) => sum + row.money, 0),
       SumExpense: ExpenseData.reduce((sum, row) => sum + row.money, 0),
       CountIncome: CountIncome,
-      CountExpense: CountExpense
+      CountExpense: CountExpense,
+      average_money: average_money
     }
     res.send(data)
   }

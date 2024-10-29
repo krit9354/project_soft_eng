@@ -17,8 +17,24 @@ export default function Summary() {
   const [SumExpense, setSumExpense] = useState(0);
   const [CountIncome, setCountIncome] = useState(0);
   const [CountExpense, setCountExpense] = useState(0);
+  const [AvgIncome, setAvgIncome] = useState(0);
+  const [AvgExpense, setAvgExpense] = useState(0);
   const [Search, setSearch] = useState(false);
   const [Clear, setClear] = useState(false);
+  const mapping_month = {
+    '01' : 'Jan',
+    '02' : 'Feb',
+    '03' : 'Mar',
+    '04' : 'Apr',
+    '05' : 'May',
+    '06' : 'Jun',
+    '07' : 'Jul',
+    '08' : 'Aug',
+    '09' : 'Sep',
+    '10' : 'Oct',
+    '11' : 'Nov',
+    '12' : 'Dec',
+  }
   const barData = [
     {
       value: 40,
@@ -173,6 +189,8 @@ export default function Summary() {
       setSumExpense(res.data.SumExpense)
       setCountIncome(res.data.CountIncome);
       setCountExpense(res.data.CountExpense);
+      setAvgIncome(res.data.average_money.Income);
+      setAvgExpense(res.data.average_money.Expense);
       console.log(Search)
     } catch (err) {
       console.log("err :", err.message)
@@ -393,7 +411,7 @@ export default function Summary() {
                 </View>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
                   <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
-                  <Text style={{ fontSize: 12 }}>113</Text>
+                  <Text style={{ fontSize: 12 }}>{AvgIncome ?? 'Error'}</Text>
                 </View>
               </View>
               <View style={myStyle.box}>
@@ -405,7 +423,7 @@ export default function Summary() {
                 </View>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
                   <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
-                  <Text style={{ fontSize: 12 }}>113</Text>
+                  <Text style={{ fontSize: 12 }}>{AvgExpense ?? "Error"}</Text>
                 </View>
               </View>
             </View>
