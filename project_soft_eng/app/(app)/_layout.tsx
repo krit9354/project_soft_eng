@@ -1,8 +1,8 @@
 import { Text } from 'react-native';
-import { Redirect, Slot } from 'expo-router';
-
+import { Redirect, Slot, Stack } from 'expo-router';
 import { useSession } from '../../components/ctx';
-
+import { SessionProvider } from '../../components/ctx';
+import { SafeAreaView } from 'react-native-safe-area-context';
 export default function AppLayout() {
   const { session, isLoading } = useSession();
 
@@ -11,14 +11,24 @@ export default function AppLayout() {
     return <Text>Loading...</Text>;
   }
 
-  // Only require authentication within the (app) group's layout as users
-  // need to be able to access the (auth) group and sign in again.
   if (!session) {
-    // On web, static rendering will stop here as the user is not authenticated
-    // in the headless Node process that the pages are rendered in.
+
     return <Redirect href="/login" />;
   }
 
-  // This layout can be deferred because it's not the root layout.
-  return <Slot />;
+  return (
+
+
+            <Stack screenOptions={{
+              headerShown: false,
+              gestureEnabled: true,
+            }}>
+                <Stack.Screen name="addincome" />
+                <Stack.Screen name="home" />
+                <Stack.Screen name="setting" />
+                <Stack.Screen name="slip" />
+                <Stack.Screen name="summary" />
+            </Stack>
+
+);
 }
