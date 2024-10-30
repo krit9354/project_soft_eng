@@ -240,6 +240,8 @@ app.post('/summary', async (req, res) => {
   // console.log("Dataที่กรุ๊ป",groupedArray);
   // console.log(data)
   if (Search == true) {
+    // let average_moneyIncome = 0;
+    // let average_moneyExpense = 0;
     const groupedDataIncome = IncomeDataSearch.reduce((acc, transaction) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
@@ -320,7 +322,14 @@ app.post('/summary', async (req, res) => {
 
 app.post('/summary_pocket', async (req, res) => {
   const id = req.body.id
-  const pocket_id = 1
+  const pocket_id = req.body.pocket_id
+  console.log('pocket_id', pocket_id)
+  // const pocket_id = 1
+  const { data: pocket_name, error: pocket_nameError } = await supabase
+    .from('pocket')
+    .select('pocket_name')
+    .eq('id', pocket_id)
+  console.log('pockettttttt',pocket_name[0].pocket_name)
   const { data: IncomeData, error: IncomeError } = await supabase
     .from('transaction')
     .select('money,created_at,is_income,pocket_id, pocket!inner(user_id)')
@@ -330,7 +339,7 @@ app.post('/summary_pocket', async (req, res) => {
 
 
 
-  console.log("แต่ละpock", IncomeData)
+  console.log("แต่ละpocket1", IncomeData)
   if (IncomeError) {
     console.log(IncomeError);
     throw IncomeError
@@ -394,7 +403,8 @@ app.post('/summary_pocket', async (req, res) => {
     CountExpense: CountExpense,
     average_money: average_money,
     Income_each_month: groupedArrayIncome,
-    Expense_each_month: groupedArrayExpense
+    Expense_each_month: groupedArrayExpense,
+    pocket_name: pocket_name[0].pocket_name
   }
   console.log(data)
   res.send(data)
