@@ -12,12 +12,7 @@ export default function Root() {
                     headerShown: false,
                     gestureEnabled: true,
                     contentStyle: { paddingTop: insets.top , paddingBottom : insets.bottom , backgroundColor : "white"}
-                }}>
-                    <Stack.Screen name="(app)" />
-                    <Stack.Screen name="login" />
-                    <Stack.Screen name="index" />
-                    <Stack.Screen name="register" />
-                </Stack>
+                }}/>
         </SessionProvider>
     );
 }
