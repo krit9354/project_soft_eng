@@ -17,6 +17,24 @@ const port = 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/get-pockets', async (req, res) => {
+  const userId = req.query.userId; // รับ user_id จาก query parameter
+
+  // Query ข้อมูล pocket_name จากฐานข้อมูล
+  const { data, error } = await supabase
+    .from('pocket')
+    .select('pocket_name')
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error fetching pockets:', error.message);
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.status(200).json(data); // ส่งข้อมูล pocket_name กลับไปในรูป JSON
+});
+
+
 app.post('/createpockets', upload.single('image'), async (req, res) => {
   const { pocketname, goal, havetarget, userId } = req.body;
   let imageUrl = null;

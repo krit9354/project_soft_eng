@@ -11,13 +11,10 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+;
 import { myStyle } from "../../style/addincome_style";
 import { LinearGradient } from "expo-linear-gradient";
-import PocketCard from "../../components/pocketCard";
-import BottomBar from "../../components/bottomBar";
-import { useNavigation } from "@react-navigation/native";
-import { ip } from "../../config";
+
 import axios from "axios";
 import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
@@ -53,6 +50,25 @@ const NewIncomeScreen = () => {
     },
   };
 
+
+  useEffect(() => {
+    const fetchPockets = async () => {
+      try {
+        const res = await axios.post(`http://${ip}:8080/get-pockets`, {
+          userId: session.id 
+        });
+        const formattedData = res.data.map((item) => ({
+          label: item.pocket_name,
+          value: item.pocket_name
+        }));
+        setPockets(formattedData);
+      } catch (err) {
+        console.error("Error fetching pockets:", err.message);
+      }
+    };
+    fetchPockets();
+  }, []);
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -66,65 +82,6 @@ const NewIncomeScreen = () => {
     }
   };
 
-  const uploadImage = async (img) => {
-    const formData = new FormData();
-    formData.append("files", {
-      uri: img.uri,
-      type: img.mimeType,
-      name: "image.png",
-      fileName: "image",
-    });
-    try {
-      const response = await fetch(
-        "https://api.slipok.com/api/line/apikey/30772",
-        {
-          method: "POST",
-          headers: {
-            "x-authorization": "SLIPOKPR1FEHV",
-            "Content-Type": "multipart/form-data",
-          },
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Upload failed:", errorData);
-        Alert.alert(
-          "Upload failed",
-          errorData.message || "Something went wrong."
-        );
-        return;
-      }
-
-      const res = await response.json();
-      console.log("Upload successful:", res.data);
-      console.log("Upload :", res.data.amount);
-      setResdata(res.data);
-      setAmount(String(res.data.amount));
-      Alert.alert(
-        "Upload successful",
-        "Your image has been uploaded successfully!"
-      );
-    } catch (error) {
-      console.error("Error:", error.message);
-      Alert.alert(
-        "Upload error",
-        error.message || "An error occurred while uploading."
-      );
-    }
-  };
-
-  const renderLabel = () => {
-    if (value || isFocus) {
-      return (
-        <Text style={[styles.label, isFocus && { color: "blue" }]}>
-          Dropdown label
-        </Text>
-      );
-    }
-    return null;
-  };
   return (
     <LinearGradient
       colors={["#CDFADB", "#38E298"]}
