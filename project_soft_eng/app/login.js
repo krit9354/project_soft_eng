@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { myStyle } from '../style/home_style';
+import { myStyle } from '../style/login_style';
 import { LinearGradient } from 'expo-linear-gradient';
 import PocketCard from '../components/pocketCard';
 import { useEffect, useState } from 'react';
@@ -47,28 +47,38 @@ export default function Login() {
       end={{ x: 0.5, y: 1 }}
       style={myStyle.bg}>
       {/* top bar */}
-      <TextInput
-
+      <View style={myStyle.bg}>
+        <View style={myStyle.main_pocket}>
+          
+          <Text style={{fontSize:32}}>I have money</Text>
+           <TextInput
+        
         placeholder="ID"
         onChangeText={(text) => setEmail(text)}
         value={email}
-      />
-      <TextInput
-
+        style={myStyle.pocket}
+           />
+        <TextInput
+        style={myStyle.pocket}
         placeholder="Password"
         onChangeText={(text) => setPassword(text)}
         value={password}
-      />
-      <View >
-        <TouchableOpacity >
+       />
+      
+        <TouchableOpacity style={myStyle.add_pocket}>
           <Text onPress={login} >Login</Text>
         </TouchableOpacity>
-        <Link href="/register" asChild>
+           </View>
+
+
+            <Link href="/register" asChild >
         <TouchableOpacity >
           <Text >Register</Text>
         </TouchableOpacity>
-        </Link>
+          </Link>
       </View>
+     
+
     </LinearGradient>
 
 

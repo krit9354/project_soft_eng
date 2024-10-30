@@ -22,21 +22,19 @@ export default function HomeScreen() {
             try {
                 const res = await axios.post('http://' + ip + ':8080/pockets',{userId : session.id});
                 setPockets(res.data);
-                console.log(res.data);
+                // console.log(res.data);
             } catch (err) {
                 console.log("err :", err.message)
             }
             try {
                 const res = await axios.post('http://' + ip + ':8080/total_money',{userId : session.id});
                 setTotal(res.data.total);
-                console.log(res.data);
+                // console.log(res.data);
             } catch (err) {
                 console.log("err :", err.message)
             }
         };
-
-
-        console.log(session);
+        // console.log(session);
         fetchData();
     }, []);
 
