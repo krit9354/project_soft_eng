@@ -22,13 +22,6 @@ export default function AppLayout() {
             <Stack screenOptions={{
               headerShown: false,
               gestureEnabled: true,
-            }}>
-                <Stack.Screen name="addincome" />
-                <Stack.Screen name="home" />
-                <Stack.Screen name="setting" />
-                <Stack.Screen name="slip" />
-                <Stack.Screen name="summary" />
-            </Stack>
-
+            }}/>
 );
 }
