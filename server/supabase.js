@@ -149,8 +149,9 @@ app.post('/total_money', async (req, res) => {
   const { userId } = req.body;
   const { data, error } = await supabase
   .from('pocket')
-  .select("money")
+  .select("money.sum()")
   .eq("user_id",userId)
+  .single()
 
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
@@ -158,14 +159,7 @@ app.post('/total_money', async (req, res) => {
   }
 
   console.log(data)
-
-  let sum = 0 ;
-  for (let i = 0; i < data.length; i++) {
-    sum += data[i].money
-  }
-
-  console.log(sum)
-  res.status(200).json({ total : sum });
+  res.send(data)
 });
 
 
