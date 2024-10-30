@@ -38,8 +38,13 @@ export const myStyle = StyleSheet.create({
     marginBottom : 20,
   },
   image: {
-    height: 50,
+    width: "100%",
+    height : "100%",
+    borderRadius : "100%",
+  },
+  image_icon : {
     width: 50,
+    height : 50,
   },
   imagePlaceholder: {
     width: 200,

@@ -20,11 +20,27 @@ import axios from "axios";
 import { Dropdown } from "react-native-element-dropdown";
 import { useSession } from "../../components/ctx";
 import { router, Redirect } from 'expo-router';
+import * as ImagePicker from "expo-image-picker";
 
 const Setting = () => {
   const { signOut, session } = useSession();
   const [username, setUsername] = useState(session.user_metadata.username);
   const [bankName, setBankName] = useState();
+  const [selectedImage, setSelectedImage] = useState("");
+
+
+  const pickImage = async () => {
+    // console.log(selectedImage)
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0]);
+    }
+  };
   return (
     <LinearGradient
       colors={["#CDFADB", "#38E298"]}
@@ -39,10 +55,14 @@ const Setting = () => {
       >
         <Text style={myStyle.bigtext}>การตั้งค่า</Text>
         <Text style={myStyle.label}>รูปโปรไฟล์</Text>
-        <TouchableOpacity style={myStyle.imagePlaceholder}>
+        <TouchableOpacity style={myStyle.imagePlaceholder} onPress={pickImage}>
           <Image
-            source={require("../../assets/images/photoicon.png")} // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
-            style={myStyle.image}
+            source={
+              selectedImage
+                ? { uri: selectedImage.uri }
+                : require("../../assets/images/photoicon.png")
+            }
+            style={selectedImage ? myStyle.image : myStyle.image_icon}
           />
         </TouchableOpacity>
 
