@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 
 app.post('/pockets', async (req, res) => {
   const { userId } = req.body;
-
+  console.log(userId)
   const { data, error } = await supabase
   .from('pocket')
   .select("*")
