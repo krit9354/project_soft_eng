@@ -20,26 +20,26 @@ export default function HomeScreen() {
 
     useFocusEffect(
         useCallback(() => {
-          fetchData();
+            fetchData();
         }, [])
-      );
+    );
 
-        const fetchData = async () => {
-            try {
-                const res = await axios.post('http://' + ip + ':8080/pockets',{userId : session.id});
-                setPockets(res.data);
-                // console.log(res.data);
-            } catch (err) {
-                console.log("err :", err.message)
-            }
-            try {
-                const res = await axios.post('http://' + ip + ':8080/total_money',{userId : session.id});
-                setTotal(res.data.sum);
-                console.log(res.data);
-            } catch (err) {
-                console.log("err :", err.message)
-            }
-        };
+    const fetchData = async () => {
+        try {
+            const res = await axios.post('http://' + ip + ':8080/pockets', { userId: session.id });
+            setPockets(res.data);
+            // console.log(res.data);
+        } catch (err) {
+            console.log("err :", err.message)
+        }
+        try {
+            const res = await axios.post('http://' + ip + ':8080/total_money', { userId: session.id });
+            setTotal(res.data.sum);
+            console.log(res.data);
+        } catch (err) {
+            console.log("err :", err.message)
+        }
+    };
 
 
     useEffect(() => {
@@ -63,7 +63,7 @@ export default function HomeScreen() {
                 <View style={myStyle.top_bar_content}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image source={require("../../assets/images/nongP.jpg")} style={{ width: 70, height: 70, borderRadius: 35 }} />
-                        <Text style={{ fontSize: 20, marginLeft: 10 }}>{ session?.user_metadata?.username ?? "ERROR" }</Text>
+                        <Text style={{ fontSize: 20, marginLeft: 10 }}>{session?.user_metadata?.username ?? "ERROR"}</Text>
                         {/* <Text onPress={() => {
                             
                             signOut();
