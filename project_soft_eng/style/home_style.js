@@ -25,7 +25,7 @@ export const myStyle = StyleSheet.create({
         alignItems : 'center',
         paddingLeft : 40,
         paddingRight : 40,
-        
+        overflow : "visible",
     },
     main_content_box : {        
         paddingHorizontal: "10%",
