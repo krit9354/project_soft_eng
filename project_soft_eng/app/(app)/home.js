@@ -27,7 +27,7 @@ export default function HomeScreen() {
             }
             try {
                 const res = await axios.post('http://' + ip + ':8080/total_money',{userId : session.id});
-                setTotal(res.data.total);
+                setTotal(res.data.sum);
                 console.log(res.data);
             } catch (err) {
                 console.log("err :", err.message)
