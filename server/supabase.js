@@ -20,18 +20,33 @@ app.get('/', (req, res) => {
 
 app.post('/pockets', async (req, res) => {
   const { userId } = req.body;
-
+  console.log(userId)
   const { data, error } = await supabase
   .from('pocket')
   .select("*")
   .eq("user_id",userId)
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+  console.log(data)
+  res.send(data)
+});
+
+app.post('/transactionid', async (req, res) => {
+  const  {pocketid}  = req.body;
+
+  const { data, error } = await supabase
+  .from('transaction')
+  .select("*")
+  .eq("pocket_id",pocketid)
 
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
   }
 
-  console.log(data)
+  console.log(pocketid)
   res.send(data)
 });
 
@@ -103,18 +118,23 @@ app.post('/summary', async (req, res) => {
   const dateStart = req.body.dateStart
   const dateEnd = req.body.dateEnd
   const Search = req.body.Search
-
+  const start_year = req.body.start_year
+  const end_year = req.body.end_year
+  // console.log('start_year',start_year)
+  // console.log('end Year',end_year)
   let IncomeDataSearch = [];
   let ExpenseDataSearch = [];
   let CountIncomeSearch = 0;
   let CountExpenseSearch = 0;
 
-  console.log(req.body)
+  console.log("body summary",req.body)
   const { data: IncomeData, error: IncomeError } = await supabase
     .from('transaction')
     .select('money,created_at,is_income, pocket!inner(user_id)')
     .eq('is_income', true)
-    .eq('pocket.user_id', id);
+    .eq('pocket.user_id', id)
+    .gte('created_at', `${start_year} 00:00:00`)
+    .lte('created_at', `${end_year} 23:59:59`);
 
   console.log(IncomeData)
   if (IncomeError) {
@@ -125,7 +145,9 @@ app.post('/summary', async (req, res) => {
     .from('transaction')
     .select('money,created_at, is_income, pocket!inner(user_id)')
     .eq('is_income', false)
-    .eq('pocket.user_id', id);
+    .eq('pocket.user_id', id)
+    .gte('created_at', `${start_year} 00:00:00`)
+    .lte('created_at', `${end_year} 23:59:59`);
   // console.log(ExpenseData)
   if (ExpenseError) {
     console.log(ExpenseError);
@@ -135,13 +157,17 @@ app.post('/summary', async (req, res) => {
     .from('transaction')
     .select('money, is_income, pocket!inner(user_id)', { count: 'exact' })
     .eq('is_income', true)
-    .eq('pocket.user_id', id);
+    .eq('pocket.user_id', id)
+    .gte('created_at', `${start_year} 00:00:00`)
+    .lte('created_at', `${end_year} 23:59:59`);
   // console.log(CountIncome)
   const { count: CountExpense, error: CountExpenseError } = await supabase
     .from('transaction')
     .select('money, is_income, pocket!inner(user_id)', { count: 'exact' })
     .eq('is_income', false)
-    .eq('pocket.user_id', id);
+    .eq('pocket.user_id', id)
+    .gte('created_at', `${start_year} 00:00:00`)
+    .lte('created_at', `${end_year} 23:59:59`);
   if (Search == true) {
     console.log('true')
     const { data: IncomeDataSearchResult, error: IncomeErrorSearch } = await supabase
@@ -187,10 +213,10 @@ app.post('/summary', async (req, res) => {
       .lte('created_at', `${dateEnd} 23:59:59`);
     CountExpenseSearch = CountExpenseSearchResult;
   }
-  console.log('Income Search', IncomeDataSearch)
-  console.log('Expense Search', ExpenseDataSearch)
-  console.log('Count Income Search', CountIncomeSearch)
-  console.log('Count Expense Search', CountExpenseSearch)
+  // console.log('Income Search', IncomeDataSearch)
+  // console.log('Expense Search', ExpenseDataSearch)
+  // console.log('Count Income Search', CountIncomeSearch)
+  // console.log('Count Expense Search', CountExpenseSearch)
 
   // const groupedData = IncomeDataSearch.reduce((acc, transaction) => {
   //   // สร้าง key ที่รวมเดือนและปีจาก created_at
@@ -214,11 +240,13 @@ app.post('/summary', async (req, res) => {
   // console.log("Dataที่กรุ๊ป",groupedArray);
   // console.log(data)
   if (Search == true) {
+    // let average_moneyIncome = 0;
+    // let average_moneyExpense = 0;
     const groupedDataIncome = IncomeDataSearch.reduce((acc, transaction) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
       if (!acc[yearMonth]) {
-        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0, type: 'income' };
       }
       acc[yearMonth].sumMoney += transaction.money;
       return acc;
@@ -229,16 +257,16 @@ app.post('/summary', async (req, res) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
       if (!acc[yearMonth]) {
-        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0, type: 'expense' };
       }
       acc[yearMonth].sumMoney += transaction.money;
       return acc;
     }, {});
     const groupedArrayExpense = Object.values(groupedDataExpense);
     const average_moneyExpense = groupedArrayExpense.reduce((sum, row) => sum + row.sumMoney, 0) / groupedArrayExpense.length;
-    const average_money = { 
-      Income: Math.trunc(average_moneyIncome), 
-      Expense: Math.trunc(average_moneyExpense) 
+    const average_money = {
+      Income: Math.trunc(average_moneyIncome),
+      Expense: Math.trunc(average_moneyExpense)
     };
     console.log(groupedArrayIncome);
     console.log(groupedArrayExpense);
@@ -247,7 +275,9 @@ app.post('/summary', async (req, res) => {
       SumExpense: ExpenseDataSearch.reduce((sum, row) => sum + row.money, 0),
       CountIncome: CountIncomeSearch,
       CountExpense: CountExpenseSearch,
-      average_money: average_money
+      average_money: average_money,
+      Income_each_month: groupedArrayIncome,
+      Expense_each_month: groupedArrayExpense
     }
     res.send(data)
   } else {
@@ -255,7 +285,7 @@ app.post('/summary', async (req, res) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
       if (!acc[yearMonth]) {
-        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0, type: 'income' };
       }
       acc[yearMonth].sumMoney += transaction.money;
       return acc;
@@ -266,28 +296,122 @@ app.post('/summary', async (req, res) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
       if (!acc[yearMonth]) {
-        acc[yearMonth] = { month: yearMonth, sumMoney: 0 };
+        acc[yearMonth] = { month: yearMonth, sumMoney: 0, type: 'expense' };
       }
       acc[yearMonth].sumMoney += transaction.money;
       return acc;
     }, {});
     const groupedArrayExpense = Object.values(groupedDataExpense);
     const average_moneyExpense = groupedArrayExpense.reduce((sum, row) => sum + row.sumMoney, 0) / groupedArrayExpense.length;
-    const average_money = { 
-      Income: Math.trunc(average_moneyIncome), 
-      Expense: Math.trunc(average_moneyExpense) 
+    const average_money = {
+      Income: Math.trunc(average_moneyIncome),
+      Expense: Math.trunc(average_moneyExpense)
     };
     const data = {
       SumIncome: IncomeData.reduce((sum, row) => sum + row.money, 0),
       SumExpense: ExpenseData.reduce((sum, row) => sum + row.money, 0),
       CountIncome: CountIncome,
       CountExpense: CountExpense,
-      average_money: average_money
+      average_money: average_money,
+      Income_each_month: groupedArrayIncome,
+      Expense_each_month: groupedArrayExpense
     }
     res.send(data)
   }
+});
 
-})
+app.post('/summary_pocket', async (req, res) => {
+  const id = req.body.id
+  const pocket_id = req.body.pocket_id
+  console.log('pocket_id', pocket_id)
+  // const pocket_id = 1
+  const { data: pocket_name, error: pocket_nameError } = await supabase
+    .from('pocket')
+    .select('pocket_name')
+    .eq('id', pocket_id)
+  console.log('pockettttttt',pocket_name[0].pocket_name)
+  const { data: IncomeData, error: IncomeError } = await supabase
+    .from('transaction')
+    .select('money,created_at,is_income,pocket_id, pocket!inner(user_id)')
+    .eq('is_income', true)
+    .eq('pocket_id', pocket_id)
+    .eq('pocket.user_id', id)
+
+
+
+  console.log("แต่ละpocket1", IncomeData)
+  if (IncomeError) {
+    console.log(IncomeError);
+    throw IncomeError
+  }
+  const { data: ExpenseData, error: ExpenseError } = await supabase
+    .from('transaction')
+    .select('money,created_at, is_income, pocket!inner(user_id)')
+    .eq('is_income', false)
+    .eq('pocket_id', pocket_id)
+    .eq('pocket.user_id', id)
+
+  // console.log(ExpenseData)
+  if (ExpenseError) {
+    console.log(ExpenseError);
+    throw ExpenseError
+  }
+  const { count: CountIncome, error: CountIncomeError } = await supabase
+    .from('transaction')
+    .select('money, is_income, pocket!inner(user_id)', { count: 'exact' })
+    .eq('is_income', true)
+    .eq('pocket_id', pocket_id)
+    .eq('pocket.user_id', id)
+
+  // console.log(CountIncome)
+  const { count: CountExpense, error: CountExpenseError } = await supabase
+    .from('transaction')
+    .select('money, is_income, pocket!inner(user_id)', { count: 'exact' })
+    .eq('is_income', false)
+    .eq('pocket_id', pocket_id)
+    .eq('pocket.user_id', id)
+  const groupedDataIncome = IncomeData.reduce((acc, transaction) => {
+    const date = new Date(transaction.created_at);
+    const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+    if (!acc[yearMonth]) {
+      acc[yearMonth] = { month: yearMonth, sumMoney: 0, type: 'income' };
+    }
+    acc[yearMonth].sumMoney += transaction.money;
+    return acc;
+  }, {});
+  const groupedArrayIncome = Object.values(groupedDataIncome);
+  const average_moneyIncome = groupedArrayIncome.reduce((sum, row) => sum + row.sumMoney, 0) / groupedArrayIncome.length;
+  const groupedDataExpense = ExpenseData.reduce((acc, transaction) => {
+    const date = new Date(transaction.created_at);
+    const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+    if (!acc[yearMonth]) {
+      acc[yearMonth] = { month: yearMonth, sumMoney: 0, type: 'expense' };
+    }
+    acc[yearMonth].sumMoney += transaction.money;
+    return acc;
+  }, {});
+  const groupedArrayExpense = Object.values(groupedDataExpense);
+  const average_moneyExpense = groupedArrayExpense.reduce((sum, row) => sum + row.sumMoney, 0) / groupedArrayExpense.length;
+  const average_money = {
+    Income: Math.trunc(average_moneyIncome),
+    Expense: Math.trunc(average_moneyExpense)
+  };
+  const data = {
+    SumIncome: IncomeData.reduce((sum, row) => sum + row.money, 0),
+    SumExpense: ExpenseData.reduce((sum, row) => sum + row.money, 0),
+    CountIncome: CountIncome,
+    CountExpense: CountExpense,
+    average_money: average_money,
+    Income_each_month: groupedArrayIncome,
+    Expense_each_month: groupedArrayExpense,
+    pocket_name: pocket_name[0].pocket_name
+  }
+  console.log(data)
+  res.send(data)
+
+});
+
+
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
 });

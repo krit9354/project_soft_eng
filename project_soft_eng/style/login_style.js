@@ -3,6 +3,9 @@ import { StyleSheet } from "react-native";
 export const myStyle = StyleSheet.create({
     bg : {
         height: "100%",
+        
+        alignItems : 'center',
+        width : "100%",
     },
     top_bar : {
         height : 100,
@@ -25,7 +28,7 @@ export const myStyle = StyleSheet.create({
         alignItems : 'center',
         paddingLeft : 40,
         paddingRight : 40,
-        overflow : "visible",
+        
     },
     main_content_box : {        
         paddingHorizontal: "10%",
@@ -33,13 +36,44 @@ export const myStyle = StyleSheet.create({
         zIndex : 0
     },
     main_pocket : {
-        position : 'relative',
+        
+        backgroundColor : "white",
+        width : "70%",
+        height: "60%",
+        borderRadius: 20,
+        flexDirection : "colum",
+        justifyContent : 'space-evenly',
+        alignItems : "center",
+        marginVertical : 25,
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 4, 
+    },
+    main_pocket2 : {
+        
         backgroundColor : "white",
         width : "100%",
-        height : 100,
-        borderRadius: 20,
-        flexDirection : "row",
-        justifyContent : "space-around",
+        height: "68%",
+        
+        flexDirection : "colum",
+       
+        alignItems : "center",
+     
+       
+    },
+    pocket : {
+        
+        backgroundColor : "white",
+        width : "60%",
+        height: "10%",
+        borderRadius: 35,
+        borderWidth: 2,
+        padding: 10,
+        flexDirection : "colum",
         alignItems : "center",
         marginVertical : 25,
         shadowOffset: {
@@ -59,14 +93,12 @@ export const myStyle = StyleSheet.create({
         marginBottom : 100               
     },
     add_pocket : {
-        position : "absolute",
-        bottom : 90,
-        right : 20,
+      
         backgroundColor : "#38E298",
-        width : 120,
-        height : 40,
+        width : "80%",
+        height: "10%",
         borderRadius : 100,
-        marginLeft : "auto",
+    
         justifyContent : "center",
         alignItems : "center",
         shadowColor: '#000', 

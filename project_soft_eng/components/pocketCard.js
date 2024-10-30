@@ -1,11 +1,13 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image,TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { myStyle } from '../style/pocketCard_style';
+import { useNavigation } from '@react-navigation/native';
+import { myStyle } from '../style/pocketCard_style'; 
+import { Link, router } from 'expo-router';
 export default function PocketCard(item) {
   const items = item.props
   console.log(items)
   return (
-    <View style={myStyle.card}>
+    <TouchableOpacity style={myStyle.card} onPress={() => router.push("/pocket/"+items.id)}>
       <Image 
        source={{ uri: items.image}}
       style={myStyle.image}
@@ -28,6 +30,8 @@ export default function PocketCard(item) {
           </View>
           </View>}
       </View>
-    </View>
+
+    </TouchableOpacity>
+    
   );
 }
