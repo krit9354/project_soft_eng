@@ -36,6 +36,12 @@ const Setting = () => {
         showsVerticalScrollIndicator={false}
         style={myStyle.main_content_box}
       >
+        <TouchableOpacity style={myStyle.imagePlaceholder}>
+              <Image
+                source={require("../../assets/images/photoicon.png")} // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
+                style={myStyle.image}
+              />
+        </TouchableOpacity>
         <TouchableOpacity style={myStyle.logout_button} onPress={() => {signOut();
           router.push("login");
         }}>
