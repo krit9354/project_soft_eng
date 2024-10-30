@@ -490,12 +490,7 @@ export default function Summary() {
                 >
                   <Text style={myStyle.buttonText}>Clear</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={myStyle.button}
-                  onPress={() => router.push("summary_pocket")}
-                >
-                  <Text style={myStyle.buttonText}>each summary</Text>
-                </TouchableOpacity>
+            
               </View>
               <View style={{
                 paddingTop: 10,
@@ -507,6 +502,8 @@ export default function Summary() {
               }}>
                 {renderTitle()}
                 <ScrollView
+                  // backgroundColor='red'
+                  width={containerWidth}
                   horizontal
                   showsHorizontalScrollIndicator={true}
                   contentContainerStyle={{ flexDirection: 'row' }}
@@ -530,28 +527,29 @@ export default function Summary() {
                 </ScrollView>
               </View>
               <View style={myStyle.containerShow}>
-                <View style={myStyle.box}>
+                <View style={[myStyle.box, { backgroundColor: "#7ba8d1" }]}
+                >
                   <Text style={{ fontSize: 15 }}>รวมเงินเข้า (บาท)</Text>
-                  <Text style={{ fontSize: 15 }}>{SumIncome ?? 'Error'}</Text>
+                  <Text style={{ fontSize: 18,textAlign: 'center', alignSelf: 'center'}}>{SumIncome ?? 'Error'}</Text>
                   <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
                     <Text style={{ fontSize: 12 }}>รายการ</Text>
-                    <Text style={{ fontSize: 12 }}>{CountIncome ?? 'Error'}</Text>
+                    <Text style={{ fontSize: 14 }}>{CountIncome ?? 'Error'}</Text>
                   </View>
                   <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
                     <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
-                    <Text style={{ fontSize: 12 }}>{AvgIncome ?? 'Error'}</Text>
+                    <Text style={{ fontSize: 14 }}>{AvgIncome ?? 'Error'}</Text>
                   </View>
                 </View>
-                <View style={myStyle.box}>
+                <View style={[myStyle.box, { backgroundColor: "#eb7d7c" }]}>
                   <Text style={{ fontSize: 15 }}>รวมเงินออก (บาท)</Text>
-                  <Text style={{ fontSize: 15 }}>{SumExpense ?? "Error"}</Text>
+                  <Text style={{ fontSize: 18,textAlign: 'center', alignSelf: 'center' }}>{SumExpense ?? "Error"}</Text>
                   <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
                     <Text style={{ fontSize: 12 }}>รายการ</Text>
-                    <Text style={{ fontSize: 12 }}>{CountExpense ?? 'Error'}</Text>
+                    <Text style={{ fontSize: 14 }}>{CountExpense ?? 'Error'}</Text>
                   </View>
                   <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
                     <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
-                    <Text style={{ fontSize: 12 }}>{AvgExpense ?? "Error"}</Text>
+                    <Text style={{ fontSize: 14 }}>{AvgExpense ?? "Error"}</Text>
                   </View>
                 </View>
               </View>
