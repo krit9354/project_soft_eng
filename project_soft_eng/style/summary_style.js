@@ -54,7 +54,7 @@ export const myStyle = StyleSheet.create({
     },
     containerButtonFilter: {
     
-
+        backgroundColor: "red",
         width: "75%",
         borderRadius: 20,
         justifyContent: 'space-around',

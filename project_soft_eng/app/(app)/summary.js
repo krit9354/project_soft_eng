@@ -335,22 +335,22 @@ export default function Summary() {
 
   const renderTitle = () => {
     return (
-      <View style={{ marginTop:0,height:0,paddingBottom:20 }}>
+      <View style={{ marginTop:0,height:50,paddingBottom:20 ,backgroundColor:'red' }}>
         <Text
           style={{
-            color: 'white',
+            color: 'black',
             fontSize: 20,
             fontWeight: 'bold',
             textAlign: 'center',
           }}>
-          Chart title goes here
+          Helo
         </Text>
         <View
           style={{
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-          
+            // height: 20,
             backgroundColor: 'yellow',
           }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -475,7 +475,7 @@ export default function Summary() {
               borderRadius: 10,
               // paddingHorizontal: 10,
               // paddingBottom: 40,
-              height: containerHeight * 0.45,
+              height: containerHeight * 0.5,
             }}>
                {renderTitle()}
               <ScrollView
