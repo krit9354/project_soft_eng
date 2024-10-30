@@ -2,7 +2,7 @@ import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Dimensions 
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { myStyle } from '../../style/summary_style';
+import { myStyle } from '../../style/summary_pocket_style';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import dayjs from 'dayjs';
 import { BarChart } from "react-native-gifted-charts";
@@ -10,9 +10,8 @@ import axios from 'axios';
 import { useSession } from '../../components/ctx';
 import { Use } from 'react-native-svg';
 import { ip } from '../../config';
-import { router } from 'expo-router';
 
-export default function Summary() {
+export default function Summary_pocket() {
   const { session } = useSession();
   const [SumIncome, setSumIncome] = useState(0);
   const [SumExpense, setSumExpense] = useState(0);
@@ -20,14 +19,9 @@ export default function Summary() {
   const [CountExpense, setCountExpense] = useState(0);
   const [AvgIncome, setAvgIncome] = useState(0);
   const [AvgExpense, setAvgExpense] = useState(0);
-  const [Search, setSearch] = useState(false);
-  const [Clear, setClear] = useState(false);
   const [GraphData, setGraphData] = useState([]);
   const [maxValueGraph, setMaxValueGraph] = useState(0);
-  const [this_year, setThis_year] = useState(dayjs().year());
-  const [start_year, setStart_year] = useState(dayjs().startOf('year').format('YYYY-MM-DD')); 
-  const [end_year, setEnd_year] = useState(dayjs().endOf('year').format('YYYY-MM-DD')); 
-  const [showHeader, setShowHeader] = useState(false);
+
   const mapping_month = {
     '01': 'Jan',
     '02': 'Feb',
@@ -190,31 +184,11 @@ export default function Summary() {
   ];
 
 
-  useEffect(() => {
-    if (Search) {
-      fetchData();
-    }
-    setSearch(false);
-  }, [Search]); // Runs only when Search changes to true
 
-  const handlePressSearch = () => {
-    setSearch(true);
-    setShowHeader(true);
-  };
-  useEffect(() => {
-    if (Clear) {
-      fetchData();
-    }
-    setClear(false);
-  }, [Clear]); // Runs only when Search changes to true
 
-  const handlePressClear = () => {
-    setClear(true);
-    setSearch(false);
-    setDateStart(new Date());
-    setDateEnd(new Date());
-    setShowHeader(false);
-  };
+ 
+
+ 
   const createBarData = (expenseData, incomeData) => {
     const monthData = {};
 
@@ -267,18 +241,17 @@ export default function Summary() {
   };
 
   const fetchData = async () => {
- 
-    try {
-      const res = await axios.post('http://' + ip + ':8080/summary', {
-        id: session.id,
-        selectedGroup: selectedGroup,
-        dateStart: dayjs(dateStart).format('YYYY-MM-DD'),
-        dateEnd: dayjs(dateEnd).format('YYYY-MM-DD'),
-        start_year: start_year,
-        end_year: end_year,
-        Search: Search
-      });
 
+    console.log(session.id)
+    console.log(ip)
+
+    try {
+      const res = await axios.post('http://' + ip + ':8080/summary_pocket', {
+        id: session.id,
+       
+      });
+ 
+      console.log(res.data);
       setSumIncome(res.data.SumIncome);
       setSumExpense(res.data.SumExpense)
       setCountIncome(res.data.CountIncome);
@@ -292,7 +265,7 @@ export default function Summary() {
 
 
 
-      console.log(Search)
+
     } catch (err) {
       console.log("err :", err.message)
     }
@@ -305,9 +278,7 @@ export default function Summary() {
 
 
 
-  const moneyIn = 2000
-  const moneyOut = 1000
-  const [selectedGroup, setSelectedGroup] = useState("");
+
 
   const [containerWidth, setContainerWidth] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
@@ -322,47 +293,30 @@ export default function Summary() {
     useShadowColorFromDataset: false // optional
   };
 
-  const [dateStart, setDateStart] = useState(new Date());
-  const [isDateStartPickerVisible, setDateStartPickerVisibility] = useState(false);
-  const showDateStartPicker = () => { setDateStartPickerVisibility(true); };
-  const hideDateStartPicker = () => { setDateStartPickerVisibility(false); };
-  function handleConfirmDateStart(date) {
-    setDateStart(date);
-    hideDateStartPicker();
-  }
-
-  const [dateEnd, setDateEnd] = useState(new Date());
-  const [isDateEndPickerVisible, setDateEndPickerVisibility] = useState(false);
-  const showDateEndPicker = () => { setDateEndPickerVisibility(true); };
-  const hideDateEndPicker = () => { setDateEndPickerVisibility(false); };
-  function handleConfirmDateEnd(date) {
-    setDateEnd(date);
-    hideDateEndPicker();
-  }
+  
 
   const renderTitle = () => {
     return (
-      <View style={{ marginTop:0,height:50,paddingBottom:20  }}>
-       {!showHeader ?
-       (<Text
+      <View style={{ marginTop:0,height:50,paddingBottom:10  }}>
+      <Text
           style={{
             color: 'black',
-            fontSize: 15,
+            fontSize: 20,
             // fontWeight: 'bold',
             textAlign: 'center',
             
           }}>
-          รายรับ-รายจ่าย ปี {this_year}
-        </Text>) : null
-      }
+          รายรับ-รายจ่าย Pocket ไปเที่ยว
+        </Text>
         <View
           style={{
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             // height: 20,
-            backgroundColor: 'white',
+            // backgroundColor: 'yellow',
             paddingTop: 10,
+        
           }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View
@@ -425,76 +379,20 @@ export default function Summary() {
             setContainerHeight(height);
           }}
         >
-          <Text style={{ fontSize: 30, fontWeight: 'bold', margin: 20 }}>Summary</Text>
+          <Text style={{ fontSize: 30, fontWeight: 'bold', margin: 20 }}>Summary Pocket</Text>
           <View style={myStyle.containerInput}>
-            {/* <View style={myStyle.pickerContainer}>
-              <Picker
-                selectedValue={selectedGroup}
-                onValueChange={(itemValue) => setSelectedGroup(itemValue)}
-                style={myStyle.picker}
-              >
-              
 
-                <Picker.Item label="เลือกหมวดหมู่" value="" />
-                <Picker.Item label="รายรับ-รายจ่าย" value="in_out" />
-                <Picker.Item label="รายรับ" value="in" />
-                <Picker.Item label="รายจ่าย" value="out" />
-              </Picker>
-            </View> */}
-            <View style={myStyle.containerDate}>
-
-              <TouchableOpacity onPress={showDateStartPicker} style={myStyle.inputDate}>
-                <Text style={myStyle.textDate}>{dateStart.toDateString()}</Text>
-              </TouchableOpacity>
-              <DateTimePickerModal
-                isVisible={isDateStartPickerVisible}
-                mode="date"
-                date={dateStart}
-                onConfirm={handleConfirmDateStart}
-                onCancel={hideDateStartPicker}
-              />
-              <Text style={myStyle.textDash}>-</Text>
-              <TouchableOpacity onPress={showDateEndPicker} style={myStyle.inputDate}>
-                <Text style={myStyle.textDate}>{dateEnd.toDateString()}</Text>
-              </TouchableOpacity>
-              {/* <Text onPress={showDateEndPicker} style={myStyle.inputDate}>{dateEnd.toDateString()}</Text> */}
-              <DateTimePickerModal
-                isVisible={isDateEndPickerVisible}
-                mode="date"
-                date={dateEnd}
-                onConfirm={handleConfirmDateEnd}
-                onCancel={hideDateEndPicker}
-              />
-            </View>
-            <View style={myStyle.containerButtonFilter} >
-              <TouchableOpacity
-                style={myStyle.button}
-                onPress={handlePressSearch}
-              >
-                <Text style={myStyle.buttonText}>Search</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={myStyle.button}
-                onPress={handlePressClear}
-              >
-                <Text style={myStyle.buttonText}>Clear</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={myStyle.button}
-                onPress={() => router.push("summary_pocket")}
-              >
-                <Text style={myStyle.buttonText}>each summary</Text>
-              </TouchableOpacity>
-            </View>
+            
+          
             <View style={{
               paddingTop: 10,
               backgroundColor: '#FFFFFF',
               borderRadius: 10,
-              // paddingHorizontal: 10,
-              // paddingBottom: 40,
+              
               height: containerHeight * 0.5,
             }}>
                {renderTitle()}
+
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={true}
@@ -513,7 +411,7 @@ export default function Summary() {
                 yAxisTextStyle={{ color: 'gray' }}
                 noOfSections={3}
                 maxValue={maxValueGraph}
-                style={{ width: 1500, height: 20 }} // ขนาดกราฟ
+                style={{ width: 1500, height: 20  }} // ขนาดกราฟ
               />
 
               </ScrollView>
