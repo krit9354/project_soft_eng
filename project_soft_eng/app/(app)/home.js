@@ -4,7 +4,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import PocketCard from '../../components/pocketCard';
 import { useEffect, useState } from 'react';
 import BottomBar from '../../components/bottomBar';
-import { useNavigation } from '@react-navigation/native';
 import { ip } from '../../config';
 import axios from 'axios'
 import { useSession } from '../../components/ctx';
@@ -23,21 +22,19 @@ export default function HomeScreen() {
             try {
                 const res = await axios.post('http://' + ip + ':8080/pockets',{userId : session.id});
                 setPockets(res.data);
-                console.log(res.data);
+                // console.log(res.data);
             } catch (err) {
                 console.log("err :", err.message)
             }
             try {
                 const res = await axios.post('http://' + ip + ':8080/total_money',{userId : session.id});
                 setTotal(res.data.total);
-                console.log(res.data);
+                // console.log(res.data);
             } catch (err) {
                 console.log("err :", err.message)
             }
         };
-
-
-        console.log(session);
+        // console.log(session);
         fetchData();
     }, []);
 
@@ -63,10 +60,10 @@ export default function HomeScreen() {
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image source={require("../../assets/images/nongP.jpg")} style={{ width: 70, height: 70, borderRadius: 35 }} />
                         <Text style={{ fontSize: 20, marginLeft: 10 }}>{ session?.user_metadata?.username ?? "ERROR" }</Text>
-                        <Text onPress={() => {
-                            // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
+                        {/* <Text onPress={() => {
+                            
                             signOut();
-                        }}>Sign out</Text>
+                        }}>Sign out</Text> */}
                     </View>
                     <View style={{ alignItems: 'center' }} >
                         <Image source={require("../../assets/images/history.png")} style={{ width: 30, height: 30, overflow: 'visible' }} />
