@@ -349,7 +349,7 @@ export default function Summary() {
           (<Text
             style={{
               color: 'black',
-              fontSize: 15,
+              fontSize: 16,
               // fontWeight: 'bold',
               textAlign: 'center',
 
