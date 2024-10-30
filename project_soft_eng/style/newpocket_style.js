@@ -38,30 +38,25 @@ export const myStyle = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 20,
     backgroundColor: "#DDDDDD",
-    // flex: 0.3,
-    height: 50,
+    flex: 0.3,
   },
   picker: {
-    height: 70,
+    height: 50,
     width: "100%",
     flex: 1,
-    padding: 10, // ระยะห่างภายใน
-    borderWidth: 0, // ทำให้ขอบหายไป
-    
-    borderRadius: 50,
   },
   textArea: {
     height: 100,
     borderRadius: 20,
   },
   imagePlaceholder: {
-    height: 100,
+    height: 250,
     backgroundColor: "#DDDDDD",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
     borderRadius: 20,
-    flex: 1,
+    // flex: 1,
     overflow: "hidden",
   },
   image: {
@@ -109,11 +104,14 @@ export const myStyle = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
-  rowincomeorexpense: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+  rowcheckbox: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 8,
+  },
+  goallabel: {
+    fontSize: 16,
+    color: '#333',
   },
   bottom_barkub : {
     width : '100%',
