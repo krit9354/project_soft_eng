@@ -25,12 +25,10 @@ app.post('/pockets', async (req, res) => {
   .from('pocket')
   .select("*")
   .eq("user_id",userId)
-
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
   }
-
   console.log(data)
   res.send(data)
 });

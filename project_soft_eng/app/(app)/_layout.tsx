@@ -1,5 +1,5 @@
 import { Text } from 'react-native';
-import { Redirect, Slot } from 'expo-router';
+import { Redirect, Slot, Stack } from 'expo-router';
 
 import { useSession } from '../../components/ctx';
 

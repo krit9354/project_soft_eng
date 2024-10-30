@@ -18,11 +18,11 @@ import { useNavigation } from "@react-navigation/native";
 import { ip } from "../../config";
 import axios from "axios";
 import { Dropdown } from "react-native-element-dropdown";
-
-
+import { useSession } from "../../components/ctx";
+import { router, Redirect } from 'expo-router';
 
 const Setting = () => {
-  
+  const { signOut, session } = useSession();
   return (
     <LinearGradient
       colors={["#CDFADB", "#38E298"]}
@@ -36,7 +36,12 @@ const Setting = () => {
         showsVerticalScrollIndicator={false}
         style={myStyle.main_content_box}
       >
-
+        <TouchableOpacity style={myStyle.logout_button} onPress={() => {signOut();
+          router.push("login");
+        }}>
+          <Text style={{color:"white"}}>logout</Text>
+        </TouchableOpacity>
+        
       </ScrollView>
 
       {/* bottom bar */}

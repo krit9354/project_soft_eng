@@ -4,7 +4,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import PocketCard from '../../components/pocketCard';
 import { useEffect, useState } from 'react';
 import BottomBar from '../../components/bottomBar';
-import { useNavigation } from '@react-navigation/native';
 import { ip } from '../../config';
 import axios from 'axios'
 import { useSession } from '../../components/ctx';
