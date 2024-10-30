@@ -110,7 +110,7 @@ app.post('/summary', async (req, res) => {
   let CountIncomeSearch = 0;
   let CountExpenseSearch = 0;
 
-  console.log(req.body)
+  console.log("body summary",req.body)
   const { data: IncomeData, error: IncomeError } = await supabase
     .from('transaction')
     .select('money,created_at,is_income, pocket!inner(user_id)')
