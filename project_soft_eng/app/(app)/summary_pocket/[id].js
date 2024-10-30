@@ -1,16 +1,17 @@
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Dimensions,ActivityIndicator } from 'react-native';
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { myStyle } from '../../style/summary_pocket_style';
+import { myStyle } from '../../../style/summary_pocket_style';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import dayjs from 'dayjs';
 import { BarChart } from "react-native-gifted-charts";
 import axios from 'axios';
-import { useSession } from '../../components/ctx';
+import { useSession } from '../../../components/ctx';
 import { Use } from 'react-native-svg';
-import { ip } from '../../config';
-
+import { ip } from '../../../config';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import { useLocalSearchParams } from 'expo-router';
 export default function Summary_pocket() {
   const { session } = useSession();
   const [SumIncome, setSumIncome] = useState(0);
@@ -21,7 +22,9 @@ export default function Summary_pocket() {
   const [AvgExpense, setAvgExpense] = useState(0);
   const [GraphData, setGraphData] = useState([]);
   const [maxValueGraph, setMaxValueGraph] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const { id } = useLocalSearchParams();
+  const [pocketName, setPocketName] = useState('');
   const mapping_month = {
     '01': 'Jan',
     '02': 'Feb',
@@ -244,13 +247,12 @@ export default function Summary_pocket() {
 
     console.log(session.id)
     console.log(ip)
-
+    setIsLoading(true);
     try {
       const res = await axios.post('http://' + ip + ':8080/summary_pocket', {
         id: session.id,
-       
+        pocket_id: id
       });
- 
       console.log(res.data);
       setSumIncome(res.data.SumIncome);
       setSumExpense(res.data.SumExpense)
@@ -258,11 +260,12 @@ export default function Summary_pocket() {
       setCountExpense(res.data.CountExpense);
       setAvgIncome(res.data.average_money.Income);
       setAvgExpense(res.data.average_money.Expense);
+      setPocketName(res.data.pocket_name);
       const barData = createBarData(res.data.Expense_each_month, res.data.Income_each_month);
       console.log(barData);
       setGraphData(barData);
 
-
+      setIsLoading(false);
 
 
 
@@ -306,7 +309,7 @@ export default function Summary_pocket() {
             textAlign: 'center',
             
           }}>
-          รายรับ-รายจ่าย Pocket ไปเที่ยว
+          รายรับ-รายจ่าย Pocket {pocketName}
         </Text>
         <View
           style={{
@@ -361,8 +364,17 @@ export default function Summary_pocket() {
     )
   }
   return (
+    isLoading ? 
+    <SafeAreaView style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
 
-    <LinearGradient
+        <ActivityIndicator size="large" />
+      </SafeAreaView>
+    :
+    (<LinearGradient
       colors={["#CDFADB", "#38E298"]}
       locations={[0.75, 1]}
       start={{ x: 0.5, y: 0 }}
@@ -394,6 +406,9 @@ export default function Summary_pocket() {
                {renderTitle()}
 
               <ScrollView
+                marginTop= {containerHeight*0.04}
+                width={containerWidth}
+                // backgroundColor='red'
                 horizontal
                 showsHorizontalScrollIndicator={true}
                 contentContainerStyle={{ flexDirection: 'row' }}
@@ -405,9 +420,6 @@ export default function Summary_pocket() {
                 spacing={24}
                 roundedTop
                 roundedBottom
-                // hideRules
-                // xAxisThickness={0}
-                // yAxisThickness={0}
                 yAxisTextStyle={{ color: 'gray' }}
                 noOfSections={3}
                 maxValue={maxValueGraph}
@@ -417,28 +429,28 @@ export default function Summary_pocket() {
               </ScrollView>
             </View>
             <View style={myStyle.containerShow}>
-              <View style={myStyle.box}>
+              <View style={[myStyle.box, { backgroundColor: "#7ba8d1" }]}>
                 <Text style={{ fontSize: 15 }}>รวมเงินเข้า (บาท)</Text>
-                <Text style={{ fontSize: 15 }}>{SumIncome ?? 'Error'}</Text>
+                <Text style={{ fontSize: 18,textAlign: 'center', alignSelf: 'center' }}>{SumIncome ?? 'Error'}</Text>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
                   <Text style={{ fontSize: 12 }}>รายการ</Text>
-                  <Text style={{ fontSize: 12 }}>{CountIncome ?? 'Error'}</Text>
+                  <Text style={{ fontSize: 14 }}>{CountIncome ?? 'Error'}</Text>
                 </View>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
                   <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
-                  <Text style={{ fontSize: 12 }}>{AvgIncome ?? 'Error'}</Text>
+                  <Text style={{ fontSize: 14 }}>{AvgIncome ?? 'Error'}</Text>
                 </View>
               </View>
-              <View style={myStyle.box}>
+              <View style={[myStyle.box, { backgroundColor: "#eb7d7c" }]}>
                 <Text style={{ fontSize: 15 }}>รวมเงินออก (บาท)</Text>
-                <Text style={{ fontSize: 15 }}>{SumExpense ?? "Error"}</Text>
+                <Text style={{ fontSize: 18, textAlign: 'center', alignSelf: 'center'}}>{SumExpense ?? "Error"}</Text>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
                   <Text style={{ fontSize: 12 }}>รายการ</Text>
-                  <Text style={{ fontSize: 12 }}>{CountExpense ?? 'Error'}</Text>
+                  <Text style={{ fontSize: 14 }}>{CountExpense ?? 'Error'}</Text>
                 </View>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
                   <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
-                  <Text style={{ fontSize: 12 }}>{AvgExpense ?? "Error"}</Text>
+                  <Text style={{ fontSize: 14 }}>{AvgExpense ?? "Error"}</Text>
                 </View>
               </View>
             </View>
@@ -448,6 +460,6 @@ export default function Summary_pocket() {
 
       {/* bottom bar */}
 
-    </LinearGradient>
+    </LinearGradient>)
   );
 }

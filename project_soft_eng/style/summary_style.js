@@ -16,7 +16,7 @@ export const myStyle = StyleSheet.create({
     main_content_box: {
         marginHorizontal: "auto",
         width: "90%",
-        height: "90%",
+        height: "100%",
         overflow: "visible",
         zIndex: 0,
     },
@@ -30,7 +30,7 @@ export const myStyle = StyleSheet.create({
         position: "relative",
         backgroundColor: "white",
         width: "100%",
-        height: "90%",
+        height: "93%",
         borderRadius: 20,
         marginVertical: 25,
         shadowOffset: {
@@ -64,7 +64,7 @@ export const myStyle = StyleSheet.create({
     containerShow: {
         // paddingTop: "30%",
         // backgroundColor: 'red',
-        height: "20%",
+        // height: "20%",
         width: "95%",
         borderRadius: 20,
         margin: "3%",
@@ -74,10 +74,10 @@ export const myStyle = StyleSheet.create({
     },
     box: {
         width: '47%',
-        height: '70%', // ความสูงของ bottom bar
-        backgroundColor: "#DDDDDD", // สีพื้นหลัง
+        // height: '70%', // ความสูงของ bottom bar
+        // backgroundColor: "#4c8cc7", // สีพื้นหลัง
         borderRadius: 20,
-        padding: '2%',
+        padding: '5%',
         // shadowOpacity: 0.25,
         // shadowRadius: 4,
         // elevation: 4, 
