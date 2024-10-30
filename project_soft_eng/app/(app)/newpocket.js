@@ -10,7 +10,7 @@ import {
   ScrollView,
   Alert,
   KeyboardAvoidingView,
-  Platform 
+  Platform,
 } from "react-native";
 import { Checkbox } from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
@@ -24,15 +24,19 @@ import axios from "axios";
 import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
 
+import { useSession } from "../../components/ctx";
+
 const addPocket = () => {
+  const { session } = useSession();
   const [amount, setAmount] = useState("");
-  const [goalAmount, setGoalAmount] = useState("");
+  const [goalAmount, setGoalAmount] = useState(null);
   const [checked, setChecked] = useState(false);
   const [selectedPocket, setSelectedPocket] = useState("");
   const [details, setDetails] = useState("");
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
+  const [selectedImageforshow, setSelectedImageforshow] = useState("");
   const [resdata, setResdata] = useState();
   const option = {
     title: "select Image",
@@ -44,7 +48,57 @@ const addPocket = () => {
     },
   };
 
+  //   const senddata = async () => {
+  //     console.log(amount)
+  //     try {
+  //         const res = await axios.post('http://' + ip + ':8080/createpockets',{userId : session.id , pocketname : amount, goal : goalAmount ,havetarget : checked});
+  //         // setPockets(res.data);
+  //         console.log(res.data);
+  //     } catch (err) {
+  //         console.log("err :", err.message)
+  //     }
+
+  // };
+
+  const senddata = async () => {
+    const formData = new FormData();
+    formData.append('pocketname', amount);
+    formData.append('havetarget', checked);
+    formData.append('userId', session.id);
+    if (goalAmount !== null && goalAmount !== "") {
+      formData.append('goal', goalAmount);
+    }
+  
+    // ตรวจสอบว่ามีการตั้งค่า selectedImage หรือไม่
+    if (selectedImage && selectedImage.uri) {
+      const fileUri = selectedImage.uri;
+      const filename = fileUri.split('/').pop();
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image`;
+  
+      formData.append('image', {
+        uri: fileUri,
+        name: filename,
+        type
+      });
+    }
+  
+    try {
+      const res = await axios.post(`http://${ip}:8080/createpockets`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log(res.data);
+    } catch (err) {
+      console.log('err:', err.message);
+    }
+  };
+
+  
+
   const pickImage = async () => {
+    // console.log(selectedImage)
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
@@ -52,71 +106,13 @@ const addPocket = () => {
     });
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      setSelectedImage(result.assets[0]);
+      setSelectedImageforshow(result.assets[0].uri);
+
       console.log(result.assets[0]);
-      
     }
   };
 
-  const uploadImage = async (img) => {
-    const formData = new FormData();
-    formData.append("files", {
-      uri: img.uri,
-      type: img.mimeType,
-      name: "image.png",
-      fileName: "image",
-    });
-    try {
-      const response = await fetch(
-        "https://api.slipok.com/api/line/apikey/30772",
-        {
-          method: "POST",
-          headers: {
-            "x-authorization": "SLIPOKPR1FEHV",
-            "Content-Type": "multipart/form-data",
-          },
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Upload failed:", errorData);
-        Alert.alert(
-          "Upload failed",
-          errorData.message || "Something went wrong."
-        );
-        return;
-      }
-
-      const res = await response.json();
-      console.log("Upload successful:", res.data);
-      console.log("Upload :", res.data.amount);
-      setResdata(res.data);
-      setAmount(String(res.data.amount));
-      Alert.alert(
-        "Upload successful",
-        "Your image has been uploaded successfully!"
-      );
-    } catch (error) {
-      console.error("Error:", error.message);
-      Alert.alert(
-        "Upload error",
-        error.message || "An error occurred while uploading."
-      );
-    }
-  };
-
-  const renderLabel = () => {
-    if (value || isFocus) {
-      return (
-        <Text style={[styles.label, isFocus && { color: "blue" }]}>
-          Dropdown label
-        </Text>
-      );
-    }
-    return null;
-  };
   return (
     <LinearGradient
       colors={["#CDFADB", "#38E298"]}
@@ -127,58 +123,58 @@ const addPocket = () => {
     >
       {/* main content */}
       <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ flexGrow: 1 }}
-        style={myStyle.main_content_box}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
       >
-        <View style={myStyle.main_pocket}>
-          <View style={myStyle.container}>
-            <Text style={myStyle.bigtext}>สร้าง Pocket</Text>
-            <TouchableOpacity
-              style={myStyle.imagePlaceholder} 
-              onPress={pickImage}
-            >
-              <Image
-                source={
-                  selectedImage
-                    ? { uri: selectedImage }
-                    : require("../../assets/images/photoicon.png")
-                } // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
-                style={selectedImage ? myStyle.image : myStyle.image_icon}
-              />
-            </TouchableOpacity>
-            <Text style={myStyle.label}>Pocket name</Text>
-            <TextInput
-              style={myStyle.input}
-              value={amount}
-              onChangeText={setAmount}
-              placeholder="ใส้ชื่อของ Pocket"
-              keyboardType="standard"
-            />
-
-            <View style={myStyle.rowcheckbox}>
-              <Checkbox
-                status={checked ? "checked" : "unchecked"}
-                onPress={() => setChecked(!checked)}
-                color="#4CAF50" // สีที่ต้องการ
-              />
-              <Text style={myStyle.goallabel}>ตั้งเป้าหมาย</Text>
-            </View>
-            {checked && (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+          style={myStyle.main_content_box}
+        >
+          <View style={myStyle.main_pocket}>
+            <View style={myStyle.container}>
+              <Text style={myStyle.bigtext}>สร้าง Pocket</Text>
+              <TouchableOpacity
+                style={myStyle.imagePlaceholder}
+                onPress={pickImage}
+              >
+                <Image
+                  source={
+                    selectedImageforshow
+                      ? { uri: selectedImageforshow }
+                      : require("../../assets/images/photoicon.png")
+                  } // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
+                  style={selectedImageforshow ? myStyle.image : myStyle.image_icon}
+                />
+              </TouchableOpacity>
+              <Text style={myStyle.label}>Pocket name</Text>
               <TextInput
                 style={myStyle.input}
-                value={goalAmount}
-                onChangeText={setGoalAmount}
-                placeholder="กรอกเป้าหมาย"
-                keyboardType="numeric"
+                value={amount}
+                onChangeText={setAmount}
+                placeholder="ใส้ชื่อของ Pocket"
+                keyboardType="standard"
               />
-            )}
 
-            {/* <Text style={myStyle.label}>รายละเอียด</Text>
+              <View style={myStyle.rowcheckbox}>
+                <Checkbox
+                  status={checked ? "checked" : "unchecked"}
+                  onPress={() => setChecked(!checked)}
+                  color="#4CAF50" // สีที่ต้องการ
+                />
+                <Text style={myStyle.goallabel}>ตั้งเป้าหมาย</Text>
+              </View>
+              {checked && (
+                <TextInput
+                  style={myStyle.input}
+                  value={goalAmount}
+                  onChangeText={setGoalAmount}
+                  placeholder="กรอกเป้าหมาย"
+                  keyboardType="numeric"
+                />
+              )}
+
+              {/* <Text style={myStyle.label}>รายละเอียด</Text>
             <TextInput
               style={[myStyle.input, myStyle.textArea]}
               value={details}
@@ -187,14 +183,14 @@ const addPocket = () => {
               multiline
               numberOfLines={4}
             /> */}
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
       </KeyboardAvoidingView>
       {/* bottom bar */}
       <View style={myStyle.bottom_barkub}>
         <View>
-          <TouchableOpacity style={myStyle.button}>
+          <TouchableOpacity style={myStyle.button} onPress={senddata}>
             <Text style={myStyle.buttonText}>สร้าง cloud pocket</Text>
           </TouchableOpacity>
         </View>

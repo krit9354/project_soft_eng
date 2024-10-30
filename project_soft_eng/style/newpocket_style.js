@@ -50,7 +50,7 @@ export const myStyle = StyleSheet.create({
     borderRadius: 20,
   },
   imagePlaceholder: {
-    height: 300,
+    height: 250,
     backgroundColor: "#DDDDDD",
     justifyContent: "center",
     alignItems: "center",

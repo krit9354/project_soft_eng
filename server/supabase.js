@@ -9,10 +9,87 @@ const supabase = createClient(supabase_url, supabase_anon_key)
 
 
 const express = require('express');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 const app = express();
 const port = 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.post('/createpockets', upload.single('image'), async (req, res) => {
+  const { pocketname, goal, havetarget, userId } = req.body;
+  let imageUrl = null;
+  const file = req.file;
+
+  if (file) {
+    const fileName = `${userId}-${Date.now()}.jpg`;
+
+    try {
+      
+      const { data, error } = await supabase.storage
+        .from('pocket') 
+        .upload(fileName, file.buffer, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.mimetype
+        });
+
+      if (error) {
+        console.error('Error uploading image:', error.message);
+        return res.status(500).json({ error: error.message });
+      }
+      console.log("File Path in Storage:", data.path);
+      console.log("File Name:", fileName);
+     
+      const { data : {publicUrl} } = supabase.storage
+        .from('pocket')
+        .getPublicUrl(fileName);
+      imageUrl = publicUrl;
+      console.log("Generated Image URL:", imageUrl);
+    } catch (error) {
+      console.error('Error uploading image:', error.message);
+      return res.status(500).json({ error: 'Failed to upload image' });
+    }
+  }
+
+  
+  const { error: insertError } = await supabase
+    .from('pocket')
+    .insert({
+      pocket_name: pocketname,
+      have_target: havetarget,
+      target: goal,
+      user_id: userId,
+      money : 0,
+      image: imageUrl
+    });
+
+  if (insertError) {
+    console.error('Error inserting data into Supabase:', insertError.message);
+    return res.status(500).json({ error: insertError.message });
+  }
+  console.log("Data inserted successfully with Image URL:", imageUrl);
+  res.status(200).json({ message: 'Pocket created', url: imageUrl });
+});
+;
+
+
+// app.post('/createpockets', async (req, res) => {
+//   const  inputdata  = req.body;
+//   console.log(inputdata)
+//   const { error } = await supabase
+//   .from('pocket')
+//   .insert({pocket_name: req.body.pocketname, have_target : req.body.havetarget , target : req.body.goal , user_id : req.body.userId})
+
+
+//   if (error) {
+//     console.error("Error fetching data from Supabase:", error.message);
+//     return res.status(500).json({ error: error.message });
+//   }
+
+//   // console.log(data)
+// });
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

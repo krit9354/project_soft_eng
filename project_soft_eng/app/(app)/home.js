@@ -9,6 +9,7 @@ import { ip } from '../../config';
 import axios from 'axios'
 import { useSession } from '../../components/ctx';
 import { router, Redirect } from 'expo-router';
+
 export default function HomeScreen() {
     const { signOut, session } = useSession();
     const [pockets, setPockets] = useState([])

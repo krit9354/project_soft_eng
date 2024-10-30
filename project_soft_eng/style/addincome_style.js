@@ -109,6 +109,12 @@ export const myStyle = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
+  rowincomeorexpense: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+  },
   bottom_barkub : {
     width : '100%',
     height: 70, // ความสูงของ bottom bar
