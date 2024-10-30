@@ -19,14 +19,9 @@ export default function Summary_pocket() {
   const [CountExpense, setCountExpense] = useState(0);
   const [AvgIncome, setAvgIncome] = useState(0);
   const [AvgExpense, setAvgExpense] = useState(0);
-  const [Search, setSearch] = useState(false);
-  const [Clear, setClear] = useState(false);
   const [GraphData, setGraphData] = useState([]);
   const [maxValueGraph, setMaxValueGraph] = useState(0);
-  const [this_year, setThis_year] = useState(dayjs().year());
-  const [start_year, setStart_year] = useState(dayjs().startOf('year').format('YYYY-MM-DD')); 
-  const [end_year, setEnd_year] = useState(dayjs().endOf('year').format('YYYY-MM-DD')); 
-  const [showHeader, setShowHeader] = useState(false);
+
   const mapping_month = {
     '01': 'Jan',
     '02': 'Feb',
@@ -189,31 +184,11 @@ export default function Summary_pocket() {
   ];
 
 
-  useEffect(() => {
-    if (Search) {
-      fetchData();
-    }
-    setSearch(false);
-  }, [Search]); // Runs only when Search changes to true
 
-  const handlePressSearch = () => {
-    setSearch(true);
-    setShowHeader(true);
-  };
-  useEffect(() => {
-    if (Clear) {
-      fetchData();
-    }
-    setClear(false);
-  }, [Clear]); // Runs only when Search changes to true
 
-  const handlePressClear = () => {
-    setClear(true);
-    setSearch(false);
-    setDateStart(new Date());
-    setDateEnd(new Date());
-    setShowHeader(false);
-  };
+ 
+
+ 
   const createBarData = (expenseData, incomeData) => {
     const monthData = {};
 
@@ -266,23 +241,16 @@ export default function Summary_pocket() {
   };
 
   const fetchData = async () => {
-    console.log(dateStart)
-    console.log(dateEnd)
+
     console.log(session.id)
     console.log(ip)
-    console.log(Search)
+
     try {
       const res = await axios.post('http://' + ip + ':8080/summary_pocket', {
         id: session.id,
-        selectedGroup: selectedGroup,
-        dateStart: dayjs(dateStart).format('YYYY-MM-DD'),
-        dateEnd: dayjs(dateEnd).format('YYYY-MM-DD'),
-        start_year: start_year,
-        end_year: end_year,
-        Search: Search
+       
       });
-      console.log('start',start_year)
-      console.log('end',end_year)
+ 
       console.log(res.data);
       setSumIncome(res.data.SumIncome);
       setSumExpense(res.data.SumExpense)
@@ -297,7 +265,7 @@ export default function Summary_pocket() {
 
 
 
-      console.log(Search)
+
     } catch (err) {
       console.log("err :", err.message)
     }
@@ -310,7 +278,7 @@ export default function Summary_pocket() {
 
 
 
-  const [selectedGroup, setSelectedGroup] = useState("");
+
 
   const [containerWidth, setContainerWidth] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
@@ -325,29 +293,12 @@ export default function Summary_pocket() {
     useShadowColorFromDataset: false // optional
   };
 
-  const [dateStart, setDateStart] = useState(new Date());
-  const [isDateStartPickerVisible, setDateStartPickerVisibility] = useState(false);
-  const showDateStartPicker = () => { setDateStartPickerVisibility(true); };
-  const hideDateStartPicker = () => { setDateStartPickerVisibility(false); };
-  function handleConfirmDateStart(date) {
-    setDateStart(date);
-    hideDateStartPicker();
-  }
-
-  const [dateEnd, setDateEnd] = useState(new Date());
-  const [isDateEndPickerVisible, setDateEndPickerVisibility] = useState(false);
-  const showDateEndPicker = () => { setDateEndPickerVisibility(true); };
-  const hideDateEndPicker = () => { setDateEndPickerVisibility(false); };
-  function handleConfirmDateEnd(date) {
-    setDateEnd(date);
-    hideDateEndPicker();
-  }
+  
 
   const renderTitle = () => {
     return (
-      <View style={{ marginTop:0,height:50,paddingBottom:20  }}>
-       {!showHeader ?
-       (<Text
+      <View style={{ marginTop:0,height:50,paddingBottom:10  }}>
+      <Text
           style={{
             color: 'black',
             fontSize: 20,
@@ -356,16 +307,16 @@ export default function Summary_pocket() {
             
           }}>
           รายรับ-รายจ่าย Pocket ไปเที่ยว
-        </Text>) : null
-      }
+        </Text>
         <View
           style={{
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-evenly',
             // height: 20,
-            backgroundColor: 'white',
+            // backgroundColor: 'yellow',
             paddingTop: 10,
+        
           }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View
@@ -437,11 +388,11 @@ export default function Summary_pocket() {
               paddingTop: 10,
               backgroundColor: '#FFFFFF',
               borderRadius: 10,
-              // paddingHorizontal: 10,
-              // paddingBottom: 40,
+              
               height: containerHeight * 0.5,
             }}>
                {renderTitle()}
+
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={true}
@@ -449,7 +400,7 @@ export default function Summary_pocket() {
               >
              
               <BarChart
-                data={barData}
+                data={GraphData}
                 barWidth={8}
                 spacing={24}
                 roundedTop
@@ -459,8 +410,8 @@ export default function Summary_pocket() {
                 // yAxisThickness={0}
                 yAxisTextStyle={{ color: 'gray' }}
                 noOfSections={3}
-                maxValue={100}
-                style={{ width: 1500, height: 20 }} // ขนาดกราฟ
+                maxValue={maxValueGraph}
+                style={{ width: 1500, height: 20  }} // ขนาดกราฟ
               />
 
               </ScrollView>
