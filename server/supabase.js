@@ -163,6 +163,21 @@ app.post('/total_money', async (req, res) => {
 });
 
 
+app.get('/user_data', async (req, res) => {
+  // const { userId } = req.body;
+  // console.log(userId)
+  const { data, error } = await supabase
+  .from('profiles')
+  .select("username,avatar_url,name_bank")
+  // .eq("id",userId)
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+  console.log(data)
+  res.send(data)
+});
+
 
 app.post('/login', async (req, res) => {
   // console.log(req.body);
