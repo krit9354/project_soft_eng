@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, Dimensions,ActivityIndicator } from 'react-native';
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useSession } from '../../components/ctx';
 import { Use } from 'react-native-svg';
 import { ip } from '../../config';
-
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 export default function Summary_pocket() {
   const { session } = useSession();
   const [SumIncome, setSumIncome] = useState(0);
@@ -21,7 +21,7 @@ export default function Summary_pocket() {
   const [AvgExpense, setAvgExpense] = useState(0);
   const [GraphData, setGraphData] = useState([]);
   const [maxValueGraph, setMaxValueGraph] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(false);
   const mapping_month = {
     '01': 'Jan',
     '02': 'Feb',
@@ -244,7 +244,7 @@ export default function Summary_pocket() {
 
     console.log(session.id)
     console.log(ip)
-
+    setIsLoading(true);
     try {
       const res = await axios.post('http://' + ip + ':8080/summary_pocket', {
         id: session.id,
@@ -262,7 +262,7 @@ export default function Summary_pocket() {
       console.log(barData);
       setGraphData(barData);
 
-
+      setIsLoading(false);
 
 
 
@@ -361,8 +361,17 @@ export default function Summary_pocket() {
     )
   }
   return (
+    isLoading ? 
+    <SafeAreaView style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
 
-    <LinearGradient
+        <ActivityIndicator size="large" />
+      </SafeAreaView>
+    :
+    (<LinearGradient
       colors={["#CDFADB", "#38E298"]}
       locations={[0.75, 1]}
       start={{ x: 0.5, y: 0 }}
@@ -394,6 +403,9 @@ export default function Summary_pocket() {
                {renderTitle()}
 
               <ScrollView
+                marginTop= {containerHeight*0.04}
+                
+                // backgroundColor='red'
                 horizontal
                 showsHorizontalScrollIndicator={true}
                 contentContainerStyle={{ flexDirection: 'row' }}
@@ -405,9 +417,6 @@ export default function Summary_pocket() {
                 spacing={24}
                 roundedTop
                 roundedBottom
-                // hideRules
-                // xAxisThickness={0}
-                // yAxisThickness={0}
                 yAxisTextStyle={{ color: 'gray' }}
                 noOfSections={3}
                 maxValue={maxValueGraph}
@@ -448,6 +457,6 @@ export default function Summary_pocket() {
 
       {/* bottom bar */}
 
-    </LinearGradient>
+    </LinearGradient>)
   );
 }

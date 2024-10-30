@@ -223,6 +223,8 @@ app.post('/summary', async (req, res) => {
   // console.log("Dataที่กรุ๊ป",groupedArray);
   // console.log(data)
   if (Search == true) {
+    // let average_moneyIncome = 0;
+    // let average_moneyExpense = 0;
     const groupedDataIncome = IncomeDataSearch.reduce((acc, transaction) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
