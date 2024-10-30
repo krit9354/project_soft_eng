@@ -65,8 +65,8 @@ export default function Login() {
         value={password}
        />
       
-        <TouchableOpacity style={myStyle.add_pocket}>
-          <Text onPress={login} >Login</Text>
+        <TouchableOpacity style={myStyle.add_pocket} onPress={login} >
+          <Text >Login</Text>
         </TouchableOpacity>
            </View>
 
