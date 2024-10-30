@@ -8,6 +8,9 @@ import { ip } from '../../config';
 import axios from 'axios'
 import { useSession } from '../../components/ctx';
 import { router, Redirect } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 export default function HomeScreen() {
     const { signOut, session } = useSession();
     const [pockets, setPockets] = useState([])
@@ -15,8 +18,12 @@ export default function HomeScreen() {
     const [pockets_element, setPockets_element] = useState()
 
 
-    useEffect(() => {
-        // ฟังก์ชันในการดึงข้อมูลจาก API
+    useFocusEffect(
+        useCallback(() => {
+          fetchData();
+        }, [])
+      );
+
         const fetchData = async () => {
             try {
                 const res = await axios.post('http://' + ip + ':8080/pockets',{userId : session.id});
@@ -33,9 +40,7 @@ export default function HomeScreen() {
                 console.log("err :", err.message)
             }
         };
-        // console.log(session);
-        fetchData();
-    }, []);
+
 
     useEffect(() => {
         setPockets_element(pockets.map((pocket, index) => {
