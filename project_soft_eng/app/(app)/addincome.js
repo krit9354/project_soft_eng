@@ -155,12 +155,15 @@ const NewIncomeScreen = () => {
             <View style={myStyle.pickerContainer}>
               <Dropdown style={myStyle.picker}
                 data={data}
-                
+                textStyle={{
+                    marginLeft: 10, // ระยะห่างของข้อความจากขอบซ้าย
+                  }}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? "Select item" : "..."}
-
+                placeholder={!isFocus ? "เลือก Pocket" : "..."}
+                placeholderStyle={{ color: "gray" }} 
+                selectedTextStyle={{ color: "black" }} 
                 value={value}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}

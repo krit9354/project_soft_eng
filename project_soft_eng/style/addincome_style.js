@@ -38,12 +38,17 @@ export const myStyle = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 20,
     backgroundColor: "#DDDDDD",
-    flex: 0.3,
+    // flex: 0.3,
+    height: 50,
   },
   picker: {
-    height: 50,
+    height: 70,
     width: "100%",
     flex: 1,
+    padding: 10, // ระยะห่างภายใน
+    borderWidth: 0, // ทำให้ขอบหายไป
+    
+    borderRadius: 50,
   },
   textArea: {
     height: 100,
