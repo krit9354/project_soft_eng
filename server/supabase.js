@@ -113,21 +113,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.post('/pockets', async (req, res) => {
-  const { userId } = req.body;
-  console.log(userId)
-  const { data, error } = await supabase
-  .from('pocket')
-  .select("*")
-  .eq("user_id",userId)
-  if (error) {
-    console.error("Error fetching data from Supabase:", error.message);
-    return res.status(500).json({ error: error.message });
-  }
-  console.log(data)
-  res.send(data)
-});
-
 app.post('/transactionid', async (req, res) => {
   const  {pocketid}  = req.body;
 
@@ -142,6 +127,21 @@ app.post('/transactionid', async (req, res) => {
   }
 
   console.log(pocketid)
+  res.send(data)
+});
+
+app.post('/pockets', async (req, res) => {
+  const { userId } = req.body;
+  console.log(userId)
+  const { data, error } = await supabase
+  .from('pocket')
+  .select("*")
+  .eq("user_id",userId)
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+  console.log(data)
   res.send(data)
 });
 

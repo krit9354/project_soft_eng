@@ -23,6 +23,8 @@ import { router, Redirect } from 'expo-router';
 
 const Setting = () => {
   const { signOut, session } = useSession();
+  const [username, setUsername] = useState(session.user_metadata.username);
+  const [bankName, setBankName] = useState();
   return (
     <LinearGradient
       colors={["#CDFADB", "#38E298"]}
@@ -32,23 +34,46 @@ const Setting = () => {
       style={myStyle.bg}
     >
       {/* main content */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
+      <View
         style={myStyle.main_content_box}
       >
+        <Text style={myStyle.bigtext}>การตั้งค่า</Text>
+        <Text style={myStyle.label}>รูปโปรไฟล์</Text>
         <TouchableOpacity style={myStyle.imagePlaceholder}>
-              <Image
-                source={require("../../assets/images/photoicon.png")} // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
-                style={myStyle.image}
-              />
+          <Image
+            source={require("../../assets/images/photoicon.png")} // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
+            style={myStyle.image}
+          />
         </TouchableOpacity>
-        <TouchableOpacity style={myStyle.logout_button} onPress={() => {signOut();
+
+        <Text style={myStyle.label}>username</Text>
+        <TextInput
+          style={myStyle.input}
+          value={username}
+          onChangeText={setUsername}
+          placeholder="username"
+        />
+
+        <Text style={myStyle.label}>ชื่อในบัญชี (ไม่เอานามสกุล)</Text>
+        <TextInput
+          style={myStyle.input}
+          value={bankName}
+          onChangeText={setBankName}
+          placeholder="Bank name"
+        />
+
+        <TouchableOpacity style={myStyle.save_button}>
+          <Text style={{ color: "white" }}>save</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={myStyle.logout_button} onPress={() => {
+          signOut();
           router.push("login");
         }}>
-          <Text style={{color:"white"}}>logout</Text>
+          <Text style={{ color: "white" }}>logout</Text>
         </TouchableOpacity>
-        
-      </ScrollView>
+
+      </View>
 
       {/* bottom bar */}
       <BottomBar />
