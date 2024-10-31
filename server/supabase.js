@@ -17,21 +17,83 @@ const port = 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/get-pockets', async (req, res) => {
-  const userId = req.query.userId; // รับ user_id จาก query parameter
+app.post('/get-pockets', async (req, res) => {
+  const { userId } = req.body; 
+  
 
-  // Query ข้อมูล pocket_name จากฐานข้อมูล
-  const { data, error } = await supabase
-    .from('pocket')
-    .select('pocket_name')
-    .eq('user_id', userId);
+  try {
+    const { data, error } = await supabase
+      .from('pocket') 
+      .select('pocket_name, id')
+      .eq('user_id', userId);
 
-  if (error) {
+    if (error) {
+      throw error;
+    }
+    
+    res.status(200).json(data); 
+  } catch (error) {
     console.error('Error fetching pockets:', error.message);
-    return res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/create-transaction', upload.single('image'), async (req, res) => {
+  const { amount, pocket_id, details, is_income , userId} = req.body;
+  let imageUrl = null;
+  let haveimgkub = false;
+  const file = req.file;
+
+  // ตรวจสอบและอัปโหลดรูปภาพ
+  if (file && userId) {
+    const fileName = `${userId}-${Date.now()}.jpg`;
+
+    try {
+      // อัปโหลดรูปภาพไปยัง Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('transaction') // แก้ชื่อ bucket ให้ตรงตามที่คุณตั้งใน Supabase
+        .upload(fileName, file.buffer, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.mimetype,
+        });
+
+      if (error) {
+        console.error('Error uploading image:', error.message);
+        return res.status(500).json({ error: error.message });
+      }
+
+      // สร้าง URL สาธารณะสำหรับไฟล์ที่อัปโหลด
+      const { data: { publicUrl } } = supabase.storage
+        .from('transaction')
+        .getPublicUrl(fileName);
+      imageUrl = publicUrl;
+      haveimgkub = true;
+      console.log("Generated Image URL:", imageUrl);
+    } catch (error) {
+      console.error('Error uploading image:', error.message);
+      return res.status(500).json({ error: 'Failed to upload image' });
+    }
   }
 
-  res.status(200).json(data); // ส่งข้อมูล pocket_name กลับไปในรูป JSON
+  // บันทึกข้อมูล transaction ลงในฐานข้อมูล
+  const { error: insertError } = await supabase
+    .from('transaction') // ชื่อ table ที่ใช้เก็บ transaction
+    .insert({
+      money: parseFloat(amount),
+      pocket_id: pocket_id,
+      event: details,
+      is_income: is_income,
+      img: imageUrl, // บันทึก URL ของรูปภาพ (ถ้ามี)
+      have_img : haveimgkub
+    });
+
+  if (insertError) {
+    console.error('Error inserting data into Supabase:', insertError.message);
+    return res.status(500).json({ error: insertError.message });
+  }
+  console.log("Data inserted successfully with Image URL:", imageUrl);
+  res.status(200).json({ message: 'Transaction created', url: imageUrl });
 });
 
 
