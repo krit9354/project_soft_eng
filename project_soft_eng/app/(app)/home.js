@@ -43,8 +43,8 @@ export default function HomeScreen() {
             return <PocketCard key={index} props={pocket} />
         }))
     }, [pockets])
-
-
+    console.log("avatar-",session)
+    console.log("avatar--",session.user_data.avatar_url)
 
     return (
         isLoading ?
@@ -68,15 +68,11 @@ export default function HomeScreen() {
                 <View style={myStyle.top_bar}>
                     <View style={myStyle.top_bar_content}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image source={require("../../assets/images/nongP.jpg")} style={{ width: 70, height: 70, borderRadius: 35 }} />
+                            <Image style={myStyle.profile} source={session.user_data.avatar_url?{ uri: session.user_data.avatar_url }:(require("../../assets/images/avatar.png"))}/>
                             <Text style={{ fontSize: 20, marginLeft: 10 }}>{session?.user_metadata?.username ?? "ERROR"}</Text>
-                            {/* <Text onPress={() => {
-                            
-                            signOut();
-                        }}>Sign out</Text> */}
                         </View>
                         <View style={{ alignItems: 'center' }} >
-                            <Image source={require("../../assets/images/history.png")} style={{ width: 30, height: 30, overflow: 'visible' }} />
+                            <Image source={require("../../assets/images/history.png")} />
                             <Text>history</Text>
                         </View>
                     </View>
