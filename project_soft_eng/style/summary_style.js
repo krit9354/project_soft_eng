@@ -67,7 +67,7 @@ export const myStyle = StyleSheet.create({
         // height: "20%",
         width: "95%",
         borderRadius: 20,
-        margin: "3%",
+        // margin: "3%",
         justifyContent: 'space-around',
         flexDirection: 'row',
         alignItems: 'center',
@@ -77,7 +77,7 @@ export const myStyle = StyleSheet.create({
         // height: '70%', // ความสูงของ bottom bar
         // backgroundColor: "#4c8cc7", // สีพื้นหลัง
         borderRadius: 20,
-        padding: '5%',
+        padding: '4%',
         // shadowOpacity: 0.25,
         // shadowRadius: 4,
         // elevation: 4, 

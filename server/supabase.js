@@ -209,7 +209,7 @@ app.post('/pockets', async (req, res) => {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
   }
-  console.log(data)
+
   res.send(data)
 });
 
@@ -266,12 +266,21 @@ app.post('/register', async (req, res) => {
       },
     }
   );
+
   if (error) {
     console.log(error);
     res.status(500)
     // throw error
   } else {
-    console.log(data);
+    console.log("id user",data.user.id);
+    
+    const { error } = await supabase
+      .from('pocket')
+      .insert({pocket_name: 'main',user_id: data.user.id, money: 0})
+    if (error) {
+      console.log("error of insert pocket",error);
+      throw error
+    }
     res.send(data);
   }
 });
