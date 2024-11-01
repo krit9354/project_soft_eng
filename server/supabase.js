@@ -205,40 +205,58 @@ app.post('/pockets', async (req, res) => {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
   }
-  console.log(data)
+
   res.send(data)
 });
 
-// app.post('/total_money', async (req, res) => {
-//   console.log("total_money")
-//   const { userId } = req.body;
-//   const { data, error } = await supabase
-//   .from('profiles')
-//   .select("main_pocket")
-//   .eq("id",userId)
-//   .single()
+app.post('/transactionid', async (req, res) => {
+  const  {pocketid}  = req.body;
 
-//   if (error) {
-//     console.error("Error fetching data from Supabase:", error.message);
-//     return res.status(500).json({ error: error.message });
-//   }
-
-//   console.log(data)
-//   res.send(data)
-// });
-
-
-app.get('/user_data', async (req, res) => {
-  // const { userId } = req.body;
-  // console.log(userId)
   const { data, error } = await supabase
-  .from('profiles')
-  .select("username,avatar_url,name_bank")
-  // .eq("id",userId)
+  .from('transaction')
+  .select("*")
+  .eq("pocket_id",pocketid)
+
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
   }
+
+  
+  res.send(data)
+});
+
+app.post('/pocketpocket', async (req, res) => {
+  const  {pocketid}  = req.body;
+
+  const { data, error } = await supabase
+  .from('pocket')
+  .select("*")
+  .eq("id",pocketid)
+  .single()
+
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+
+  console.log(pocketid)
+  res.send(data)
+});
+
+app.post('/total_money', async (req, res) => {
+  const { userId } = req.body;
+  const { data, error } = await supabase
+  .from('pocket')
+  .select("money.sum()")
+  .eq("user_id",userId)
+  .single()
+
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+
   console.log(data)
   res.send(data)
 });
