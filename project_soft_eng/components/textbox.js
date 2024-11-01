@@ -6,23 +6,23 @@ export default function Textbox(item) {
   return (
     <View style={[items.is_income ? myStyle.mincard : myStyle.card]}>
       <View style={myStyle.container}>
-        <View style={{flexDirection : 'row',alignItems:"center"}}>
-          <Text>{items.money}</Text>
-          {items.target && <Text style={{fontSize:12}}> / {items.Target}</Text>}
-          <Text> ฿</Text>
+        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "center" }}>
+          <Text style={{ marginTop:"2%"}}>{items.is_income ? "-"+items.money : items.money}฿</Text>
+          {items.target && <Text style={{ fontSize: 12 }}> / {items.Target}</Text>}
+          
         </View>
         {items.event != null && <View>
-         <Text> {items.event}</Text>
-          </View>}
-        
-        
+          <Text> {items.event}</Text>
+        </View>}
+
+
       </View>
-       {items.have_img  && <View>
-        <Image 
-       source={{ uri: items.Image}}
-      style={myStyle.image}
-      />
-          </View>}
+      {items.have_img && <View>
+        <Image
+          source={{ uri: items.img }}
+           style={myStyle.image}
+        />
+      </View>}
     </View>
   );
 }

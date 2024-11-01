@@ -14,11 +14,14 @@ import {
 ;
 import { myStyle } from "../../style/addincome_style";
 import { LinearGradient } from "expo-linear-gradient";
-
+import { useEffect } from "react";
 import axios from "axios";
 import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
 import { Button } from "react-native-paper";
+import { ip } from "../../config";
+import { useSession } from "../../components/ctx";
+
 
 const data = [
   { label: "Item 1", value: "1" },
@@ -33,13 +36,19 @@ const data = [
 
 const NewIncomeScreen = () => {
   const [amount, setAmount] = useState("");
+  const [pocketId, setPocketId] = useState(null);
   const [selectedPocket, setSelectedPocket] = useState("");
-  const [details, setDetails] = useState("");
+  const [details, setDetails] = useState(null);
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
+  const [selectedImageforshow, setSelectedImageforshow] = useState("");
   const [resdata, setResdata] = useState();
   const [is_income, setIs_income] = useState(true);
+  const [pockets, setPockets] = useState([]);
+  const { session } = useSession();
+
+  
   const option = {
     title: "select Image",
     type: "library",
@@ -59,7 +68,7 @@ const NewIncomeScreen = () => {
         });
         const formattedData = res.data.map((item) => ({
           label: item.pocket_name,
-          value: item.pocket_name
+          value: item.id
         }));
         setPockets(formattedData);
       } catch (err) {
@@ -69,6 +78,8 @@ const NewIncomeScreen = () => {
     fetchPockets();
   }, []);
 
+
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -77,11 +88,51 @@ const NewIncomeScreen = () => {
     });
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      setSelectedImage(result.assets[0]);
+      setSelectedImageforshow(result.assets[0].uri)
       console.log(result.assets[0]);
     }
   };
 
+  const Submit = async () => {
+    if (!amount || !pocketId) {
+      Alert.alert("Error", "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("amount", amount);
+      formData.append("pocket_id", pocketId);
+      formData.append("details", details ? details : null);
+      formData.append("is_income", is_income);
+      formData.append("userId", session.id)
+      
+
+      if (selectedImage && selectedImage.uri) {
+        const fileUri = selectedImage.uri;
+        const filename = fileUri.split('/').pop();
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : `image`;
+    
+        formData.append('image', {
+          uri: fileUri,
+          name: filename,
+          type
+        });
+      }
+
+      const res = await axios.post(`http://${ip}:8080/create-transaction`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย");
+    } catch (err) {
+      console.error("Error submitting data:", err.message);
+      Alert.alert("Error", "ไม่สามารถบันทึกข้อมูลได้");
+    }
+  };
   return (
     <LinearGradient
       colors={["#CDFADB", "#38E298"]}
@@ -140,9 +191,9 @@ const NewIncomeScreen = () => {
               <View style={myStyle.pickerContainer}>
                 <Dropdown
                   style={myStyle.picker}
-                  data={data}
+                  data={pockets}
                   textStyle={{
-                    marginLeft: 10, // ระยะห่างของข้อความจากขอบซ้าย
+                    marginLeft: 10, 
                   }}
                   maxHeight={300}
                   labelField="label"
@@ -154,7 +205,7 @@ const NewIncomeScreen = () => {
                   onFocus={() => setIsFocus(true)}
                   onBlur={() => setIsFocus(false)}
                   onChange={(item) => {
-                    setValue(item.value);
+                    setPocketId(item.value);
                     setIsFocus(false);
                   }}
                 />
@@ -171,14 +222,14 @@ const NewIncomeScreen = () => {
               />
 
               <Text style={myStyle.label}>รูป</Text>
-              <TouchableOpacity style={myStyle.imagePlaceholder}>
+              <TouchableOpacity onPress={pickImage} style={myStyle.imagePlaceholder}>
                 <Image
                   source={
-                    selectedImage
-                      ? { uri: selectedImage }
+                    selectedImageforshow
+                      ? { uri: selectedImageforshow }
                       : require("../../assets/images/photoicon.png")
-                  } // เพิ่มรูปตาม URL หรือใช้โค้ดเพื่อให้ผู้ใช้เลือกรูป
-                  style={selectedImage ? myStyle.image : myStyle.image_icon}
+                  } 
+                  style={selectedImageforshow ? myStyle.image : myStyle.image_icon}
                 />
               </TouchableOpacity>
             </View>
@@ -188,7 +239,7 @@ const NewIncomeScreen = () => {
       {/* bottom bar */}
       <View style={myStyle.bottom_barkub}>
         <View>
-          <TouchableOpacity style={myStyle.button} onPress={pickImage}>
+          <TouchableOpacity style={myStyle.button} onPress={Submit}>
             <Text style={myStyle.buttonText}>ยืนยัน</Text>
           </TouchableOpacity>
         </View>
