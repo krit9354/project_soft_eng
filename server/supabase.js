@@ -177,21 +177,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.post('/pockets', async (req, res) => {
-  const { userId } = req.body;
-  console.log(userId)
-  const { data, error } = await supabase
-  .from('pocket')
-  .select("*")
-  .eq("user_id",userId)
-  if (error) {
-    console.error("Error fetching data from Supabase:", error.message);
-    return res.status(500).json({ error: error.message });
-  }
-  console.log(data)
-  res.send(data)
-});
-
 app.post('/transactionid', async (req, res) => {
   const  {pocketid}  = req.body;
 
@@ -209,27 +194,58 @@ app.post('/transactionid', async (req, res) => {
   res.send(data)
 });
 
-app.post('/total_money', async (req, res) => {
+app.post('/pockets', async (req, res) => {
   const { userId } = req.body;
+  console.log(userId)
   const { data, error } = await supabase
   .from('pocket')
-  .select("money.sum()")
+  .select("*")
   .eq("user_id",userId)
-  .single()
-
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
   }
+  console.log(data)
+  res.send(data)
+});
 
+// app.post('/total_money', async (req, res) => {
+//   console.log("total_money")
+//   const { userId } = req.body;
+//   const { data, error } = await supabase
+//   .from('profiles')
+//   .select("main_pocket")
+//   .eq("id",userId)
+//   .single()
+
+//   if (error) {
+//     console.error("Error fetching data from Supabase:", error.message);
+//     return res.status(500).json({ error: error.message });
+//   }
+
+//   console.log(data)
+//   res.send(data)
+// });
+
+
+app.get('/user_data', async (req, res) => {
+  // const { userId } = req.body;
+  // console.log(userId)
+  const { data, error } = await supabase
+  .from('profiles')
+  .select("username,avatar_url,name_bank")
+  // .eq("id",userId)
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
   console.log(data)
   res.send(data)
 });
 
 
-
 app.post('/login', async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   const { data, error } = await supabase.auth.signInWithPassword({
     email: req.body.email,
     password: req.body.password,
