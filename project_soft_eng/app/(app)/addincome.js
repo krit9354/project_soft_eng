@@ -31,7 +31,7 @@ const NewIncomeScreen = () => {
   const [data, setData] = useState("");
   const [selectedImageforshow, setSelectedImageforshow] = useState("");
   const [resdata, setResdata] = useState();
-  const [is_income, setIs_income] = useState(true);
+  const [is_income, setIs_income] = useState(null);
   const [pockets, setPockets] = useState([]);
   const { session } = useSession();
 
@@ -120,7 +120,9 @@ const NewIncomeScreen = () => {
 
       const res = await response.json();
       console.log("Upload successful:", res.data);
-      setAmount(res.data.paidLocalAmount);
+      
+      setAmount(String( res.data.amount));
+      console.log(res.data.amount);
       
       
       if(session?.user_data?.name_bank !== null){
@@ -240,7 +242,7 @@ const NewIncomeScreen = () => {
                   mode="contained"
                   onPress={() => setIs_income(true)}
                   style={{ marginHorizontal: 10 }}
-                  buttonColor={is_income ? "#38E298" : "#CDFADB"}
+                  buttonColor={is_income === null ? "#CDFADB" : is_income ? "#38E298" : "#CDFADB"}
                   textColor={is_income ? "#ffffff" : "#ffffff"}
                 >
                   รายรับ
@@ -249,7 +251,8 @@ const NewIncomeScreen = () => {
                   mode="contained"
                   onPress={() => setIs_income(false)}
                   style={{ marginHorizontal: 10 }}
-                  buttonColor={!is_income ? "#FF5A5A" : "#FDC5C5"}
+                  buttonColor={is_income === null ? "#FDC5C5" : !is_income ? "#FF5A5A" : "#FDC5C5"}
+
                   textColor={!is_income ? "#ffffff" : "#ffffff"}
                 >
                   รายจ่าย

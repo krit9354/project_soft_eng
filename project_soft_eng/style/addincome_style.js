@@ -55,7 +55,8 @@ export const myStyle = StyleSheet.create({
     borderRadius: 20,
   },
   imagePlaceholder: {
-    height: 100,
+    // height: 100,
+    width: "100%",
     backgroundColor: "#DDDDDD",
     justifyContent: "center",
     alignItems: "center",

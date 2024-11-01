@@ -45,15 +45,6 @@ const transfermoney = () => {
   const [moneyforshow, setMoneyforshow] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (pockets_send.length > 0 && pocketId) {
-      setPocketId_send(pocketId);
-      const selectedPocket = pockets_send.find((pocket) => pocket.value === pocketId);
-      if (selectedPocket) {
-        setMoneyforshow(selectedPocket.moneyamount);
-      }
-    }
-  }, [pockets_send, pocketId]);
 
   useEffect(() => {
     const fetchPockets = async () => {
@@ -71,8 +62,8 @@ const transfermoney = () => {
         setPockets_re(formattedData);
 
         if (pocketId) {
-          setPocketId_send(pocketId);
-          const selectedPocket = formattedData.find((pocket) => pocket.value === pocketId);
+          setPocketId_send(Number(pocketId));
+          const selectedPocket = formattedData.find((pocket) => pocket.value == pocketId);
           if (selectedPocket) {
             setMoneyforshow(selectedPocket.moneyamount);
           }
