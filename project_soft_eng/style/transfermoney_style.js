@@ -53,6 +53,7 @@ export const myStyle = StyleSheet.create({
   textArea: {
     height: 100,
     borderRadius: 20,
+    
   },
   imagePlaceholder: {
     height: 100,
@@ -90,6 +91,7 @@ export const myStyle = StyleSheet.create({
     height: "90%",
     overflow: "visible",
     zIndex: 0,
+    flex: 1
   },
   main_pocket: {
     position: "relative",
@@ -109,11 +111,23 @@ export const myStyle = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
-  rowincomeorexpense: {
+  moneyamount: {
+    position: "relative",
+    backgroundColor: "white",
+    width: "100%",
+    height: "13%",
+    borderRadius: 20,
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
-    marginBottom: 8,
+    marginVertical: 25,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
   },
   bottom_barkub : {
     width : '100%',

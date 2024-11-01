@@ -9,28 +9,172 @@ const supabase = createClient(supabase_url, supabase_anon_key)
 
 
 const express = require('express');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 const app = express();
 const port = 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.post('/get-pockets', async (req, res) => {
+  const { userId } = req.body; 
+  
+
+  try {
+    const { data, error } = await supabase
+      .from('pocket') 
+      .select('pocket_name, id')
+      .eq('user_id', userId);
+
+    if (error) {
+      throw error;
+    }
+    
+    res.status(200).json(data); 
+  } catch (error) {
+    console.error('Error fetching pockets:', error.message);
+    res.status(500).json({ error: error.message });
+  }
 });
 
-app.post('/pockets', async (req, res) => {
-  const { userId } = req.body;
-  console.log(userId)
-  const { data, error } = await supabase
-    .from('pocket')
-    .select("*")
-    .eq("user_id", userId)
-  if (error) {
-    console.error("Error fetching data from Supabase:", error.message);
-    return res.status(500).json({ error: error.message });
+app.post('/create-transaction', upload.single('image'), async (req, res) => {
+  const { amount, pocket_id, details, is_income , userId} = req.body;
+  let imageUrl = null;
+  let haveimgkub = false;
+  const detailsValue = (details === "null" || details === "") ? null : details;
+  console.log("Details Value:", details);
+  const file = req.file;
+
+  
+  if (file && userId) {
+    const fileName = `${userId}-${Date.now()}.jpg`;
+
+    try {
+      
+      const { data, error } = await supabase.storage
+        .from('transaction') 
+        .upload(fileName, file.buffer, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.mimetype,
+        });
+
+      if (error) {
+        console.error('Error uploading image:', error.message);
+        return res.status(500).json({ error: error.message });
+      }
+
+    
+      const { data: { publicUrl } } = supabase.storage
+        .from('transaction')
+        .getPublicUrl(fileName);
+      imageUrl = publicUrl;
+      haveimgkub = true;
+      console.log("Generated Image URL:", imageUrl);
+    } catch (error) {
+      console.error('Error uploading image:', error.message);
+      return res.status(500).json({ error: 'Failed to upload image' });
+    }
   }
-  console.log(data)
-  res.send(data)
+
+  
+  const { error: insertError } = await supabase
+    .from('transaction') 
+    .insert({
+      money: parseFloat(amount),
+      pocket_id: pocket_id,
+      event: detailsValue,
+      is_income: is_income,
+      img: imageUrl, 
+      have_img : haveimgkub
+    });
+
+  if (insertError) {
+    console.error('Error inserting data into Supabase:', insertError.message);
+    return res.status(500).json({ error: insertError.message });
+  }
+  console.log("Data inserted successfully with Image URL:", imageUrl);
+  res.status(200).json({ message: 'Transaction created', url: imageUrl });
+});
+
+
+app.post('/createpockets', upload.single('image'), async (req, res) => {
+  const { pocketname, goal, havetarget, userId } = req.body;
+  let imageUrl = null;
+  const file = req.file;
+
+  if (file) {
+    const fileName = `${userId}-${Date.now()}.jpg`;
+
+    try {
+      
+      const { data, error } = await supabase.storage
+        .from('pocket') 
+        .upload(fileName, file.buffer, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.mimetype
+        });
+
+      if (error) {
+        console.error('Error uploading image:', error.message);
+        return res.status(500).json({ error: error.message });
+      }
+      console.log("File Path in Storage:", data.path);
+      console.log("File Name:", fileName);
+     
+      const { data : {publicUrl} } = supabase.storage
+        .from('pocket')
+        .getPublicUrl(fileName);
+      imageUrl = publicUrl;
+      console.log("Generated Image URL:", imageUrl);
+    } catch (error) {
+      console.error('Error uploading image:', error.message);
+      return res.status(500).json({ error: 'Failed to upload image' });
+    }
+  }
+
+  
+  const { error: insertError } = await supabase
+    .from('pocket')
+    .insert({
+      pocket_name: pocketname,
+      have_target: havetarget,
+      target: goal,
+      user_id: userId,
+      money : 0,
+      image: imageUrl
+    });
+
+  if (insertError) {
+    console.error('Error inserting data into Supabase:', insertError.message);
+    return res.status(500).json({ error: insertError.message });
+  }
+  console.log("Data inserted successfully with Image URL:", imageUrl);
+  res.status(200).json({ message: 'Pocket created', url: imageUrl });
+});
+;
+
+
+// app.post('/createpockets', async (req, res) => {
+//   const  inputdata  = req.body;
+//   console.log(inputdata)
+//   const { error } = await supabase
+//   .from('pocket')
+//   .insert({pocket_name: req.body.pocketname, have_target : req.body.havetarget , target : req.body.goal , user_id : req.body.userId})
+
+
+//   if (error) {
+//     console.error("Error fetching data from Supabase:", error.message);
+//     return res.status(500).json({ error: error.message });
+//   }
+
+//   // console.log(data)
+// });
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
 });
 
 app.post('/transactionid', async (req, res) => {
@@ -50,33 +194,58 @@ app.post('/transactionid', async (req, res) => {
   res.send(data)
 });
 
-app.post('/total_money', async (req, res) => {
+app.post('/pockets', async (req, res) => {
   const { userId } = req.body;
+  console.log(userId)
   const { data, error } = await supabase
-    .from('pocket')
-    .select("money")
-    .eq("user_id", userId)
-
+  .from('pocket')
+  .select("*")
+  .eq("user_id",userId)
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
   }
-
   console.log(data)
+  res.send(data)
+});
 
-  let sum = 0;
-  for (let i = 0; i < data.length; i++) {
-    sum += data[i].money
+// app.post('/total_money', async (req, res) => {
+//   console.log("total_money")
+//   const { userId } = req.body;
+//   const { data, error } = await supabase
+//   .from('profiles')
+//   .select("main_pocket")
+//   .eq("id",userId)
+//   .single()
+
+//   if (error) {
+//     console.error("Error fetching data from Supabase:", error.message);
+//     return res.status(500).json({ error: error.message });
+//   }
+
+//   console.log(data)
+//   res.send(data)
+// });
+
+
+app.get('/user_data', async (req, res) => {
+  // const { userId } = req.body;
+  // console.log(userId)
+  const { data, error } = await supabase
+  .from('profiles')
+  .select("username,avatar_url,name_bank")
+  // .eq("id",userId)
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
   }
-
-  console.log(sum)
-  res.status(200).json({ total: sum });
+  console.log(data)
+  res.send(data)
 });
 
 
-
 app.post('/login', async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   const { data, error } = await supabase.auth.signInWithPassword({
     email: req.body.email,
     password: req.body.password,
