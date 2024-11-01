@@ -28,7 +28,7 @@ const NewIncomeScreen = () => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
-  const [data, setData] = useState('');
+  const [data, setData] = useState("");
   const [selectedImageforshow, setSelectedImageforshow] = useState("");
   const [resdata, setResdata] = useState();
   const [is_income, setIs_income] = useState(true);
@@ -63,8 +63,6 @@ const NewIncomeScreen = () => {
     fetchPockets();
   }, []);
 
-
-
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -80,37 +78,69 @@ const NewIncomeScreen = () => {
   };
 
   const uploadImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      quality: 1,
+    });
+    if (result.canceled) {
+      return;
+    }
+    setSelectedImage(result.assets[0]);
+    setSelectedImageforshow(result.assets[0].uri);
     const formData = new FormData();
-    formData.append("files",{
-      uri : selectedImage.uri,
-      type : selectedImage.mimeType,
-      name : "image.png",
-      fileName : "image"
-    })
+    formData.append("files", {
+      uri: result.assets[0].uri,
+      type: result.assets[0].mimeType,
+      name: "image.png",
+      fileName: "image",
+    });
     try {
-      const response = await fetch("https://api.slipok.com/api/line/apikey/33139", {
-        method: "POST",
-        headers: {
-          "x-authorization": "SLIPOKR3QLPUQ",
-          "Content-Type": "multipart/form-data"
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        "https://api.slipok.com/api/line/apikey/33139",
+        {
+          method: "POST",
+          headers: {
+            "x-authorization": "SLIPOKR3QLPUQ",
+            "Content-Type": "multipart/form-data",
+          },
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Upload failed:", errorData);
-        Alert.alert("Upload failed", errorData.message || "Something went wrong.");
+        Alert.alert(
+          "Upload failed",
+          errorData.message || "Something went wrong."
+        );
         return;
       }
 
       const res = await response.json();
       console.log("Upload successful:", res.data);
-      setData(res.data)
-      Alert.alert("Upload successful", "Your image has been uploaded successfully!");
+      setAmount(res.data.paidLocalAmount);
+      
+      
+      if(session?.user_data?.name_bank !== null){
+        if (res.data.receiver.displayName.includes(session.user_data.name_bank)){
+          setIs_income(true)
+        }else if(res.data.sender.displayName.includes(session.user_data.name_bank)){
+          setIs_income(false)
+        }
+      }
+      setData(res.data);
+      Alert.alert(
+        "Upload successful",
+        "Your image has been uploaded successfully!"
+      );
     } catch (error) {
       console.error("Error:", error.message);
-      Alert.alert("Upload error", error.message || "An error occurred while uploading.");
+      Alert.alert(
+        "Upload error",
+        error.message || "An error occurred while uploading."
+      );
     }
   };
 
@@ -191,14 +221,17 @@ const NewIncomeScreen = () => {
                 }}
               >
                 <Text style={myStyle.bigtext}>รายการใหม่</Text>
-                <TouchableOpacity style={{ alignItems: "center" }} onPress={() => {pickImage();uploadImage();}}>
-                  <Image 
+                <TouchableOpacity
+                  style={{ alignItems: "center" }}
+                  onPress={async () => {
+                    uploadImage();
+                  }}
+                >
+                  <Image
                     source={require("../../assets/images/Scanpic.png")}
                     style={{ width: 33, height: 33, marginLeft: 10 }}
                   />
-                  <Text style={{ fontSize: 11}}>
-                    นำเข้าด้วยรูป
-                  </Text>
+                  <Text style={{ fontSize: 11 }}>นำเข้าด้วยรูป</Text>
                 </TouchableOpacity>
               </View>
 

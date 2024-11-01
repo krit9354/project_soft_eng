@@ -18,7 +18,7 @@ const Slip = () => {
     },
   }
 
-  
+   
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -45,10 +45,10 @@ const Slip = () => {
       fileName : "image"
     })
     try {
-      const response = await fetch("https://api.slipok.com/api/line/apikey/30772", {
+      const response = await fetch("https://api.slipok.com/api/line/apikey/33139", {
         method: "POST",
         headers: {
-          "x-authorization": "SLIPOKPR1FEHV",
+          "x-authorization": "SLIPOKR3QLPUQ",
           "Content-Type": "multipart/form-data"
         },
         body: formData,
@@ -80,7 +80,7 @@ const Slip = () => {
           source={{ uri: selectedImage.uri }}
           style={styles.image}
         />
-      )}
+      )} 
       <Button title="Upload Image" onPress={uploadImage} />
       {data && (<Text>{data.sender.displayName} send to {data.receiver.displayName} {data.amount} bath</Text>)}
     </View>
