@@ -26,6 +26,11 @@ export const myStyle = StyleSheet.create({
         paddingHorizontal : 40,
         overflow : "visible",
     },
+    profile : {
+        width: 70,
+        height: 70,
+        borderRadius: 35 
+    },
     main_content_box : {        
         paddingHorizontal: "10%",
         zIndex : 0

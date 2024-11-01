@@ -12,6 +12,7 @@ import { Use } from 'react-native-svg';
 import { ip } from '../../../config';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
+import BottomBar from '../../../components/bottomBar';
 export default function Summary_pocket() {
   const { session } = useSession();
   const [SumIncome, setSumIncome] = useState(0);
@@ -223,6 +224,7 @@ export default function Summary_pocket() {
     let maxValue = 0;
     sortedMonths.forEach(data => {
       maxValue = Math.max(maxValue, data.income, data.expense);
+      console.log("maxValue",maxValue)
       setMaxValueGraph(maxValue);
       barData.push(
         {
@@ -231,11 +233,11 @@ export default function Summary_pocket() {
           spacing: 2,
           labelWidth: 30,
           labelTextStyle: { color: 'gray' },
-          frontColor: '#177AD5', // สีน้ำเงินสำหรับ income
+          frontColor: '#38E298', // สีน้ำเงินสำหรับ income
         },
         {
           value: data.expense,
-          frontColor: '#ED6665', // สีแดงสำหรับ expense
+          frontColor: '#FF5A5A', // สีแดงสำหรับ expense
         }
       );
     });
@@ -295,7 +297,18 @@ export default function Summary_pocket() {
     barPercentage: 0.5,
     useShadowColorFromDataset: false // optional
   };
+  const formatYAxisLabel = (value) => {
+    if (value >= 1000000) {
 
+      return `${(value / 1000000).toFixed(1)}m`;
+    } else if (value >= 10000) {
+
+      return `${(value / 1000).toFixed(1)}k`;
+    } else {
+
+      return value.toString();
+    }
+  };
   
 
   const renderTitle = () => {
@@ -327,7 +340,7 @@ export default function Summary_pocket() {
                 height: 12,
                 width: 12,
                 borderRadius: 6,
-                backgroundColor: '#177AD5',
+                backgroundColor: '#38E298',
                 marginRight: 8,
               }}
             />
@@ -346,7 +359,7 @@ export default function Summary_pocket() {
                 height: 12,
                 width: 12,
                 borderRadius: 6,
-                backgroundColor: '#ED6665',
+                backgroundColor: '#FF5A5A',
                 marginRight: 8,
               }}
             />
@@ -398,10 +411,11 @@ export default function Summary_pocket() {
           
             <View style={{
               paddingTop: 10,
-              backgroundColor: '#FFFFFF',
+              // backgroundColor: 'red',
               borderRadius: 10,
               
-              height: containerHeight * 0.5,
+              height: containerHeight * 0.55,
+              
             }}>
                {renderTitle()}
 
@@ -421,36 +435,39 @@ export default function Summary_pocket() {
                 roundedTop
                 roundedBottom
                 yAxisTextStyle={{ color: 'gray' }}
-                noOfSections={3}
+                noOfSections={5}
                 maxValue={maxValueGraph}
-                style={{ width: 1500, height: 20  }} // ขนาดกราฟ
+                yAxisLabelTexts={Array.from({ length: 6 }, (_, i) =>
+                  formatYAxisLabel((maxValueGraph / 5) * i)
+                )}
+                style={{ width: 1500, height: 30  }} // ขนาดกราฟ
               />
 
               </ScrollView>
             </View>
             <View style={myStyle.containerShow}>
-              <View style={[myStyle.box, { backgroundColor: "#7ba8d1" }]}>
-                <Text style={{ fontSize: 15 }}>รวมเงินเข้า (บาท)</Text>
-                <Text style={{ fontSize: 18,textAlign: 'center', alignSelf: 'center' }}>{SumIncome ?? 'Error'}</Text>
+              <View style={[myStyle.box, { backgroundColor: "#0AB17B" }]}>
+                <Text style={{ fontSize: 15 ,color:'white'}}>รวมเงินเข้า (บาท)</Text>
+                <Text style={{ fontSize: 18,textAlign: 'center', alignSelf: 'center' ,color:'white'}}>{SumIncome ?? 'Error'}</Text>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
-                  <Text style={{ fontSize: 12 }}>รายการ</Text>
-                  <Text style={{ fontSize: 14 }}>{CountIncome ?? 'Error'}</Text>
+                  <Text style={{ fontSize: 12 ,color:'white'}}>รายการ</Text>
+                  <Text style={{ fontSize: 14,color:'white' }}>{CountIncome ?? 'Error'}</Text>
                 </View>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
-                  <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
-                  <Text style={{ fontSize: 14 }}>{AvgIncome ?? 'Error'}</Text>
+                  <Text style={{ fontSize: 12 ,color:'white'}}>เฉลี่ย/เดิอน</Text>
+                  <Text style={{ fontSize: 14,color:'white' }}>{AvgIncome ?? 'Error'}</Text>
                 </View>
               </View>
-              <View style={[myStyle.box, { backgroundColor: "#eb7d7c" }]}>
-                <Text style={{ fontSize: 15 }}>รวมเงินออก (บาท)</Text>
-                <Text style={{ fontSize: 18, textAlign: 'center', alignSelf: 'center'}}>{SumExpense ?? "Error"}</Text>
+              <View style={[myStyle.box, { backgroundColor: "#bd3128" }]}>
+                <Text style={{ fontSize: 15,color:'white' }}>รวมเงินออก (บาท)</Text>
+                <Text style={{ fontSize: 18, textAlign: 'center', alignSelf: 'center',color:'white'}}>{SumExpense ?? "Error"}</Text>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
-                  <Text style={{ fontSize: 12 }}>รายการ</Text>
-                  <Text style={{ fontSize: 14 }}>{CountExpense ?? 'Error'}</Text>
+                  <Text style={{ fontSize: 12 ,color:'white'}}>รายการ</Text>
+                  <Text style={{ fontSize: 14 ,color:'white'}}>{CountExpense ?? 'Error'}</Text>
                 </View>
                 <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
-                  <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
-                  <Text style={{ fontSize: 14 }}>{AvgExpense ?? "Error"}</Text>
+                  <Text style={{ fontSize: 12 ,color:'white'}}>เฉลี่ย/เดิอน</Text>
+                  <Text style={{ fontSize: 14 ,color:'white'}}>{AvgExpense ?? "Error"}</Text>
                 </View>
               </View>
             </View>
@@ -459,7 +476,7 @@ export default function Summary_pocket() {
       </ScrollView>
 
       {/* bottom bar */}
-
+      <BottomBar />
     </LinearGradient>)
   );
 }

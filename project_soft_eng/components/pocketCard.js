@@ -8,8 +8,9 @@ export default function PocketCard(item) {
   console.log(items)
   return (
     <TouchableOpacity style={myStyle.card} onPress={() => router.push("/pocket/" + items.id)}>
+      
       <Image
-        source={{ uri: items.image }}
+        source={items.image?{ uri: items.image }:(require("../assets/images/pocket.png"))}
         style={myStyle.image}
       />
       <View style={myStyle.container}>
