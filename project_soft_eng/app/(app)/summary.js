@@ -250,6 +250,7 @@ export default function Summary() {
     sortedMonths.forEach(data => {
       maxValue = Math.max(maxValue, data.income, data.expense);
       setMaxValueGraph(maxValue);
+      console.log("maxvalue",maxValue);
       barData.push(
         {
           value: data.income,
@@ -267,6 +268,19 @@ export default function Summary() {
     });
 
     return barData;
+  };
+
+  const formatYAxisLabel = (value) => {
+    if (value >= 1000000) {
+
+      return `${(value / 1000000).toFixed(1)}m`;
+    } else if (value >= 10000) {
+
+      return `${(value / 1000).toFixed(1)}k`;
+    } else {
+
+      return value.toString();
+    }
   };
 
   const fetchData = async () => {
@@ -409,6 +423,7 @@ export default function Summary() {
       </View>
     )
   }
+  
   return (
     isLoading ?
       <SafeAreaView style={{
@@ -522,8 +537,11 @@ export default function Summary() {
                     // xAxisThickness={0}
                     // yAxisThickness={0}
                     yAxisTextStyle={{ color: 'gray' }}
-                    noOfSections={3}
+                    noOfSections={5}
                     maxValue={maxValueGraph}
+                    yAxisLabelTexts={Array.from({ length: 6 }, (_, i) =>
+                      formatYAxisLabel((maxValueGraph / 5) * i)
+                    )}
                     style={{ width: 1500, height: 20 }} // ขนาดกราฟ
                   />
 

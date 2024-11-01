@@ -224,6 +224,7 @@ export default function Summary_pocket() {
     let maxValue = 0;
     sortedMonths.forEach(data => {
       maxValue = Math.max(maxValue, data.income, data.expense);
+      console.log("maxValue",maxValue)
       setMaxValueGraph(maxValue);
       barData.push(
         {
@@ -296,7 +297,18 @@ export default function Summary_pocket() {
     barPercentage: 0.5,
     useShadowColorFromDataset: false // optional
   };
+  const formatYAxisLabel = (value) => {
+    if (value >= 1000000) {
 
+      return `${(value / 1000000).toFixed(1)}m`;
+    } else if (value >= 10000) {
+
+      return `${(value / 1000).toFixed(1)}k`;
+    } else {
+
+      return value.toString();
+    }
+  };
   
 
   const renderTitle = () => {
@@ -423,8 +435,11 @@ export default function Summary_pocket() {
                 roundedTop
                 roundedBottom
                 yAxisTextStyle={{ color: 'gray' }}
-                noOfSections={3}
+                noOfSections={5}
                 maxValue={maxValueGraph}
+                yAxisLabelTexts={Array.from({ length: 6 }, (_, i) =>
+                  formatYAxisLabel((maxValueGraph / 5) * i)
+                )}
                 style={{ width: 1500, height: 30  }} // ขนาดกราฟ
               />
 
