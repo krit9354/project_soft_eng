@@ -14,7 +14,6 @@ import {
 ;
 import { myStyle } from "../../style/addincome_style";
 import { LinearGradient } from "expo-linear-gradient";
-// import { useEffect } from "react";
 import axios from "axios";
 import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
