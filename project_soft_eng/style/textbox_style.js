@@ -3,12 +3,10 @@ import { StyleSheet } from "react-native";
 export const myStyle = StyleSheet.create({
     card : {
         maxWidth : 145,
-        minHeight : 30 ,
-        flex : 1,
+        minHeight : 40 ,
         backgroundColor : 'white',
         alignItems : 'center', 
         justifyContent: "center",
-        textAlignVertical : 'center', 
         textAlign:"center",
         marginTop : 10,
         marginBottom:10,
@@ -21,16 +19,14 @@ export const myStyle = StyleSheet.create({
             elevation: 4, 
     },
     mincard : {
-        maxWidth : 145,
+        minWidth : 145,
         minHeight : 40 ,
-        flex : 1,
         backgroundColor : 'white',
         alignItems : 'center', 
         justifyContent: "center",
-        
         marginTop : 10,
         marginBottom:10,
-        marginLeft :"auto",
+        alignSelf: 'flex-end',
         borderTopLeftRadius : 15,
         borderBottomLeftRadius:15,
         borderBottomRightRadius:15,

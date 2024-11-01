@@ -9,42 +9,57 @@ import { ip } from '../../../config';
 import axios from 'axios'
 import { useLocalSearchParams } from 'expo-router';
 import { router } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 export default function Pocket() {
+   
     const { id } = useLocalSearchParams();
 
-    const navigation = useNavigation();
+    const [total, setTotal] = useState([])
 
     const [pockets, setPockets] = useState()
 
+    const [pocket, setPocket] = useState()
+
     const [pockets_element, setPockets_element] = useState()
 
+    useFocusEffect(
+        useCallback(() => {
+          fetchData();
+        }, [])
+      );
 
-    useEffect(() => {
-
+   
         const fetchData = async () => {
-            //   try {
-            //     const res = await axios.post('http://'+ip+':8080/transaction');
-            //     setPockets(res.data);
-            //   } catch (err) {
-            //     console.log("err :",err.message)
-            //   }
+            try {
+                const res = await axios.post('http://' + ip + ':8080/pocketpocket',{pocketid: id });
+                setPocket(res.data);
+
+                 console.log(res.data);
+            } catch (err) {
+                console.log("err :", err.message)}
+
+
             try {
                 const res = await axios.post('http://' + ip + ':8080/transactionid', { pocketid: id });
                 setPockets(res.data);
-                console.log(res.data);
+                
             } catch (err) {
                 console.log("err :", err.message)
             }
         };
-        console.log(id);
-        fetchData();
-    }, []);
+        
+        
+    
 
     useEffect(() => {
         setPockets_element(pockets?.map((pocket, index) => {
             return <Textbox key={index} props={pocket} />
         }))
     }, [pockets])
+
+    
 
 
     return (
@@ -59,13 +74,15 @@ export default function Pocket() {
             <View style={myStyle.top_bar}>
                 <View style={myStyle.top_bar_content}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Image source={require("../../../assets/images/test_image.png")} style={{ width: 70, height: 70, borderRadius: 35 }} />
-                        <Text style={{ fontSize: 20, marginLeft: 10 }}>food</Text>
-                    </View>
-                    
+                        <Image   source={{ uri: pocket?.image }} style={{ width: 70, height: 70, borderRadius: 35 }} />
+                        <View style={{ flexDirection: 'colum', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 20, marginLeft: 10 }}>{pocket?.pocket_name}</Text>
+                        <Text style={{ fontSize: 15, marginLeft: 10 }}>{pocket?.money}฿</Text>
+                        </View>
+                    </View>                    
                     <TouchableOpacity  style={{alignItems :'center'}} onPress={() => router.push("../summary_pocket/"+id)} >
-                        <Image source={require("../../../assets/images/history.png")} style={{width : 30,height:30,overflow:'visible'}} />
-                        <Text>history</Text>
+                        <Image source={require("../../../assets/images/Vector.png")} style={{}} />
+                        
                     </TouchableOpacity>
                 </View>
             </View>
