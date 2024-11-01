@@ -31,22 +31,9 @@ const addPocket = () => {
   const [amount, setAmount] = useState("");
   const [goalAmount, setGoalAmount] = useState(null);
   const [checked, setChecked] = useState(false);
-  const [selectedPocket, setSelectedPocket] = useState("");
-  const [details, setDetails] = useState("");
-  const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedImageforshow, setSelectedImageforshow] = useState("");
-  const [resdata, setResdata] = useState();
-  const option = {
-    title: "select Image",
-    type: "library",
-    options: {
-      selectionlimit: 1,
-      mediaType: "photo",
-      includeBase64: false,
-    },
-  };
+
 
   //   const senddata = async () => {
   //     console.log(amount)
