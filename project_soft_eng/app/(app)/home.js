@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import BottomBar from '../../components/bottomBar';
 import { ip } from '../../config';
 import axios from 'axios'
-import axiosRetry from 'axios-retry';
 import { useSession } from '../../components/ctx';
 import { router, Redirect } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
@@ -26,27 +25,30 @@ export default function HomeScreen() {
         }, [])
     );
 
-    const axiosInstance = axios.create({
-        baseURL: `http://${ip}:8080`,  // แก้ไข IP ตามที่ใช้
-        timeout: 10000,  // ตั้ง timeout เป็น 10 วินาที (10000 มิลลิวินาที)
-      });
-      
-      // ตั้งค่า retry โดยใช้ axios-retry
-      axiosRetry(axiosInstance, {
-        retries: 3,  // ลองใหม่สูงสุด 3 ครั้ง
-        retryDelay: (retryCount) => retryCount * 1000,  // รอ 1 วินาทีระหว่างแต่ละครั้ง
-      });
-
     const fetchData = async () => {
-        setIsLoading(true)
+        setIsLoading(true);
         try {
-            const res = await axiosInstance.post('/pockets', { userId: session.id });
-            setPockets(res.data.filter(pocket => pocket.pocket_name !== "main"));
-            setMainPockets(res.data.find(pocket => pocket.pocket_name === "main"));
+            const res = await fetch('http://' + ip + ':8080/pockets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: session.id }),
+            });
+
+            if (!res.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await res.json();
+            setPockets(data.filter(pocket => pocket.pocket_name !== "main"));
+            setMainPockets(data.find(pocket => pocket.pocket_name === "main"));
         } catch (err) {
-            console.log("err :", err.message)
+            console.log("err :", err.message);
         }
-        setIsLoading(false)
+        setIsLoading(false);
+
+
     };
 
 
