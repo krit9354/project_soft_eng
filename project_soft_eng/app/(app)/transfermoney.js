@@ -133,7 +133,9 @@ const transfermoney = () => {
           },
         }
       );
-      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย");
+      ("Success", "บันทึกข้อมูลเรียบร้อย", [
+        { text: "OK", onPress: () => router.push("/home") },
+      ]);
     } catch (err) {
       console.error("Error submitting data:", err.message);
       Alert.alert("Error", "ไม่สามารถบันทึกข้อมูลได้");
@@ -175,7 +177,9 @@ const transfermoney = () => {
           },
         }
       );
-      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย");
+      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย", [
+        { text: "OK", onPress: () => router.push("/home") },
+      ]);
     } catch (err) {
       console.error("Error submitting data:", err.message);
       Alert.alert("Error", "ไม่สามารถบันทึกข้อมูลได้");

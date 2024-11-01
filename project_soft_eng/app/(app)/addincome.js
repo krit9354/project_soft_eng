@@ -19,6 +19,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Button } from "react-native-paper";
 import { ip } from "../../config";
 import { useSession } from "../../components/ctx";
+import { router } from "expo-router";
 
 const NewIncomeScreen = () => {
   const [amount, setAmount] = useState("");
@@ -27,6 +28,7 @@ const NewIncomeScreen = () => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
+  const [data, setData] = useState('');
   const [selectedImageforshow, setSelectedImageforshow] = useState("");
   const [resdata, setResdata] = useState();
   const [is_income, setIs_income] = useState(true);
@@ -61,6 +63,8 @@ const NewIncomeScreen = () => {
     fetchPockets();
   }, []);
 
+
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -72,6 +76,41 @@ const NewIncomeScreen = () => {
       setSelectedImage(result.assets[0]);
       setSelectedImageforshow(result.assets[0].uri);
       console.log(result.assets[0]);
+    }
+  };
+
+  const uploadImage = async () => {
+    const formData = new FormData();
+    formData.append("files",{
+      uri : selectedImage.uri,
+      type : selectedImage.mimeType,
+      name : "image.png",
+      fileName : "image"
+    })
+    try {
+      const response = await fetch("https://api.slipok.com/api/line/apikey/33139", {
+        method: "POST",
+        headers: {
+          "x-authorization": "SLIPOKR3QLPUQ",
+          "Content-Type": "multipart/form-data"
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Upload failed:", errorData);
+        Alert.alert("Upload failed", errorData.message || "Something went wrong.");
+        return;
+      }
+
+      const res = await response.json();
+      console.log("Upload successful:", res.data);
+      setData(res.data)
+      Alert.alert("Upload successful", "Your image has been uploaded successfully!");
+    } catch (error) {
+      console.error("Error:", error.message);
+      Alert.alert("Upload error", error.message || "An error occurred while uploading.");
     }
   };
 
@@ -111,7 +150,9 @@ const NewIncomeScreen = () => {
           },
         }
       );
-      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย");
+      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย", [
+        { text: "OK", onPress: () => router.push("/home") },
+      ]);
     } catch (err) {
       console.error("Error submitting data:", err.message);
       Alert.alert("Error", "ไม่สามารถบันทึกข้อมูลได้");
@@ -150,8 +191,8 @@ const NewIncomeScreen = () => {
                 }}
               >
                 <Text style={myStyle.bigtext}>รายการใหม่</Text>
-                <TouchableOpacity style={{ alignItems: "center" }}>
-                  <Image
+                <TouchableOpacity style={{ alignItems: "center" }} onPress={() => {pickImage();uploadImage();}}>
+                  <Image 
                     source={require("../../assets/images/Scanpic.png")}
                     style={{ width: 33, height: 33, marginLeft: 10 }}
                   />
