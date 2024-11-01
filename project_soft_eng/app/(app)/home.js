@@ -26,29 +26,15 @@ export default function HomeScreen() {
     );
 
     const fetchData = async () => {
-        setIsLoading(true);
+        setIsLoading(true)
         try {
-            const res = await fetch('http://' + ip + ':8080/pockets', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userId: session.id }),
-            });
-
-            if (!res.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await res.json();
-            setPockets(data.filter(pocket => pocket.pocket_name !== "main"));
-            setMainPockets(data.find(pocket => pocket.pocket_name === "main"));
+            const res = await axios.post('http://' + ip + ':8080/pockets', { userId: session.id });
+            setPockets(res.data.filter(pocket => pocket.pocket_name !== "main"));
+            setMainPockets(res.data.find(pocket => pocket.pocket_name === "main"));
         } catch (err) {
-            console.log("err :", err.message);
+            console.log("err :", err.message)
         }
-        setIsLoading(false);
-
-
+        setIsLoading(false)
     };
 
 

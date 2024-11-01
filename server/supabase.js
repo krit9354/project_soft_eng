@@ -10,17 +10,19 @@ const supabase = createClient(supabase_url, supabase_anon_key)
 
 const express = require('express');
 const multer = require('multer');
+var cors = require('cors');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const app = express();
 const port = 8080;
+app.use(cors({origin: true, credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/get-pockets', async (req, res) => {
   const { userId } = req.body; 
   
-
+ 
   try {
     const { data, error } = await supabase
       .from('pocket') 
@@ -28,7 +30,9 @@ app.post('/get-pockets', async (req, res) => {
       .eq('user_id', userId);
 
     if (error) {
-      throw error;
+      // throw error;
+      res.status(500);
+      console.log(error);
     }
     
     res.status(200).json(data); 
@@ -228,13 +232,13 @@ app.post('/pockets', async (req, res) => {
 // });
 
 
-app.get('/user_data', async (req, res) => {
-  // const { userId } = req.body;
-  // console.log(userId)
+app.post('/user_data', async (req, res) => {
+  const { userId } = req.body;
+  console.log(userId)
   const { data, error } = await supabase
   .from('profiles')
   .select("username,avatar_url,name_bank")
-  // .eq("id",userId)
+  .eq("id",userId)
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
@@ -252,7 +256,8 @@ app.post('/login', async (req, res) => {
   })
   if (error) {
     console.log(error);
-    throw error
+    // throw error
+    res.status(500)
   } else {
     console.log(data);
     res.send(data);
@@ -274,7 +279,8 @@ app.post('/register', async (req, res) => {
   );
   if (error) {
     console.log(error);
-    throw error
+    res.status(500)
+    // throw error
   } else {
     console.log(data);
     res.send(data);
@@ -308,7 +314,8 @@ app.post('/summary', async (req, res) => {
   console.log(IncomeData)
   if (IncomeError) {
     console.log(IncomeError);
-    throw IncomeError
+    //throw IncomeError
+    res.status(500)
   }
   const { data: ExpenseData, error: ExpenseError } = await supabase
     .from('transaction')
@@ -320,7 +327,8 @@ app.post('/summary', async (req, res) => {
   // console.log(ExpenseData)
   if (ExpenseError) {
     console.log(ExpenseError);
-    throw ExpenseError
+    //throw ExpenseError
+    res.status(500)
   }
   const { count: CountIncome, error: CountIncomeError } = await supabase
     .from('transaction')
@@ -351,7 +359,8 @@ app.post('/summary', async (req, res) => {
     IncomeDataSearch = IncomeDataSearchResult;
     if (IncomeErrorSearch) {
       console.log(IncomeErrorSearch);
-      throw IncomeErrorSearch
+      //throw IncomeErrorSearch
+      res.status(500)
     }
     const { data: ExpenseDataSearchResult, error: ExpenseErrorSearch } = await supabase
       .from('transaction')
@@ -363,7 +372,8 @@ app.post('/summary', async (req, res) => {
     ExpenseDataSearch = ExpenseDataSearchResult;
     if (ExpenseErrorSearch) {
       console.log(ExpenseErrorSearch);
-      throw ExpenseErrorSearch
+      //throw ExpenseErrorSearch
+      res.status(500)
     }
     const { count: CountIncomeSearchResult, error: CountIncomeErrorSearch } = await supabase
       .from('transaction')
@@ -511,7 +521,8 @@ app.post('/summary_pocket', async (req, res) => {
   console.log("แต่ละpocket1", IncomeData)
   if (IncomeError) {
     console.log(IncomeError);
-    throw IncomeError
+    //throw IncomeError
+    res.status(500)
   }
   const { data: ExpenseData, error: ExpenseError } = await supabase
     .from('transaction')
@@ -523,7 +534,8 @@ app.post('/summary_pocket', async (req, res) => {
   // console.log(ExpenseData)
   if (ExpenseError) {
     console.log(ExpenseError);
-    throw ExpenseError
+    res.status(500)
+    //throw ExpenseError
   }
   const { count: CountIncome, error: CountIncomeError } = await supabase
     .from('transaction')
