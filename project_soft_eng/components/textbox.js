@@ -6,8 +6,10 @@ export default function Textbox(item) {
   return (
     <View style={[items.is_income ? myStyle.card : myStyle.mincard]}>
       <View style={myStyle.container}>
-        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "center" }}>
-          <Text style={{ marginTop:"2%"}}>{items.is_income ? items.money : "-"+items.money}฿</Text>
+        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "center", }}>
+          
+          <Text style={myStyle.text}>{items.is_income ? items.money : "-"+items.money}฿</Text>
+
           {items.target && <Text style={{ fontSize: 12 }}> / {items.Target}</Text>}
           
         </View>

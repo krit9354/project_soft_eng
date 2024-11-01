@@ -124,7 +124,7 @@ app.post('/pockets', async (req, res) => {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
   }
-  console.log(data)
+
   res.send(data)
 });
 
@@ -141,7 +141,7 @@ app.post('/transactionid', async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 
-  console.log(pocketid)
+  
   res.send(data)
 });
 

@@ -1,7 +1,8 @@
-import { View, Text, ScrollView, Image, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, FlatList, TouchableOpacity, Modal, Button } from 'react-native';
 import { myStyle } from '../../../style/pocket_style';
 import { LinearGradient } from 'expo-linear-gradient';
 import Textbox from '../../../components/textbox';
+
 import { useEffect, useState } from 'react';
 import BottomBar from '../../../components/bottomBar';
 import { useNavigation } from '@react-navigation/native';
@@ -16,13 +17,14 @@ export default function Pocket() {
    
     const { id } = useLocalSearchParams();
 
-    const [total, setTotal] = useState([])
 
     const [pockets, setPockets] = useState()
 
     const [pocket, setPocket] = useState()
 
     const [pockets_element, setPockets_element] = useState()
+
+    const [modalVisible, setModalVisible] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -80,7 +82,7 @@ export default function Pocket() {
                         <Text style={{ fontSize: 15, marginLeft: 10 }}>{pocket?.money}฿</Text>
                         </View>
                     </View>                    
-                    <TouchableOpacity  style={{alignItems :'center'}} onPress={() => router.push("../summary_pocket/"+id)} >
+                    <TouchableOpacity  style={{alignItems :'center'}} onPress={() => setModalVisible(true)} >
                         <Image source={require("../../../assets/images/Vector.png")} style={{}} />
                         
                     </TouchableOpacity>
@@ -100,8 +102,50 @@ export default function Pocket() {
             {/* bottom bar */}
 
             <BottomBar />
-        </LinearGradient>
 
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Button title="Show Modal" onPress={() => setModalVisible(true)} />
+
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)} // กดปุ่มย้อนกลับบน Android เพื่อปิด
+      >
+        <TouchableOpacity
+          style={myStyle.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setModalVisible(false)} // กดที่พื้นที่นอก modal เพื่อปิด
+        >
+          <View style={myStyle.modalContent}>
+            
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => router.push("/summary_pocket/" + id)}>
+            <Image source={require("../../../assets/images/summary.png")}  />
+              <Text style={myStyle.menuText}>Summary</Text>
+            </TouchableOpacity>
+
+            <View style={myStyle.separator} />
+
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => alert('Transfer selected')}>
+            <Image source={require("../../../assets/images/transfer.png")}  />
+              <Text style={myStyle.menuText}>Transfer</Text>
+            </TouchableOpacity>
+
+            <View style={myStyle.separator} />
+
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => alert('Setting selected')}>
+            <Image source={require("../../../assets/images/setting.png")}  />
+              <Text style={myStyle.menuText}>Setting</Text>
+            </TouchableOpacity>
+            
+          </View>
+
+        </TouchableOpacity>
+      </Modal>
+    </View>
+
+           
+        </LinearGradient>
+        
 
     );
 }

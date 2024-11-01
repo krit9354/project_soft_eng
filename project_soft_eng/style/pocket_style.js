@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 
+
 export const myStyle = StyleSheet.create({
     bg : {
         height: "100%",
@@ -85,4 +86,44 @@ export const myStyle = StyleSheet.create({
             shadowRadius: 4,
             elevation: 4, 
     },
-})
+
+   
+
+  
+      modalOverlay: {
+        flex: 1,
+       width: "100%",
+        height:"100%",
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      modalContent: {
+        position: 'absolute',
+        top: 70,       
+        right: 20,
+        width: 200,
+        height: 250,
+        justifyContent : 'space-evenly',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        elevation: 5,
+      },
+      menuItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+      },
+      menuText: {
+        fontSize: 16,
+        color: 'gray',
+        marginLeft: 10,
+      },
+      separator: {
+        height: 1,
+        backgroundColor: '#ddd',
+        marginHorizontal: 20,
+      },
+
+});
+
