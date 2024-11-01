@@ -63,7 +63,7 @@ export const myStyle = StyleSheet.create({
     },
     containerShow: {
         // paddingTop: "30%",
-        marginTop: "20%",
+        marginTop: "10%",
         // backgroundColor: 'red',
         // height: "20%",
         width: "95%",

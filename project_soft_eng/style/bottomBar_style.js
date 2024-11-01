@@ -36,7 +36,7 @@ export const myStyle = StyleSheet.create({
     },
     icon : {
         width : 50,
-        height : 50
+        height : 50,
     }
     
 })

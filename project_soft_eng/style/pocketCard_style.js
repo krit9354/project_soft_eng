@@ -31,6 +31,7 @@ export const myStyle = StyleSheet.create({
         backgroundColor : "#D9D9D9", 
         width : "80%",
         height : 10,
-        borderRadius : 20
+        borderRadius : 20,
+        overflow : "hidden"
     }
 })
