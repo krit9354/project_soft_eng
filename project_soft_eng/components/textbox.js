@@ -19,8 +19,8 @@ export default function Textbox(item) {
       </View>
       {items.have_img && <View>
         <Image
-          source={{ uri: items.image }}
-          style={myStyle.image}
+          source={{ uri: items.img }}
+           style={myStyle.image}
         />
       </View>}
     </View>
