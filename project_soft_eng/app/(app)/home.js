@@ -43,8 +43,6 @@ export default function HomeScreen() {
             return <PocketCard key={index} props={pocket} />
         }))
     }, [pockets])
-    console.log("avatar-",session)
-    console.log("avatar--",session.user_data.avatar_url)
 
     return (
         isLoading ?
