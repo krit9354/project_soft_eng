@@ -25,9 +25,8 @@ import * as ImagePicker from "expo-image-picker";
 const Setting = () => {
   const { signOut, session } = useSession();
   const [username, setUsername] = useState(session.user_metadata.username);
-  const [bankName, setBankName] = useState();
-  const [selectedImage, setSelectedImage] = useState("");
-
+  const [bankName, setBankName] = useState(session.user_data.name_bank ? session.user_data.name_bank : null);
+  const [selectedImage, setSelectedImage] = useState(session.user_data.avatar_url ? { uri : session.user_data.avatar_url} : null);
 
   const pickImage = async () => {
     // console.log(selectedImage)
