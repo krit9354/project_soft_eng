@@ -12,6 +12,7 @@ import { Use } from 'react-native-svg';
 import { ip } from '../../config';
 import { router } from 'expo-router';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import BottomBar from '../../components/bottomBar';
 
 export default function Summary() {
   const { session } = useSession();
@@ -256,11 +257,11 @@ export default function Summary() {
           spacing: 2,
           labelWidth: 30,
           labelTextStyle: { color: 'gray' },
-          frontColor: '#177AD5', // สีน้ำเงินสำหรับ income
+          frontColor: '#38E298', // สีน้ำเงินสำหรับ income
         },
         {
           value: data.expense,
-          frontColor: '#ED6665', // สีแดงสำหรับ expense
+          frontColor: '#FF5A5A', // สีแดงสำหรับ expense
         }
       );
     });
@@ -372,7 +373,7 @@ export default function Summary() {
                 height: 12,
                 width: 12,
                 borderRadius: 6,
-                backgroundColor: '#177AD5',
+                backgroundColor: '#38E298',
                 marginRight: 8,
               }}
             />
@@ -391,7 +392,7 @@ export default function Summary() {
                 height: 12,
                 width: 12,
                 borderRadius: 6,
-                backgroundColor: '#ED6665',
+                backgroundColor: '#FF5A5A',
                 marginRight: 8,
               }}
             />
@@ -485,7 +486,7 @@ export default function Summary() {
                   <Text style={myStyle.buttonText}>Search</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={myStyle.button}
+                  style={[myStyle.button,{backgroundColor: "#939393"}]}
                   onPress={handlePressClear}
                 >
                   <Text style={myStyle.buttonText}>Clear</Text>
@@ -507,6 +508,8 @@ export default function Summary() {
                   horizontal
                   showsHorizontalScrollIndicator={true}
                   contentContainerStyle={{ flexDirection: 'row' }}
+                  // backgroundColor='red'
+
                 >
 
                   <BarChart
@@ -527,29 +530,29 @@ export default function Summary() {
                 </ScrollView>
               </View>
               <View style={myStyle.containerShow}>
-                <View style={[myStyle.box, { backgroundColor: "#7ba8d1" }]}
+                <View style={[myStyle.box, { backgroundColor: "#0AB17B" }]}
                 >
-                  <Text style={{ fontSize: 15 }}>รวมเงินเข้า (บาท)</Text>
-                  <Text style={{ fontSize: 18,textAlign: 'center', alignSelf: 'center'}}>{SumIncome ?? 'Error'}</Text>
-                  <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
-                    <Text style={{ fontSize: 12 }}>รายการ</Text>
-                    <Text style={{ fontSize: 14 }}>{CountIncome ?? 'Error'}</Text>
+                  <Text style={{ fontSize: 15 ,color:'white'}}>รวมเงินเข้า (บาท)</Text>
+                  <Text style={{ fontSize: 18,textAlign: 'center', alignSelf: 'center',color:'white'}}>{SumIncome ?? 'Error'}</Text>
+                  <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%',color:'white' }}>
+                    <Text style={{ fontSize: 12 ,color:'white'}}>รายการ</Text>
+                    <Text style={{ fontSize: 14,color:'white' }}>{CountIncome ?? 'Error'}</Text>
                   </View>
                   <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
-                    <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
-                    <Text style={{ fontSize: 14 }}>{AvgIncome ?? 'Error'}</Text>
+                    <Text style={{ fontSize: 12 ,color:'white'}}>เฉลี่ย/เดิอน</Text>
+                    <Text style={{ fontSize: 14 ,color:'white'}}>{AvgIncome ?? 'Error'}</Text>
                   </View>
                 </View>
-                <View style={[myStyle.box, { backgroundColor: "#eb7d7c" }]}>
-                  <Text style={{ fontSize: 15 }}>รวมเงินออก (บาท)</Text>
-                  <Text style={{ fontSize: 18,textAlign: 'center', alignSelf: 'center' }}>{SumExpense ?? "Error"}</Text>
-                  <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%' }}>
-                    <Text style={{ fontSize: 12 }}>รายการ</Text>
-                    <Text style={{ fontSize: 14 }}>{CountExpense ?? 'Error'}</Text>
+                <View style={[myStyle.box, { backgroundColor: "#bd3128" }]}>
+                  <Text style={{ fontSize: 15,color:'white' }}>รวมเงินออก (บาท)</Text>
+                  <Text style={{ fontSize: 18,textAlign: 'center', alignSelf: 'center',color:'white' }}>{SumExpense ?? "Error"}</Text>
+                  <View style={{ justifyContent: "space-between", flexDirection: 'row', marginTop: '2%',color:'white' }}>
+                    <Text style={{ fontSize: 12 ,color:'white'}}>รายการ</Text>
+                    <Text style={{ fontSize: 14,color:'white' }}>{CountExpense ?? 'Error'}</Text>
                   </View>
-                  <View style={{ justifyContent: "space-between", flexDirection: 'row', }}>
-                    <Text style={{ fontSize: 12 }}>เฉลี่ย/เดิอน</Text>
-                    <Text style={{ fontSize: 14 }}>{AvgExpense ?? "Error"}</Text>
+                  <View style={{ justifyContent: "space-between", flexDirection: 'row', color:'white'}}>
+                    <Text style={{ fontSize: 12,color:'white' }}>เฉลี่ย/เดิอน</Text>
+                    <Text style={{ fontSize: 14,color:'white' }}>{AvgExpense ?? "Error"}</Text>
                   </View>
                 </View>
               </View>
@@ -558,7 +561,7 @@ export default function Summary() {
         </ScrollView>
 
         {/* bottom bar */}
-
+        <BottomBar />
       </LinearGradient>)
   );
 }
