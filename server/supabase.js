@@ -25,8 +25,8 @@ app.post('/get-pockets', async (req, res) => {
 
   try {
     const { data, error } = await supabase
-      .from('pocket')
-      .select('pocket_name, id')
+      .from('pocket') 
+      .select('pocket_name, id, money')
       .eq('user_id', userId);
 
     if (error) {
