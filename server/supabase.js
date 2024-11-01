@@ -178,12 +178,12 @@ app.get('/', (req, res) => {
 });
 
 app.post('/transactionid', async (req, res) => {
-  const  {pocketid}  = req.body;
+  const { pocketid } = req.body;
 
   const { data, error } = await supabase
-  .from('transaction')
-  .select("*")
-  .eq("pocket_id",pocketid)
+    .from('transaction')
+    .select("*")
+    .eq("pocket_id", pocketid)
 
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
@@ -272,11 +272,20 @@ app.post('/register', async (req, res) => {
       },
     }
   );
+
   if (error) {
     console.log(error);
     throw error
   } else {
-    console.log(data);
+    console.log("id user",data.user.id);
+    
+    const { error } = await supabase
+      .from('pocket')
+      .insert({pocket_name: 'main',user_id: data.user.id, money: 0})
+    if (error) {
+      console.log("error of insert pocket",error);
+      throw error
+    }
     res.send(data);
   }
 });
@@ -296,7 +305,7 @@ app.post('/summary', async (req, res) => {
   let CountIncomeSearch = 0;
   let CountExpenseSearch = 0;
 
-  console.log("body summary",req.body)
+  console.log("body summary", req.body)
   const { data: IncomeData, error: IncomeError } = await supabase
     .from('transaction')
     .select('money,created_at,is_income, pocket!inner(user_id)')
@@ -498,7 +507,7 @@ app.post('/summary_pocket', async (req, res) => {
     .from('pocket')
     .select('pocket_name')
     .eq('id', pocket_id)
-  console.log('pockettttttt',pocket_name[0].pocket_name)
+  console.log('pockettttttt', pocket_name[0].pocket_name)
   const { data: IncomeData, error: IncomeError } = await supabase
     .from('transaction')
     .select('money,created_at,is_income,pocket_id, pocket!inner(user_id)')
