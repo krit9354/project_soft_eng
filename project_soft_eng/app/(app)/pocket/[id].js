@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ip } from '../../../config';
 import axios from 'axios'
 import { useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 export default function Pocket() {
     const { id } = useLocalSearchParams();
 
@@ -61,9 +62,9 @@ export default function Pocket() {
                         <Image source={require("../../../assets/images/test_image.png")} style={{ width: 70, height: 70, borderRadius: 35 }} />
                         <Text style={{ fontSize: 20, marginLeft: 10 }}>food</Text>
                     </View>
-
-                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('Test')} >
-                        <Image source={require("../../../assets/images/history.png")} style={{ width: 30, height: 30, overflow: 'visible' }} />
+                    
+                    <TouchableOpacity  style={{alignItems :'center'}} onPress={() => router.push("../summary_pocket/"+id)} >
+                        <Image source={require("../../../assets/images/history.png")} style={{width : 30,height:30,overflow:'visible'}} />
                         <Text>history</Text>
                     </TouchableOpacity>
                 </View>

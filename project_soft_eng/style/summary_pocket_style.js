@@ -63,8 +63,9 @@ export const myStyle = StyleSheet.create({
     },
     containerShow: {
         // paddingTop: "30%",
+        marginTop: "20%",
         // backgroundColor: 'red',
-        height: "20%",
+        // height: "20%",
         width: "95%",
         borderRadius: 20,
         margin: "3%",
@@ -74,10 +75,10 @@ export const myStyle = StyleSheet.create({
     },
     box: {
         width: '47%',
-        height: '70%', // ความสูงของ bottom bar
+        // height: '70%', // ความสูงของ bottom bar
         backgroundColor: "#DDDDDD", // สีพื้นหลัง
         borderRadius: 20,
-        padding: '2%',
+        padding: '5%',
         // shadowOpacity: 0.25,
         // shadowRadius: 4,
         // elevation: 4, 

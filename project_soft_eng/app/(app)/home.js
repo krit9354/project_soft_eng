@@ -8,6 +8,9 @@ import { ip } from '../../config';
 import axios from 'axios'
 import { useSession } from '../../components/ctx';
 import { router, Redirect } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 export default function HomeScreen() {
     const { signOut, session } = useSession();
     const [pockets, setPockets] = useState([])
@@ -15,8 +18,12 @@ export default function HomeScreen() {
     const [pockets_element, setPockets_element] = useState()
 
 
-    useEffect(() => {
-        // ฟังก์ชันในการดึงข้อมูลจาก API
+    useFocusEffect(
+        useCallback(() => {
+          fetchData();
+        }, [])
+      );
+
         const fetchData = async () => {
             try {
                 const res = await axios.post('http://' + ip + ':8080/pockets',{userId : session.id});
@@ -27,15 +34,13 @@ export default function HomeScreen() {
             }
             try {
                 const res = await axios.post('http://' + ip + ':8080/total_money',{userId : session.id});
-                setTotal(res.data.total);
-                // console.log(res.data);
+                setTotal(res.data.sum);
+                console.log(res.data);
             } catch (err) {
                 console.log("err :", err.message)
             }
         };
-        // console.log(session);
-        fetchData();
-    }, []);
+
 
     useEffect(() => {
         setPockets_element(pockets.map((pocket, index) => {
@@ -76,8 +81,8 @@ export default function HomeScreen() {
                     <Image source={require("../../assets/images/dollar.png")} />
                     <Text style={{ fontSize: 20 }}> {total}</Text>
                     <View style={{ alignItems: 'center' }}>
-                        <Image source={require("../../assets/images/transfer.png")} />
-                        <Text>transfer</Text>
+                        <Image onPress={() => router.push("newpocket")} source={require("../../assets/images/transfer.png") } />
+                        <Text onPress={() => router.push("transfermoney")}>transfer</Text>
                     </View>
                 </View>
                 <View style={myStyle.grid}>
@@ -86,7 +91,7 @@ export default function HomeScreen() {
             </ScrollView>
             {/* bottom bar */}
             <View style={myStyle.add_pocket}>
-                <Text style={{ fontSize: 16, color: "white" }} onPress={() => router.push("addincome")}>Add Pocket</Text>
+                <Text style={{ fontSize: 16, color: "white" }} onPress={() => router.push("newpocket")}>Add Pocket</Text>
             </View>
             <BottomBar />
         </LinearGradient>

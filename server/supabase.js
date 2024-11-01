@@ -9,10 +9,105 @@ const supabase = createClient(supabase_url, supabase_anon_key)
 
 
 const express = require('express');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 const app = express();
 const port = 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get('/get-pockets', async (req, res) => {
+  const userId = req.query.userId; // รับ user_id จาก query parameter
+
+  // Query ข้อมูล pocket_name จากฐานข้อมูล
+  const { data, error } = await supabase
+    .from('pocket')
+    .select('pocket_name')
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error fetching pockets:', error.message);
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.status(200).json(data); // ส่งข้อมูล pocket_name กลับไปในรูป JSON
+});
+
+
+app.post('/createpockets', upload.single('image'), async (req, res) => {
+  const { pocketname, goal, havetarget, userId } = req.body;
+  let imageUrl = null;
+  const file = req.file;
+
+  if (file) {
+    const fileName = `${userId}-${Date.now()}.jpg`;
+
+    try {
+      
+      const { data, error } = await supabase.storage
+        .from('pocket') 
+        .upload(fileName, file.buffer, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.mimetype
+        });
+
+      if (error) {
+        console.error('Error uploading image:', error.message);
+        return res.status(500).json({ error: error.message });
+      }
+      console.log("File Path in Storage:", data.path);
+      console.log("File Name:", fileName);
+     
+      const { data : {publicUrl} } = supabase.storage
+        .from('pocket')
+        .getPublicUrl(fileName);
+      imageUrl = publicUrl;
+      console.log("Generated Image URL:", imageUrl);
+    } catch (error) {
+      console.error('Error uploading image:', error.message);
+      return res.status(500).json({ error: 'Failed to upload image' });
+    }
+  }
+
+  
+  const { error: insertError } = await supabase
+    .from('pocket')
+    .insert({
+      pocket_name: pocketname,
+      have_target: havetarget,
+      target: goal,
+      user_id: userId,
+      money : 0,
+      image: imageUrl
+    });
+
+  if (insertError) {
+    console.error('Error inserting data into Supabase:', insertError.message);
+    return res.status(500).json({ error: insertError.message });
+  }
+  console.log("Data inserted successfully with Image URL:", imageUrl);
+  res.status(200).json({ message: 'Pocket created', url: imageUrl });
+});
+;
+
+
+// app.post('/createpockets', async (req, res) => {
+//   const  inputdata  = req.body;
+//   console.log(inputdata)
+//   const { error } = await supabase
+//   .from('pocket')
+//   .insert({pocket_name: req.body.pocketname, have_target : req.body.havetarget , target : req.body.goal , user_id : req.body.userId})
+
+
+//   if (error) {
+//     console.error("Error fetching data from Supabase:", error.message);
+//     return res.status(500).json({ error: error.message });
+//   }
+
+//   // console.log(data)
+// });
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -54,8 +149,9 @@ app.post('/total_money', async (req, res) => {
   const { userId } = req.body;
   const { data, error } = await supabase
   .from('pocket')
-  .select("money")
+  .select("money.sum()")
   .eq("user_id",userId)
+  .single()
 
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
@@ -63,14 +159,7 @@ app.post('/total_money', async (req, res) => {
   }
 
   console.log(data)
-
-  let sum = 0 ;
-  for (let i = 0; i < data.length; i++) {
-    sum += data[i].money
-  }
-
-  console.log(sum)
-  res.status(200).json({ total : sum });
+  res.send(data)
 });
 
 
@@ -240,6 +329,8 @@ app.post('/summary', async (req, res) => {
   // console.log("Dataที่กรุ๊ป",groupedArray);
   // console.log(data)
   if (Search == true) {
+    // let average_moneyIncome = 0;
+    // let average_moneyExpense = 0;
     const groupedDataIncome = IncomeDataSearch.reduce((acc, transaction) => {
       const date = new Date(transaction.created_at);
       const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
@@ -320,7 +411,14 @@ app.post('/summary', async (req, res) => {
 
 app.post('/summary_pocket', async (req, res) => {
   const id = req.body.id
-  const pocket_id = 1
+  const pocket_id = req.body.pocket_id
+  console.log('pocket_id', pocket_id)
+  // const pocket_id = 1
+  const { data: pocket_name, error: pocket_nameError } = await supabase
+    .from('pocket')
+    .select('pocket_name')
+    .eq('id', pocket_id)
+  console.log('pockettttttt',pocket_name[0].pocket_name)
   const { data: IncomeData, error: IncomeError } = await supabase
     .from('transaction')
     .select('money,created_at,is_income,pocket_id, pocket!inner(user_id)')
@@ -330,7 +428,7 @@ app.post('/summary_pocket', async (req, res) => {
 
 
 
-  console.log("แต่ละpock", IncomeData)
+  console.log("แต่ละpocket1", IncomeData)
   if (IncomeError) {
     console.log(IncomeError);
     throw IncomeError
@@ -394,7 +492,8 @@ app.post('/summary_pocket', async (req, res) => {
     CountExpense: CountExpense,
     average_money: average_money,
     Income_each_month: groupedArrayIncome,
-    Expense_each_month: groupedArrayExpense
+    Expense_each_month: groupedArrayExpense,
+    pocket_name: pocket_name[0].pocket_name
   }
   console.log(data)
   res.send(data)
