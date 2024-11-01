@@ -591,6 +591,22 @@ app.post('/summary_pocket', async (req, res) => {
 });
 
 
+app.post('/pocketpocket', async (req, res) => {
+  const  {pocketid}  = req.body;
+  const { data, error } = await supabase
+  .from('pocket')
+  .select("*")
+  .eq("id",pocketid)
+  .single()
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+  console.log(pocketid)
+  res.send(data)
+});
+
+
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
 });
