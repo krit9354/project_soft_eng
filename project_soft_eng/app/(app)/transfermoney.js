@@ -11,6 +11,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { myStyle } from "../../style/transfermoney_style";
@@ -23,19 +24,12 @@ import axios from "axios";
 import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
 import { useSession } from "../../components/ctx";
-
-const data = [
-  { label: "Item 1", value: "1" },
-  { label: "Item 2", value: "2" },
-  { label: "Item 3", value: "3" },
-  { label: "Item 4", value: "4" },
-  { label: "Item 5", value: "5" },
-  { label: "Item 6", value: "6" },
-  { label: "Item 7", value: "7" },
-  { label: "Item 8", value: "8" },
-];
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const transfermoney = () => {
+  const router = useRouter();
+  const { pocketId } = useLocalSearchParams();
   const [pockets_send, setPockets_send] = useState([]);
   const [pocketId_send, setPocketId_send] = useState(null);
   const [pockets_re, setPockets_re] = useState([]);
@@ -49,10 +43,22 @@ const transfermoney = () => {
   const [selectedImageforshow, setSelectedImageforshow] = useState("");
   const { session } = useSession();
   const [moneyforshow, setMoneyforshow] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (pockets_send.length > 0 && pocketId) {
+      setPocketId_send(pocketId);
+      const selectedPocket = pockets_send.find((pocket) => pocket.value === pocketId);
+      if (selectedPocket) {
+        setMoneyforshow(selectedPocket.moneyamount);
+      }
+    }
+  }, [pockets_send, pocketId]);
 
   useEffect(() => {
     const fetchPockets = async () => {
       try {
+  
         const res = await axios.post(`http://${ip}:8080/get-pockets`, {
           userId: session.id,
         });
@@ -63,19 +69,34 @@ const transfermoney = () => {
         }));
         setPockets_send(formattedData);
         setPockets_re(formattedData);
-        // console.log(formattedData);
+
+        if (pocketId) {
+          setPocketId_send(pocketId);
+          const selectedPocket = formattedData.find((pocket) => pocket.value === pocketId);
+          if (selectedPocket) {
+            setMoneyforshow(selectedPocket.moneyamount);
+          }
+        } else if (formattedData.length > 0) {
+          setPocketId_send(formattedData[0].value);
+          setMoneyforshow(formattedData[0].moneyamount);
+        }
+        console.log("Received pocketId:", pocketId);
+        console.log("Received pocketId:", pocketId_send);
       } catch (err) {
         console.error("Error fetching pockets:", err.message);
       }
+      setIsLoading(false)
     };
     fetchPockets();
-  }, []);
+  },[pocketId]);
+
+
 
   const Submit = async () => {
     outcomesend();
     incomesend();
   };
-  
+
   const incomesend = async () => {
     if (!amount || !pocketId_re) {
       Alert.alert("Error", "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
@@ -88,27 +109,30 @@ const transfermoney = () => {
       formData.append("pocket_id", pocketId_re);
       formData.append("details", details ? details : null);
       formData.append("is_income", true);
-      formData.append("userId", session.id)
-      
+      formData.append("userId", session.id);
 
       if (selectedImage && selectedImage.uri) {
         const fileUri = selectedImage.uri;
-        const filename = fileUri.split('/').pop();
+        const filename = fileUri.split("/").pop();
         const match = /\.(\w+)$/.exec(filename);
         const type = match ? `image/${match[1]}` : `image`;
-    
-        formData.append('image', {
+
+        formData.append("image", {
           uri: fileUri,
           name: filename,
-          type
+          type,
         });
       }
 
-      const res = await axios.post(`http://${ip}:8080/create-transaction`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
+      const res = await axios.post(
+        `http://${ip}:8080/create-transaction`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      });
+      );
       Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย");
     } catch (err) {
       console.error("Error submitting data:", err.message);
@@ -127,27 +151,30 @@ const transfermoney = () => {
       formData.append("pocket_id", pocketId_send);
       formData.append("details", details ? details : null);
       formData.append("is_income", false);
-      formData.append("userId", session.id)
-      
+      formData.append("userId", session.id);
 
       if (selectedImage && selectedImage.uri) {
         const fileUri = selectedImage.uri;
-        const filename = fileUri.split('/').pop();
+        const filename = fileUri.split("/").pop();
         const match = /\.(\w+)$/.exec(filename);
         const type = match ? `image/${match[1]}` : `image`;
-    
-        formData.append('image', {
+
+        formData.append("image", {
           uri: fileUri,
           name: filename,
-          type
+          type,
         });
       }
 
-      const res = await axios.post(`http://${ip}:8080/create-transaction`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
+      const res = await axios.post(
+        `http://${ip}:8080/create-transaction`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      });
+      );
       Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย");
     } catch (err) {
       console.error("Error submitting data:", err.message);
@@ -170,7 +197,7 @@ const transfermoney = () => {
   };
 
   return (
-    <LinearGradient
+   <LinearGradient
       colors={["#CDFADB", "#38E298"]}
       locations={[0.75, 1]}
       start={{ x: 0.5, y: 0 }}
@@ -197,18 +224,20 @@ const transfermoney = () => {
                 source= 
                 style={myStyle.image}
               /> */}
-              <Text style={myStyle.bigtext}>Transfer money</Text>
+              <Text style={myStyle.bigtext}>
+                Transfer money {pocketId_send}
+              </Text>
               <View style={myStyle.moneyamount}>
                 <Image source={require("../../assets/images/dollar.png")} />
                 <Text style={{ fontSize: 20 }}> {moneyforshow}</Text>
                 {/* <Text style={{ fontSize: 20 }}> 123</Text> */}
                 <View style={{ alignItems: "center" }}></View>
               </View>
-              
 
               <Text style={myStyle.label}>Pocket ส่ง</Text>
               <View style={myStyle.pickerContainer}>
                 <Dropdown
+                  key={pocketId_send}
                   style={myStyle.picker}
                   data={pockets_send}
                   textStyle={{
@@ -296,7 +325,7 @@ const transfermoney = () => {
       {/* bottom bar */}
       <View style={myStyle.bottom_barkub}>
         <View>
-        <TouchableOpacity style={myStyle.button} onPress={Submit}>
+          <TouchableOpacity style={myStyle.button} onPress={Submit}>
             <Text style={myStyle.buttonText}>ยืนยัน</Text>
           </TouchableOpacity>
         </View>

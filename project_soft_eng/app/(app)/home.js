@@ -19,7 +19,7 @@ export default function HomeScreen() {
     const [mainPockets, setMainPockets] = useState([])
     const [pockets_element, setPockets_element] = useState()
     const [isLoading, setIsLoading] = useState(false);
-
+    const [selectedPocketId, setSelectedPocketId] = useState(null);
     useFocusEffect(
         useCallback(() => {
             fetchData();
@@ -43,6 +43,7 @@ export default function HomeScreen() {
             const res = await axiosInstance.post('/pockets', { userId: session.id });
             setPockets(res.data.filter(pocket => pocket.pocket_name !== "main"));
             setMainPockets(res.data.find(pocket => pocket.pocket_name === "main"));
+            // setSelectedPocketId(res.data.find(pocket => pocket.pocket_name === "main"));
         } catch (err) {
             console.log("err :", err.message)
         }
@@ -98,7 +99,8 @@ export default function HomeScreen() {
                     <View style={myStyle.main_pocket}>
                         <Image source={require("../../assets/images/dollar.png")} />
                         <Text style={{ fontSize: 20 }}> {mainPockets?.money}</Text>
-                        <TouchableOpacity onPress={() => router.push("transfermoney")} style={{ alignItems: 'center' }}>
+                        <TouchableOpacity onPress={() => router.push({ pathname: "transfermoney", params: { pocketId: mainPockets?.id } })} style={{ alignItems: 'center' }}>
+                        {/* <TouchableOpacity onPress={() => router.push("transfermoney")} style={{ alignItems: 'center' }}> */}
                             <Image  source={require("../../assets/images/transfer.png")} />
                             <Text >transfer</Text>
                         </TouchableOpacity>

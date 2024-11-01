@@ -114,6 +114,7 @@ export const myStyle = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 8,
+    marginTop: 10,
   },
   bottom_barkub : {
     width : '100%',

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-;
 import { myStyle } from "../../style/addincome_style";
 import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
@@ -20,8 +19,6 @@ import * as ImagePicker from "expo-image-picker";
 import { Button } from "react-native-paper";
 import { ip } from "../../config";
 import { useSession } from "../../components/ctx";
-
-
 
 const NewIncomeScreen = () => {
   const [amount, setAmount] = useState("");
@@ -36,7 +33,6 @@ const NewIncomeScreen = () => {
   const [pockets, setPockets] = useState([]);
   const { session } = useSession();
 
-  
   const option = {
     title: "select Image",
     type: "library",
@@ -47,16 +43,15 @@ const NewIncomeScreen = () => {
     },
   };
 
-
   useEffect(() => {
     const fetchPockets = async () => {
       try {
         const res = await axios.post(`http://${ip}:8080/get-pockets`, {
-          userId: session.id 
+          userId: session.id,
         });
         const formattedData = res.data.map((item) => ({
           label: item.pocket_name,
-          value: item.id
+          value: item.id,
         }));
         setPockets(formattedData);
       } catch (err) {
@@ -65,8 +60,6 @@ const NewIncomeScreen = () => {
     };
     fetchPockets();
   }, []);
-
-
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -77,7 +70,7 @@ const NewIncomeScreen = () => {
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0]);
-      setSelectedImageforshow(result.assets[0].uri)
+      setSelectedImageforshow(result.assets[0].uri);
       console.log(result.assets[0]);
     }
   };
@@ -94,27 +87,30 @@ const NewIncomeScreen = () => {
       formData.append("pocket_id", pocketId);
       formData.append("details", details ? details : null);
       formData.append("is_income", is_income);
-      formData.append("userId", session.id)
-      
+      formData.append("userId", session.id);
 
       if (selectedImage && selectedImage.uri) {
         const fileUri = selectedImage.uri;
-        const filename = fileUri.split('/').pop();
+        const filename = fileUri.split("/").pop();
         const match = /\.(\w+)$/.exec(filename);
         const type = match ? `image/${match[1]}` : `image`;
-    
-        formData.append('image', {
+
+        formData.append("image", {
           uri: fileUri,
           name: filename,
-          type
+          type,
         });
       }
 
-      const res = await axios.post(`http://${ip}:8080/create-transaction`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
+      const res = await axios.post(
+        `http://${ip}:8080/create-transaction`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      });
+      );
       Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย");
     } catch (err) {
       console.error("Error submitting data:", err.message);
@@ -146,13 +142,31 @@ const NewIncomeScreen = () => {
                 source= 
                 style={myStyle.image}
               /> */}
-              <Text style={myStyle.bigtext}>รายการใหม่</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={myStyle.bigtext}>รายการใหม่</Text>
+                <TouchableOpacity style={{ alignItems: "center" }}>
+                  <Image
+                    source={require("../../assets/images/Scanpic.png")}
+                    style={{ width: 33, height: 33, marginLeft: 10 }}
+                  />
+                  <Text style={{ fontSize: 11}}>
+                    นำเข้าด้วยรูป
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
               <View style={myStyle.rowincomeorexpense}>
                 <Button
                   mode="contained"
                   onPress={() => setIs_income(true)}
                   style={{ marginHorizontal: 10 }}
-                  buttonColor={is_income ? "#38E298" : "#CDFADB"} 
+                  buttonColor={is_income ? "#38E298" : "#CDFADB"}
                   textColor={is_income ? "#ffffff" : "#ffffff"}
                 >
                   รายรับ
@@ -161,7 +175,7 @@ const NewIncomeScreen = () => {
                   mode="contained"
                   onPress={() => setIs_income(false)}
                   style={{ marginHorizontal: 10 }}
-                  buttonColor={!is_income ? "#FF5A5A" : "#FDC5C5"} 
+                  buttonColor={!is_income ? "#FF5A5A" : "#FDC5C5"}
                   textColor={!is_income ? "#ffffff" : "#ffffff"}
                 >
                   รายจ่าย
@@ -182,7 +196,7 @@ const NewIncomeScreen = () => {
                   style={myStyle.picker}
                   data={pockets}
                   textStyle={{
-                    marginLeft: 10, 
+                    marginLeft: 10,
                   }}
                   maxHeight={300}
                   labelField="label"
@@ -211,14 +225,19 @@ const NewIncomeScreen = () => {
               />
 
               <Text style={myStyle.label}>รูป</Text>
-              <TouchableOpacity onPress={pickImage} style={myStyle.imagePlaceholder}>
+              <TouchableOpacity
+                onPress={pickImage}
+                style={myStyle.imagePlaceholder}
+              >
                 <Image
                   source={
                     selectedImageforshow
                       ? { uri: selectedImageforshow }
                       : require("../../assets/images/photoicon.png")
-                  } 
-                  style={selectedImageforshow ? myStyle.image : myStyle.image_icon}
+                  }
+                  style={
+                    selectedImageforshow ? myStyle.image : myStyle.image_icon
+                  }
                 />
               </TouchableOpacity>
             </View>
