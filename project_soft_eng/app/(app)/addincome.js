@@ -104,7 +104,7 @@ const NewIncomeScreen = () => {
       const formData = new FormData();
       formData.append("amount", amount);
       formData.append("pocket_id", pocketId);
-      formData.append("details", details);
+      formData.append("details", details ? details : null);
       formData.append("is_income", is_income);
       formData.append("userId", session.id)
       
@@ -193,7 +193,7 @@ const NewIncomeScreen = () => {
                   style={myStyle.picker}
                   data={pockets}
                   textStyle={{
-                    marginLeft: 10, // ระยะห่างของข้อความจากขอบซ้าย
+                    marginLeft: 10, 
                   }}
                   maxHeight={300}
                   labelField="label"

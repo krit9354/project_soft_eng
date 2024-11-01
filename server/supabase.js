@@ -42,16 +42,18 @@ app.post('/create-transaction', upload.single('image'), async (req, res) => {
   const { amount, pocket_id, details, is_income , userId} = req.body;
   let imageUrl = null;
   let haveimgkub = false;
+  const detailsValue = (details === "null" || details === "") ? null : details;
+  console.log("Details Value:", details);
   const file = req.file;
 
-  // ตรวจสอบและอัปโหลดรูปภาพ
+  
   if (file && userId) {
     const fileName = `${userId}-${Date.now()}.jpg`;
 
     try {
-      // อัปโหลดรูปภาพไปยัง Supabase Storage
+      
       const { data, error } = await supabase.storage
-        .from('transaction') // แก้ชื่อ bucket ให้ตรงตามที่คุณตั้งใน Supabase
+        .from('transaction') 
         .upload(fileName, file.buffer, {
           cacheControl: '3600',
           upsert: false,
@@ -63,7 +65,7 @@ app.post('/create-transaction', upload.single('image'), async (req, res) => {
         return res.status(500).json({ error: error.message });
       }
 
-      // สร้าง URL สาธารณะสำหรับไฟล์ที่อัปโหลด
+    
       const { data: { publicUrl } } = supabase.storage
         .from('transaction')
         .getPublicUrl(fileName);
@@ -76,15 +78,15 @@ app.post('/create-transaction', upload.single('image'), async (req, res) => {
     }
   }
 
-  // บันทึกข้อมูล transaction ลงในฐานข้อมูล
+  
   const { error: insertError } = await supabase
-    .from('transaction') // ชื่อ table ที่ใช้เก็บ transaction
+    .from('transaction') 
     .insert({
       money: parseFloat(amount),
       pocket_id: pocket_id,
-      event: details,
+      event: detailsValue,
       is_income: is_income,
-      img: imageUrl, // บันทึก URL ของรูปภาพ (ถ้ามี)
+      img: imageUrl, 
       have_img : haveimgkub
     });
 
