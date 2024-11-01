@@ -34,9 +34,9 @@ export const myStyle = StyleSheet.create({
         
     },
     main_content_box : {
-        marginHorizontal:"auto",
-        width:"80%",
-
+        height:"100%",
+        paddingHorizontal: "7%",
+        
         zIndex : 0
     },
     main_pocket : {
