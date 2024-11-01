@@ -12,7 +12,7 @@ import { router, Redirect } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { TouchableOpacity } from 'react-native';
 export default function HomeScreen() {
     const { signOut, session } = useSession();
     const [pockets, setPockets] = useState([])
@@ -98,10 +98,10 @@ export default function HomeScreen() {
                     <View style={myStyle.main_pocket}>
                         <Image source={require("../../assets/images/dollar.png")} />
                         <Text style={{ fontSize: 20 }}> {mainPockets?.money}</Text>
-                        <View style={{ alignItems: 'center' }}>
-                            <Image onPress={() => router.push("newpocket")} source={require("../../assets/images/transfer.png")} />
-                            <Text onPress={() => router.push("transfermoney")}>transfer</Text>
-                        </View>
+                        <TouchableOpacity onPress={() => router.push("transfermoney")} style={{ alignItems: 'center' }}>
+                            <Image  source={require("../../assets/images/transfer.png")} />
+                            <Text >transfer</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={myStyle.grid}>
                         {pockets_element}

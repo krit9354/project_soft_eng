@@ -14,7 +14,6 @@ import {
 ;
 import { myStyle } from "../../style/addincome_style";
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect } from "react";
 import axios from "axios";
 import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
@@ -23,21 +22,10 @@ import { ip } from "../../config";
 import { useSession } from "../../components/ctx";
 
 
-const data = [
-  { label: "Item 1", value: "1" },
-  { label: "Item 2", value: "2" },
-  { label: "Item 3", value: "3" },
-  { label: "Item 4", value: "4" },
-  { label: "Item 5", value: "5" },
-  { label: "Item 6", value: "6" },
-  { label: "Item 7", value: "7" },
-  { label: "Item 8", value: "8" },
-];
 
 const NewIncomeScreen = () => {
   const [amount, setAmount] = useState("");
   const [pocketId, setPocketId] = useState(null);
-  const [selectedPocket, setSelectedPocket] = useState("");
   const [details, setDetails] = useState(null);
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
@@ -133,6 +121,7 @@ const NewIncomeScreen = () => {
       Alert.alert("Error", "ไม่สามารถบันทึกข้อมูลได้");
     }
   };
+
   return (
     <LinearGradient
       colors={["#CDFADB", "#38E298"]}
