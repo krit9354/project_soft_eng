@@ -11,14 +11,14 @@ import { router, Redirect } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { TouchableOpacity } from 'react-native';
 export default function HomeScreen() {
     const { signOut, session } = useSession();
     const [pockets, setPockets] = useState([])
     const [mainPockets, setMainPockets] = useState([])
     const [pockets_element, setPockets_element] = useState()
     const [isLoading, setIsLoading] = useState(false);
-
+    const [selectedPocketId, setSelectedPocketId] = useState(null);
     useFocusEffect(
         useCallback(() => {
             fetchData();
@@ -31,6 +31,7 @@ export default function HomeScreen() {
             const res = await axios.post('http://' + ip + ':8080/pockets', { userId: session.id });
             setPockets(res.data.filter(pocket => pocket.pocket_name !== "main"));
             setMainPockets(res.data.find(pocket => pocket.pocket_name === "main"));
+            // setSelectedPocketId(res.data.find(pocket => pocket.pocket_name === "main"));
         } catch (err) {
             console.log("err :", err.message)
         }
@@ -43,8 +44,6 @@ export default function HomeScreen() {
             return <PocketCard key={index} props={pocket} />
         }))
     }, [pockets])
-    console.log("avatar-",session)
-    console.log("avatar--",session.avatar_url)
 
     return (
         isLoading ?
@@ -82,10 +81,11 @@ export default function HomeScreen() {
                     <View style={myStyle.main_pocket}>
                         <Image source={require("../../assets/images/dollar.png")} />
                         <Text style={{ fontSize: 20 }}> {mainPockets?.money}</Text>
-                        <View style={{ alignItems: 'center' }}>
-                            <Image onPress={() => router.push("newpocket")} source={require("../../assets/images/transfer.png")} />
-                            <Text onPress={() => router.push("transfermoney")}>transfer</Text>
-                        </View>
+                        <TouchableOpacity onPress={() => router.push({ pathname: "transfermoney", params: { pocketId: mainPockets?.id } })} style={{ alignItems: 'center' }}>
+                        {/* <TouchableOpacity onPress={() => router.push("transfermoney")} style={{ alignItems: 'center' }}> */}
+                            <Image  source={require("../../assets/images/transfer.png")} />
+                            <Text >transfer</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={myStyle.grid}>
                         {pockets_element}

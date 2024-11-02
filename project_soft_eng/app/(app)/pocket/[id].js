@@ -76,7 +76,7 @@ export default function Pocket() {
             <View style={myStyle.top_bar}>
                 <View style={myStyle.top_bar_content}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Image   source={{ uri: pocket?.image }} style={{ width: 70, height: 70, borderRadius: 35 }} />
+                        <Image   source={pocket?.image?{ uri: pocket?.image }:(require("../../../assets/images/pocket.png"))} style={{ width: 70, height: 70, borderRadius: 35 }} />
                         <View style={{ flexDirection: 'colum', alignItems: 'center' }}>
                         <Text style={{ fontSize: 20, marginLeft: 10 }}>{pocket?.pocket_name}</Text>
                         <Text style={{ fontSize: 15, marginLeft: 10 }}>{pocket?.money}฿</Text>
@@ -125,7 +125,7 @@ export default function Pocket() {
 
             <View style={myStyle.separator} />
 
-            <TouchableOpacity style={myStyle.menuItem} onPress={() => alert('Transfer selected')}>
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => router.push({ pathname: "transfermoney", params: { pocketId: id } })}>
             <Image source={require("../../../assets/images/transfer.png")}  />
               <Text style={myStyle.menuText}>Transfer</Text>
             </TouchableOpacity>

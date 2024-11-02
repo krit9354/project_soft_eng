@@ -18,7 +18,7 @@ const Slip = () => {
     },
   }
 
-  
+   
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -80,7 +80,7 @@ const Slip = () => {
           source={{ uri: selectedImage.uri }}
           style={styles.image}
         />
-      )}
+      )} 
       <Button title="Upload Image" onPress={uploadImage} />
       {data && (<Text>{data.sender.displayName} send to {data.receiver.displayName} {data.amount} bath</Text>)}
     </View>

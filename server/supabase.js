@@ -25,8 +25,8 @@ app.post('/get-pockets', async (req, res) => {
 
   try {
     const { data, error } = await supabase
-      .from('pocket')
-      .select('pocket_name, id')
+      .from('pocket') 
+      .select('pocket_name, id, money')
       .eq('user_id', userId);
 
     if (error) {
@@ -588,6 +588,22 @@ app.post('/summary_pocket', async (req, res) => {
   console.log(data)
   res.send(data)
 
+});
+
+
+app.post('/pocketpocket', async (req, res) => {
+  const  {pocketid}  = req.body;
+  const { data, error } = await supabase
+  .from('pocket')
+  .select("*")
+  .eq("id",pocketid)
+  .single()
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+  console.log(pocketid)
+  res.send(data)
 });
 
 
