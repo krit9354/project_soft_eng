@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { myStyle } from "../../style/setting_style";
@@ -24,9 +25,9 @@ import * as ImagePicker from "expo-image-picker";
 
 const Setting = () => {
   const { signOut, session } = useSession();
-  const [username, setUsername] = useState(session.user_metadata.username);
-  const [bankName, setBankName] = useState(session.user_data.name_bank ? session.user_data.name_bank : null);
-  const [selectedImage, setSelectedImage] = useState(session.user_data.avatar_url ? { uri : session.user_data.avatar_url} : null);
+  const [username, setUsername] = useState(session.username);
+  const [bankName, setBankName] = useState(session.name_bank ? session.name_bank : null);
+  const [selectedImage, setSelectedImage] = useState(session.avatar_url ? { uri: session.avatar_url } : null);
 
   const pickImage = async () => {
     // console.log(selectedImage)
@@ -40,6 +41,38 @@ const Setting = () => {
       setSelectedImage(result.assets[0]);
     }
   };
+
+  const Submit = async () => {
+
+    try {
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("name_bank", bankName);
+      formData.append("userId", session.id)
+
+
+
+
+        formData.append("image",{
+          uri : selectedImage.uri,
+          type : selectedImage.mimeType,
+          name : "image.png",
+          fileName : "image"
+        });
+      
+
+      const res = await axios.post(`http://${ip}:8080/edit_profile`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      Alert.alert("Success", "แก้ไขข้อมูล");
+    } catch (err) {
+      console.error("Error submitting data:", err.message);
+      Alert.alert("Error", "ไม่สามารถบันทึกข้อมูลได้");
+    }
+  };
+
   return (
     <LinearGradient
       colors={["#CDFADB", "#38E298"]}
@@ -81,7 +114,7 @@ const Setting = () => {
           placeholder="Bank name"
         />
 
-        <TouchableOpacity style={myStyle.save_button}>
+        <TouchableOpacity style={myStyle.save_button} onPress={Submit}>
           <Text style={{ color: "white" }}>save</Text>
         </TouchableOpacity>
 

@@ -67,8 +67,8 @@ export default function HomeScreen() {
                 <View style={myStyle.top_bar}>
                     <View style={myStyle.top_bar_content}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image style={myStyle.profile} source={session.user_data.avatar_url?{ uri: session.user_data.avatar_url }:(require("../../assets/images/avatar.png"))}/>
-                            <Text style={{ fontSize: 20, marginLeft: 10 }}>{session?.user_metadata?.username ?? "ERROR"}</Text>
+                            <Image style={myStyle.profile} source={session.avatar_url?{ uri: session.avatar_url }:(require("../../assets/images/avatar.png"))}/>
+                            <Text style={{ fontSize: 20, marginLeft: 10 }}>{session.username ?? "ERROR"}</Text>
                         </View>
                         <View style={{ alignItems: 'center' }} >
                             <Image source={require("../../assets/images/history.png")} />
@@ -93,7 +93,7 @@ export default function HomeScreen() {
                 </ScrollView>
                 {/* bottom bar */}
                 <View style={myStyle.add_pocket}>
-                    <Text style={{ fontSize: 16, color: "white" }} onPress={() => router.push("newpocket")}>Add Pocket</Text>
+                    <Text style={{ fontSize: 16, color: "white" }} onPress={() => router.push("slip")}>Add Pocket</Text>
                 </View>
                 <BottomBar />
             </LinearGradient>)
