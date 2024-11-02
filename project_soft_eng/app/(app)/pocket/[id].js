@@ -125,7 +125,7 @@ export default function Pocket() {
 
             <View style={myStyle.separator} />
 
-            <TouchableOpacity style={myStyle.menuItem} onPress={() => alert('Transfer selected')}>
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => router.push({ pathname: "transfermoney", params: { pocketId: id } })}>
             <Image source={require("../../../assets/images/transfer.png")}  />
               <Text style={myStyle.menuText}>Transfer</Text>
             </TouchableOpacity>
