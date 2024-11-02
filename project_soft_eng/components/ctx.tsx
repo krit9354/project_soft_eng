@@ -54,7 +54,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
               email: email,
               password: password
             });
-          console.log("res!",res.data.user);
+          console.log("user data in session :",res.data.user);
           setSession(res.data);
           router.replace("/home");
           console.log("pass")

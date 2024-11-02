@@ -11,7 +11,6 @@ export const myStyle = StyleSheet.create({
     marginHorizontal: "auto",
     width: "80%",
     height: "80%",
-    overflow: "visible",
     zIndex: 0,
     backgroundColor: "white",
     borderRadius : 20,

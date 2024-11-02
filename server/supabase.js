@@ -25,7 +25,7 @@ app.post('/get-pockets', async (req, res) => {
 
   try {
     const { data, error } = await supabase
-      .from('pocket') 
+      .from('pocket')
       .select('pocket_name, id, money')
       .eq('user_id', userId);
 
@@ -247,8 +247,7 @@ app.post('/login', async (req, res) => {
       console.error("Error fetching data from Supabase:", error.message);
       return res.status(500).json({ error: error.message });
     }
-    console.log("user_data",userdata.data)
-    userdata.data[0]
+    console.log("user_data", userdata.data)
     res.send(userdata.data[0])
   }
 });
@@ -272,13 +271,13 @@ app.post('/register', async (req, res) => {
     res.status(500)
     // throw error
   } else {
-    console.log("id user",data.user.id);
-    
+    console.log("id user", data.user.id);
+
     const { error } = await supabase
       .from('pocket')
-      .insert({pocket_name: 'main',user_id: data.user.id, money: 0})
+      .insert({ pocket_name: 'main', user_id: data.user.id, money: 0 })
     if (error) {
-      console.log("error of insert pocket",error);
+      console.log("error of insert pocket", error);
       throw error
     }
     res.send(data);
@@ -592,12 +591,12 @@ app.post('/summary_pocket', async (req, res) => {
 
 
 app.post('/pocketpocket', async (req, res) => {
-  const  {pocketid}  = req.body;
+  const { pocketid } = req.body;
   const { data, error } = await supabase
-  .from('pocket')
-  .select("*")
-  .eq("id",pocketid)
-  .single()
+    .from('pocket')
+    .select("*")
+    .eq("id", pocketid)
+    .single()
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
@@ -609,7 +608,7 @@ app.post('/pocketpocket', async (req, res) => {
 
 
 app.post('/edit_profile', upload.single('image'), async (req, res) => {
-  const { userId,username,name_bank } = req.body;
+  const { userId, username, name_bank } = req.body;
   let imageUrl = null;
   const file = req.file;
 
@@ -648,9 +647,9 @@ app.post('/edit_profile', upload.single('image'), async (req, res) => {
   const { error: insertError } = await supabase
     .from('profiles')
     .update({
-      avatar_url:imageUrl,
-      username : username,
-      name_bank : name_bank
+      avatar_url: imageUrl,
+      username: username,
+      name_bank: name_bank
     })
     .eq("id", userId);
 
@@ -659,7 +658,18 @@ app.post('/edit_profile', upload.single('image'), async (req, res) => {
     return res.status(500).json({ error: insertError.message });
   }
   console.log("Data inserted successfully with Image URL:", imageUrl);
-  res.status(200).json({ message: 'Pocket created', url: imageUrl });
+  // res.status(200).json({ message: 'Pocket created', url: imageUrl });
+
+  const userdata = await supabase
+    .from('profiles')
+    .select("*")
+    .eq("id", userId)
+  if (userdata.error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+  console.log("user_data", userdata.data)
+  res.send(userdata.data[0])
 });
 ;
 

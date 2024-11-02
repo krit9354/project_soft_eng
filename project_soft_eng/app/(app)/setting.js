@@ -3,28 +3,26 @@ import {
   View,
   Text,
   TextInput,
-  Button,
-  StyleSheet,
   TouchableOpacity,
   Image,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import { myStyle } from "../../style/setting_style";
 import { LinearGradient } from "expo-linear-gradient";
-import PocketCard from "../../components/pocketCard";
 import BottomBar from "../../components/bottomBar";
-import { useNavigation } from "@react-navigation/native";
 import { ip } from "../../config";
 import axios from "axios";
-import { Dropdown } from "react-native-element-dropdown";
 import { useSession } from "../../components/ctx";
 import { router, Redirect } from 'expo-router';
 import * as ImagePicker from "expo-image-picker";
+import { useStorageState } from "../../components/useStorageState";
 
 const Setting = () => {
   const { signOut, session } = useSession();
+  const [, setSession] = useStorageState('session');
   const [username, setUsername] = useState(session.username);
   const [bankName, setBankName] = useState(session.name_bank ? session.name_bank : null);
   const [selectedImage, setSelectedImage] = useState(session.avatar_url ? { uri: session.avatar_url } : null);
@@ -51,8 +49,6 @@ const Setting = () => {
       formData.append("userId", session.id)
 
 
-
-
         formData.append("image",{
           uri : selectedImage.uri,
           type : selectedImage.mimeType,
@@ -66,6 +62,12 @@ const Setting = () => {
           "Content-Type": "multipart/form-data"
         }
       });
+      console.log("user data in session :",res.data);
+      
+      setSession(res.data.user);
+      console.log(session)
+
+      
       Alert.alert("Success", "แก้ไขข้อมูล");
     } catch (err) {
       console.error("Error submitting data:", err.message);
@@ -81,8 +83,12 @@ const Setting = () => {
       end={{ x: 0.5, y: 1 }}
       style={myStyle.bg}
     >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
       {/* main content */}
-      <View
+      <ScrollView
         style={myStyle.main_content_box}
       >
         <Text style={myStyle.bigtext}>การตั้งค่า</Text>
@@ -125,9 +131,11 @@ const Setting = () => {
           <Text style={{ color: "white" }}>logout</Text>
         </TouchableOpacity>
 
-      </View>
+      </ScrollView>
 
       {/* bottom bar */}
+      
+      </KeyboardAvoidingView>
       <BottomBar />
     </LinearGradient>
   );
