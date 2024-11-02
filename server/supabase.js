@@ -235,21 +235,21 @@ app.post('/login', async (req, res) => {
   if (error) {
     console.log(error);
     // throw error
-    res.status(500)
+    return res.status(500)
   } else {
     console.log(data.user.id)
 
     const userdata = await supabase
       .from('profiles')
-      .select("username,avatar_url,name_bank")
+      .select("*")
       .eq("id", data.user.id)
     if (error) {
       console.error("Error fetching data from Supabase:", error.message);
       return res.status(500).json({ error: error.message });
     }
     console.log("user_data",userdata.data)
-    data.user.user_data = userdata.data[0]
-    res.send(data)
+    userdata.data[0]
+    res.send(userdata.data[0])
   }
 });
 
@@ -589,6 +589,63 @@ app.post('/summary_pocket', async (req, res) => {
   res.send(data)
 
 });
+
+
+
+app.post('/edit_profile', upload.single('image'), async (req, res) => {
+  const { userId,username,name_bank } = req.body;
+  let imageUrl = null;
+  const file = req.file;
+
+  if (file) {
+    const fileName = `${userId}-${Date.now()}.jpg`;
+
+    try {
+
+      const { data, error } = await supabase.storage
+        .from('avatar')
+        .upload(fileName, file.buffer, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.mimetype
+        });
+
+      if (error) {
+        console.error('Error uploading image:', error.message);
+        return res.status(500).json({ error: error.message });
+      }
+      console.log("File Path in Storage:", data.path);
+      console.log("File Name:", fileName);
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatar')
+        .getPublicUrl(fileName);
+      imageUrl = publicUrl;
+      console.log("Generated Image URL:", imageUrl);
+    } catch (error) {
+      console.error('Error uploading image:', error.message);
+      return res.status(500).json({ error: 'Failed to upload image' });
+    }
+  }
+
+
+  const { error: insertError } = await supabase
+    .from('profiles')
+    .update({
+      avatar_url:imageUrl,
+      username : username,
+      name_bank : name_bank
+    })
+    .eq("id", userId);
+
+  if (insertError) {
+    console.error('Error inserting data into Supabase:', insertError.message);
+    return res.status(500).json({ error: insertError.message });
+  }
+  console.log("Data inserted successfully with Image URL:", imageUrl);
+  res.status(200).json({ message: 'Pocket created', url: imageUrl });
+});
+;
 
 
 app.listen(port, () => {
