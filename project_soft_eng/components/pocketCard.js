@@ -5,16 +5,22 @@ import { myStyle } from '../style/pocketCard_style';
 import { Link, router } from 'expo-router';
 export default function PocketCard(item) {
   const items = item.props
-  var width_bar = items.money / items.target * 100
-  if (width_bar < 0){
-    width_bar = 0
+  var width_bar = 0
+  if (items.have_target) {
+    if (items.money != null || items.target != null) {
+      width_bar = items.money / items.target * 100
+    }
+    if (width_bar < 0) {
+      width_bar = 0
+    }
   }
-  console.log(items.pocket_name,items.money , items.target , items.money / items.target * 100)
+  
+  console.log(items.pocket_name, items.money, items.target, items.money / items.target * 100)
   return (
     <TouchableOpacity style={myStyle.card} onPress={() => router.push("/pocket/" + items.id)}>
-      
+
       <Image
-        source={items.image?{ uri: items.image }:(require("../assets/images/pocket.png"))}
+        source={items.image ? { uri: items.image } : (require("../assets/images/pocket.png"))}
         style={myStyle.image}
       />
       <View style={myStyle.container}>
