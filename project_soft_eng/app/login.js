@@ -20,13 +20,14 @@ export default function Login() {
   const [password, setPassword] = useState('');
 
   async function login() {
-    console.log("login")
     try {
+      
       await signIn(email, password);
+      
 
-    } catch (err) {
-      console.error(err.message);
-      Alert.alert("Email or password is incorrect");
+    } catch (err) { 
+      //  console.error(err.message);
+     alert("Email or password is incorrect");
     }
   };
   
