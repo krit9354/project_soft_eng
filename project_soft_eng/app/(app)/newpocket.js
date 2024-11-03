@@ -53,32 +53,32 @@ const addPocket = () => {
       Alert.alert("Error", "กรุณากรอกชื่อ Pocket");
       return;
     }
-    if ((checked && !goalAmount )&& goalAmount != 0)  {
-      Alert.alert("Error", "กรุณากรอกจำนวนเป้าหมาย");
+    if ((checked && Number(goalAmount) == 0) || (checked && !goalAmount)) {
+      Alert.alert("กรุณากรอกจำนวนเป้าหมาย(ที่ไม่ใช่ 0)");
       return;
     }
     const formData = new FormData();
     formData.append('pocketname', amount);
     formData.append('havetarget', checked);
     formData.append('userId', session.id);
-    if (goalAmount !== null && goalAmount !== "") {
+    if (checked) {
       formData.append('goal', goalAmount);
     }
-  
+
     // ตรวจสอบว่ามีการตั้งค่า selectedImage หรือไม่
     if (selectedImage && selectedImage.uri) {
       const fileUri = selectedImage.uri;
       const filename = fileUri.split('/').pop();
       const match = /\.(\w+)$/.exec(filename);
       const type = match ? `image/${match[1]}` : `image`;
-  
+
       formData.append('image', {
         uri: fileUri,
         name: filename,
         type
       });
     }
-  
+
     try {
       const res = await axios.post(`http://${ip}:8080/createpockets`, formData, {
         headers: {
@@ -94,7 +94,7 @@ const addPocket = () => {
     }
   };
 
-  
+
 
   const pickImage = async () => {
     // console.log(selectedImage)
