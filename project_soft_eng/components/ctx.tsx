@@ -55,12 +55,15 @@ export function SessionProvider({ children }: PropsWithChildren) {
       
     },
     signIn: async (email, password) => {
-      console.log("login ctx");
+      // console.log("login ctx");
       try {
         const res = await axios.post('http://' + ip + ':8080/login', {
           email: email,
           password: password
         });
+        
+        console.log(res);
+        
         console.log("user data in session:", res.data);
         setSession(res.data); // ตั้งค่า session ใหม่
         router.replace("/home");
