@@ -25,6 +25,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
 
 import { useSession } from "../../components/ctx";
+import { router } from "expo-router";
 
 const addPocket = () => {
   const { session } = useSession();
@@ -48,6 +49,14 @@ const addPocket = () => {
   // };
 
   const senddata = async () => {
+    if (!amount) {
+      Alert.alert("Error", "กรุณากรอกชื่อ Pocket");
+      return;
+    }
+    if ((checked && !goalAmount )&& goalAmount != 0)  {
+      Alert.alert("Error", "กรุณากรอกจำนวนเป้าหมาย");
+      return;
+    }
     const formData = new FormData();
     formData.append('pocketname', amount);
     formData.append('havetarget', checked);
@@ -76,6 +85,9 @@ const addPocket = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
+      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย", [
+        { text: "OK", onPress: () => router.push("/home") },
+      ]);
       console.log(res.data);
     } catch (err) {
       console.log('err:', err.message);

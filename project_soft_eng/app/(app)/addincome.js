@@ -134,8 +134,8 @@ const NewIncomeScreen = () => {
       }
       setData(res.data);
       Alert.alert(
-        "Upload successful",
-        "Your image has been uploaded successfully!"
+        "อัพโหลดรูปภาพสำเร็จ!!",
+        "รูปภาพของคุณถูกอัพโหลดเสร็จสิ้น"
       );
     } catch (error) {
       console.error("Error:", error.message);
@@ -148,9 +148,10 @@ const NewIncomeScreen = () => {
 
   const Submit = async () => {
     if (!amount || !pocketId) {
-      Alert.alert("Error", "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
+      Alert.alert("Error", "กรุณากรอกยอดเงินและเลือก Pocket ");
       return;
     }
+    
 
     try {
       const formData = new FormData();
@@ -182,7 +183,7 @@ const NewIncomeScreen = () => {
           },
         }
       );
-      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย", [
+      Alert.alert("Success", "บันทึกยอดเงินเรียบร้อย", [
         { text: "OK", onPress: () => router.push("/home") },
       ]);
     } catch (err) {

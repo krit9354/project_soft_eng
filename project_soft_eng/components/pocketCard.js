@@ -25,7 +25,7 @@ export default function PocketCard(item) {
             backgroundColor: "#38E298",
             height: 10,
             borderRadius: 20,
-            width: items.money / items.target * 100
+            width: 50
           }}>
           </View>
         </View>}
