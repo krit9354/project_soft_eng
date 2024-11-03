@@ -48,12 +48,14 @@ export function SessionProvider({ children }: PropsWithChildren) {
           router.replace("/home");
         },
         signIn: async (email, password) => {
-          console.log("login ctx")
+          // console.log("login ctx")
           try{
             const res = await axios.post('http://' + ip + ':8080/login', {
               email: email,
               password: password
             });
+            
+            
           console.log("res!",res.data.user);
           setSession(res.data);
           router.replace("/home");

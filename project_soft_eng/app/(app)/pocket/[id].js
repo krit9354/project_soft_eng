@@ -2,7 +2,7 @@ import { View, Text, ScrollView, Image, FlatList, TouchableOpacity, Modal, Butto
 import { myStyle } from '../../../style/pocket_style';
 import { LinearGradient } from 'expo-linear-gradient';
 import Textbox from '../../../components/textbox';
-
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import BottomBar from '../../../components/bottomBar';
 import { useNavigation } from '@react-navigation/native';
@@ -55,11 +55,33 @@ export default function Pocket() {
         
     
 
-    useEffect(() => {
-        setPockets_element(pockets?.map((pocket, index) => {
-            return <Textbox key={index} props={pocket} />
-        }))
-    }, [pockets])
+        useEffect(() => {
+          if (!pockets) return;
+    
+          // เรียงลำดับ pockets ตามวันที่จากใหม่ไปเก่า
+          const sortedPockets = [...pockets].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    
+          const groupedElements = [];
+          let lastDate = null;
+    
+          sortedPockets.forEach((pocket, index) => {
+              const currentDate = moment(pocket.created_at).format('YYYY-MM-DD');
+    
+              if (currentDate !== lastDate) {
+                  // หากวันที่ปัจจุบันไม่เท่ากับวันที่ก่อนหน้า ให้เพิ่ม divider
+                  groupedElements.push(
+                      <Text key={`date-${index}`} style={{  fontSize: 16, marginVertical: 10, textAlign: 'center' ,color: '#A9A9A9'}}>
+                          {currentDate}
+                      </Text>
+                  );
+                  lastDate = currentDate;
+              }
+    
+              groupedElements.push(<Textbox key={index} props={pocket} />);
+          });
+    
+          setPockets_element(groupedElements);
+      }, [pockets]);
 
     
 

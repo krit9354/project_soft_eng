@@ -26,7 +26,7 @@ export default function Register() {
         console.log("REGISTERING!!!")
         await signUp(email, username, password, confirm_password);
       } catch (err) {
-        console.log("err_register :",err.message)
+        // console.log("err_register :",err.message)
         Alert.alert("Register not successful");
       }
     };
@@ -70,7 +70,7 @@ export default function Register() {
         onChangeText={text => setConfirm_password(text)}
        />
       
-        <TouchableOpacity style={myStyle.add_pocket}  >
+        <TouchableOpacity style={myStyle.add_pocket} onPress={register} >
           <Text >Login</Text>
         </TouchableOpacity>
            </View>
