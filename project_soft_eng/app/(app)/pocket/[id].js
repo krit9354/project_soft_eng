@@ -57,7 +57,7 @@ export default function Pocket() {
                 console.log("err :", err.message)
             }
             setIsLoading(false)
-            scrollViewRef.current.scrollToEnd({ animated: true });
+           
         };
         
         
