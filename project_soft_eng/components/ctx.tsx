@@ -56,7 +56,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
           email: email,
           password: password
         });
-        console.log("user data in session:", res.data.user);
+        console.log("user data in session:", res.data);
         setSession(res.data); // ตั้งค่า session ใหม่
         router.replace("/home");
         console.log("pass");
