@@ -93,8 +93,8 @@ export default function Register() {
             <Text >Sign in</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={register}>
-          <Text >Cancle</Text>
+        <TouchableOpacity onPress={router.back}>
+          <Text >Cancel</Text>
         </TouchableOpacity>
 
       </View>
