@@ -77,7 +77,7 @@ export default function Register() {
 
 
            
-        <TouchableOpacity >
+        <TouchableOpacity onPress={register}>
           <Text >Register</Text>
         </TouchableOpacity>
          

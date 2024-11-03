@@ -25,7 +25,7 @@ app.post('/get-pockets', async (req, res) => {
 
   try {
     const { data, error } = await supabase
-      .from('pocket') 
+      .from('pocket')
       .select('pocket_name, id, money')
       .eq('user_id', userId);
 
@@ -264,6 +264,8 @@ app.post('/login', async (req, res) => {
       console.error("Error fetching data from Supabase:", error.message);
       return res.status(500).json({ error: error.message });
     }
+    console.log("user_data", userdata.data)
+    res.send(userdata.data[0])
     console.log("user_data",userdata.data)
     userdata.data[0]
      res.send(userdata.data[0])
@@ -289,16 +291,25 @@ app.post('/register', async (req, res) => {
     res.status(500)
     // throw error
   } else {
-    console.log("id user",data.user.id);
-    
+    console.log("id user", data.user.id);
+
     const { error } = await supabase
       .from('pocket')
-      .insert({pocket_name: 'main',user_id: data.user.id, money: 0})
+      .insert({ pocket_name: 'main', user_id: data.user.id, money: 0 })
     if (error) {
-      console.log("error of insert pocket",error);
+      console.log("error of insert pocket", error);
       throw error
     }
-    res.send(data);
+    const userdata = await supabase
+      .from('profiles')
+      .select("*")
+      .eq("id", data.user.id)
+    if (error) {
+      console.error("Error fetching data from Supabase:", error.message);
+      return res.status(500).json({ error: error.message });
+    }
+    console.log("user_data", userdata.data)
+    res.send(userdata.data[0])
   }
 });
 
@@ -609,7 +620,7 @@ app.post('/summary_pocket', async (req, res) => {
 
 
 app.post('/pocketpocket', async (req, res) => {
-  const  {pocketid}  = req.body;
+  const { pocketid } = req.body;
   const { data, error } = await supabase
   .from('pocket')
   .select("*")
@@ -649,7 +660,7 @@ app.post('/total_money', async (req, res) => {
 
 
 app.post('/edit_profile', upload.single('image'), async (req, res) => {
-  const { userId,username,name_bank } = req.body;
+  const { userId, username, name_bank } = req.body;
   let imageUrl = null;
   const file = req.file;
 
@@ -688,9 +699,9 @@ app.post('/edit_profile', upload.single('image'), async (req, res) => {
   const { error: insertError } = await supabase
     .from('profiles')
     .update({
-      avatar_url:imageUrl,
-      username : username,
-      name_bank : name_bank
+      avatar_url: imageUrl,
+      username: username,
+      name_bank: name_bank
     })
     .eq("id", userId);
 
@@ -699,9 +710,115 @@ app.post('/edit_profile', upload.single('image'), async (req, res) => {
     return res.status(500).json({ error: insertError.message });
   }
   console.log("Data inserted successfully with Image URL:", imageUrl);
-  res.status(200).json({ message: 'Pocket created', url: imageUrl });
+  // res.status(200).json({ message: 'Pocket created', url: imageUrl });
+
+  const userdata = await supabase
+    .from('profiles')
+    .select("*")
+    .eq("id", userId)
+  if (userdata.error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+  console.log("user_data", userdata.data)
+  res.send(userdata.data[0])
 });
 ;
+
+app.delete('/delete_pocket', async (req, res) => {
+  const { pocketId } = req.body; // รับ pocketId จากคำขอ
+  console.log("deleting", pocketId);
+
+  const { data, error } = await supabase
+    .from('pocket')
+    .delete()
+    .eq('id', pocketId);
+
+  if (error) {
+    console.error("Error deleting pocket:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.status(200).json({ message: 'Pocket deleted successfully' });
+  console.log("delete success")
+});
+
+app.post('/pocket_data', async (req, res) => {
+  const { pocketId } = req.body;
+
+
+  const { data, error } = await supabase
+    .from('pocket')
+    .select("*")
+    .eq('id', pocketId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching pocket data:', error.message);
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.status(200).json(data);
+
+});
+
+app.post('/edit_pocket', upload.single('image'), async (req, res) => {
+  const { pocketId, pocket_name, target, have_target } = req.body;
+  let imageUrl = null;
+  const file = req.file;
+  console.log("edit")
+
+  // ตรวจสอบและอัปโหลดรูปภาพใหม่
+
+
+  try {
+    if (file) {
+      const fileName = `${pocketId}-${Date.now()}.jpg`;
+      const { data, error } = await supabase.storage
+        .from('pocket')
+        .upload(fileName, file.buffer, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.mimetype
+        });
+
+      if (error) {
+        console.error('Error uploading image:', error.message);
+        return res.status(500).json({ error: error.message });
+      }
+
+      // สร้าง URL สาธารณะสำหรับไฟล์ที่อัปโหลด
+      const { data: { publicUrl } } = supabase.storage
+        .from('pocket')
+        .getPublicUrl(fileName);
+      imageUrl = publicUrl;
+      console.log("Generated Image URL:", imageUrl);
+    }
+    // อัปเดตข้อมูล pocket ในฐานข้อมูล
+    const { error: updateError } = await supabase
+      .from('pocket')
+      .update({
+        pocket_name: pocket_name,
+        target: target,
+        have_target: have_target,
+        image: imageUrl
+      })
+      .eq("id", pocketId);
+
+    if (updateError) {
+      console.error('Error updating pocket in Supabase:', updateError.message);
+      return res.status(500).json({ error: updateError.message });
+    }
+    console.log("Pocket updated successfully");
+    res.status(200).json({ message: 'Pocket updated' });
+
+
+  } catch (error) {
+    console.error('Error get url image:', error.message);
+    return res.status(500).json({ error: 'Failed to upload image' });
+  }
+});
+
 
 
 app.listen(port, () => {

@@ -126,9 +126,9 @@ const NewIncomeScreen = () => {
       
       
       if(session?.user_data?.name_bank !== null){
-        if (res.data.receiver.displayName.includes(session.user_data.name_bank)){
+        if (res.data.receiver.displayName.includes(session.name_bank)){
           setIs_income(true)
-        }else if(res.data.sender.displayName.includes(session.user_data.name_bank)){
+        }else if(res.data.sender.displayName.includes(session.name_bank)){
           setIs_income(false)
         }
       }

@@ -5,7 +5,6 @@ import { myStyle } from '../style/pocketCard_style';
 import { Link, router } from 'expo-router';
 export default function PocketCard(item) {
   const items = item.props
-  console.log(items)
   return (
     <TouchableOpacity style={myStyle.card} onPress={() => router.push("/pocket/" + items.id)}>
       
