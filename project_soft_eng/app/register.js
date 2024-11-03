@@ -9,6 +9,7 @@ import { ip } from '../config';
 import axios from 'axios'
 import { useSession } from '../components/ctx';
 import { router } from 'expo-router';
+import validator from 'validator';
 
 export default function Register() {
     const { signUp } = useSession();
@@ -17,9 +18,19 @@ export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirm_password, setConfirm_password] = useState('');
-
+    function validateEmail(email) {
+      var re = /\S+@\S+\.\S+/;
+      console.log(validator.isEmail(email))
+      console.log(re.test(email))
+      return re.test(email);
+    }
     async function  register  (){
       try{
+        console.log(!validator.isEmail(email))
+        // if (!validator.isEmail(email)) {
+        //   console.log("Invalid email")
+        //   return Alert.alert("Invalid email");
+        // }
         if (password != confirm_password) {
           return Alert.alert("Passwords don't match");
         }
@@ -30,7 +41,19 @@ export default function Register() {
         Alert.alert("Register not successful");
       }
     };
-    
+    // validate = (text) => {
+    //   console.log(text);
+    //   let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    //   if (reg.test(text) === false) {
+    //     console.log("Email is Not Correct");
+    //     this.setState({ email: text })
+    //     return false;
+    //   }
+    //   else {
+    //     this.setState({ email: text })
+    //     console.log("Email is Correct");
+    //   }
+    // }
     return (
 
         <LinearGradient
@@ -77,7 +100,7 @@ export default function Register() {
 
 
            
-        <TouchableOpacity onPress={register}>
+        <TouchableOpacity onPress={validateEmail}>
           <Text >Register</Text>
         </TouchableOpacity>
          
