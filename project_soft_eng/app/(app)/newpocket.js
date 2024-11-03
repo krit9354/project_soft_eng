@@ -25,6 +25,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
 
 import { useSession } from "../../components/ctx";
+import { router } from "expo-router";
 
 const addPocket = () => {
   const { session } = useSession();
@@ -48,41 +49,52 @@ const addPocket = () => {
   // };
 
   const senddata = async () => {
+    if (!amount) {
+      Alert.alert("Error", "กรุณากรอกชื่อ Pocket");
+      return;
+    }
+    if ((checked && Number(goalAmount) == 0) || (checked && !goalAmount)) {
+      Alert.alert("กรุณากรอกจำนวนเป้าหมาย(ที่ไม่ใช่ 0)");
+      return;
+    }
     const formData = new FormData();
     formData.append('pocketname', amount);
     formData.append('havetarget', checked);
     formData.append('userId', session.id);
-    if (goalAmount !== null && goalAmount !== "") {
+    if (checked) {
       formData.append('goal', goalAmount);
     }
-  
+
     // ตรวจสอบว่ามีการตั้งค่า selectedImage หรือไม่
     if (selectedImage && selectedImage.uri) {
       const fileUri = selectedImage.uri;
       const filename = fileUri.split('/').pop();
       const match = /\.(\w+)$/.exec(filename);
       const type = match ? `image/${match[1]}` : `image`;
-  
+
       formData.append('image', {
         uri: fileUri,
         name: filename,
         type
       });
     }
-  
+
     try {
       const res = await axios.post(`http://${ip}:8080/createpockets`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
+      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย", [
+        { text: "OK", onPress: () => router.push("/home") },
+      ]);
       console.log(res.data);
     } catch (err) {
       console.log('err:', err.message);
     }
   };
 
-  
+
 
   const pickImage = async () => {
     // console.log(selectedImage)

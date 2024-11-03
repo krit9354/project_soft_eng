@@ -90,7 +90,7 @@ const transfermoney = () => {
 
   const incomesend = async () => {
     if (!amount || !pocketId_re) {
-      Alert.alert("Error", "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
+      Alert.alert("Error", "กรุณากรอกยอดเงินและเลือก Pocket ที่จะรับ");
       return;
     }
 
@@ -124,8 +124,8 @@ const transfermoney = () => {
           },
         }
       );
-      ("Success", "บันทึกข้อมูลเรียบร้อย", [
-        { text: "OK", onPress: () => router.push("/home") },
+      Alert.alert("Success", "โอนยอดเงินเรียบร้อย", [
+        { text: "OK", onPress: () => router.push("/pocket/" + pocketId_re) },
       ]);
     } catch (err) {
       console.error("Error submitting data:", err.message);
@@ -134,7 +134,7 @@ const transfermoney = () => {
   };
   const outcomesend = async () => {
     if (!amount || !pocketId_send) {
-      Alert.alert("Error", "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
+      Alert.alert("Error", "กรุณากรอกยอดเงินและเลือก Pocket ที่จะส่ง");
       return;
     }
 
@@ -168,8 +168,8 @@ const transfermoney = () => {
           },
         }
       );
-      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย", [
-        { text: "OK", onPress: () => router.push("/home") },
+      Alert.alert("Success", "โอนยอดเงินเรียบร้อย", [
+        { text: "OK", onPress: () => router.push("/pocket/" + pocketId_re) },
       ]);
     } catch (err) {
       console.error("Error submitting data:", err.message);
