@@ -47,7 +47,8 @@ const SettingPocket = () => {
                 const res = await axios.post('http://' + ip + ':8080/pocket_data', { pocketId: id });
                 setPocketName(res.data.pocket_name)
                 setChecked(res.data.have_target)
-                if (res.data.target != null) {
+                console.log(res.data.target)
+                if (res.data.target != null && res.data.target != "NaN") {
                     setGoalAmount(String(res.data.target))
                 }
                 setSelectedImage({ uri: res.data.image })
