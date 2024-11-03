@@ -19,6 +19,7 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 app.post('/get-pockets', async (req, res) => {
   const { userId } = req.body;
 
@@ -250,9 +251,10 @@ app.post('/login', async (req, res) => {
     password: req.body.password,
   })
   if (error) {
+     console.log("loginไม่สำเร็จ");
      console.log(error);
     // throw error
-    return res.status(500)
+    return res.status(500).json({ error: "errorกูส่งเอง" });
   } else {
     console.log(data.user.id)
 
@@ -284,8 +286,8 @@ app.post('/register', async (req, res) => {
   );
 
   if (error) {
-    console.log(error);
-    res.status(500)
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
     // throw error
   } else {
     console.log("id user", data.user.id);

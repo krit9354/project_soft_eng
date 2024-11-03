@@ -39,15 +39,20 @@ export function SessionProvider({ children }: PropsWithChildren) {
     <AuthContext.Provider
   value={{
     signUp: async (email, username, password, confirm_password) => {
+      try {
+        
       const res = await axios.post('http://' + ip + ':8080/register', {
         email: email,
         username: username,
         password: password,
         confirm_password: confirm_password
       });
-
       setSession(res.data); // ตั้งค่า session ใหม่
       router.replace("/home");
+      } catch (err) {
+        alert("This Email already exists in the system");
+      }
+      
     },
     signIn: async (email, password) => {
       // console.log("login ctx");
@@ -64,7 +69,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
         router.replace("/home");
         console.log("pass");
       } catch (err) {
-        console.log(err);
+        alert("Invalid email or password");
+        // console.log("error",err?.response?.data?.error);
       }
     },
     signOut: () => {
