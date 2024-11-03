@@ -5,6 +5,11 @@ import { myStyle } from '../style/pocketCard_style';
 import { Link, router } from 'expo-router';
 export default function PocketCard(item) {
   const items = item.props
+  var width_bar = items.money / items.target * 100
+  if (width_bar < 0){
+    width_bar = 0
+  }
+  console.log(items.pocket_name,items.money , items.target , items.money / items.target * 100)
   return (
     <TouchableOpacity style={myStyle.card} onPress={() => router.push("/pocket/" + items.id)}>
       
@@ -25,7 +30,7 @@ export default function PocketCard(item) {
             backgroundColor: "#38E298",
             height: 10,
             borderRadius: 20,
-            width: items.money / items.target * 100
+            width: width_bar
           }}>
           </View>
         </View>}
