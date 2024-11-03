@@ -73,7 +73,7 @@ const Setting = () => {
 
 
       Alert.alert("Success", "แก้ไขข้อมูลสำเร็จ");
-      // router.push("home");
+      router.push("home");
     } catch (err) {
       console.error("Error submitting data:", err.response.data.error);
       Alert.alert("ไม่สามารถบันทึกข้อมูลได้", err.response.data.error);
