@@ -266,9 +266,6 @@ app.post('/login', async (req, res) => {
     }
     console.log("user_data", userdata.data)
     res.send(userdata.data[0])
-    console.log("user_data",userdata.data)
-    userdata.data[0]
-     res.send(userdata.data[0])
   }
 });
 
