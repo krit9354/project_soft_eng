@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, TouchableOpacity,TextInput} from 'react-native';
-import { myStyle } from '../style/home_style';
+import { myStyle } from '../style/register_style';
 import { LinearGradient } from 'expo-linear-gradient';
 import PocketCard from '../components/pocketCard';
 import { useEffect, useState } from 'react';
@@ -26,7 +26,7 @@ export default function Register() {
         console.log("REGISTERING!!!")
         await signUp(email, username, password, confirm_password);
       } catch (err) {
-        console.log("err_register :",err.message)
+        // console.log("err_register :",err.message)
         Alert.alert("Register not successful");
       }
     };
@@ -40,6 +40,72 @@ export default function Register() {
         end={{ x: 0.5, y: 1 }}
         style={myStyle.bg}>
             {/* top bar */}
+
+            <View style={myStyle.bg}>
+        <View style={myStyle.main_pocket}>
+          
+          <Text style={{fontSize:32}}>I have money</Text>
+           <TextInput
+        value={email}
+        placeholder="email"
+        onChangeText={text => setEmail(text)}
+        style={myStyle.pocket}
+           />
+             <TextInput
+        value={username}
+        placeholder="Username"
+        onChangeText={text => setUsername(text)}
+        style={myStyle.pocket}
+           />
+             <TextInput
+         value={password}
+         placeholder="Password"
+         onChangeText={text => setPassword(text)}
+        style={myStyle.pocket}
+           />
+        <TextInput
+        style={myStyle.pocket}
+        value={confirm_password}
+        placeholder="confirm Password"
+        onChangeText={text => setConfirm_password(text)}
+       />
+      
+        <TouchableOpacity style={myStyle.add_pocket} onPress={register} >
+          <Text >Login</Text>
+        </TouchableOpacity>
+           </View>
+
+
+           
+        <TouchableOpacity onPress={register}>
+          <Text >Register</Text>
+        </TouchableOpacity>
+         
+      </View>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <TextInput
               value={email}
               placeholder="email"

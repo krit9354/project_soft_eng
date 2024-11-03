@@ -25,28 +25,16 @@ import { Dropdown } from "react-native-element-dropdown";
 import * as ImagePicker from "expo-image-picker";
 
 import { useSession } from "../../components/ctx";
+import { router } from "expo-router";
 
 const addPocket = () => {
   const { session } = useSession();
   const [amount, setAmount] = useState("");
   const [goalAmount, setGoalAmount] = useState(null);
   const [checked, setChecked] = useState(false);
-  const [selectedPocket, setSelectedPocket] = useState("");
-  const [details, setDetails] = useState("");
-  const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedImageforshow, setSelectedImageforshow] = useState("");
-  const [resdata, setResdata] = useState();
-  const option = {
-    title: "select Image",
-    type: "library",
-    options: {
-      selectionlimit: 1,
-      mediaType: "photo",
-      includeBase64: false,
-    },
-  };
+
 
   //   const senddata = async () => {
   //     console.log(amount)
@@ -61,6 +49,14 @@ const addPocket = () => {
   // };
 
   const senddata = async () => {
+    if (!amount) {
+      Alert.alert("Error", "กรุณากรอกชื่อ Pocket");
+      return;
+    }
+    if ((checked && !goalAmount )&& goalAmount != 0)  {
+      Alert.alert("Error", "กรุณากรอกจำนวนเป้าหมาย");
+      return;
+    }
     const formData = new FormData();
     formData.append('pocketname', amount);
     formData.append('havetarget', checked);
@@ -89,6 +85,9 @@ const addPocket = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
+      Alert.alert("Success", "บันทึกข้อมูลเรียบร้อย", [
+        { text: "OK", onPress: () => router.push("/home") },
+      ]);
       console.log(res.data);
     } catch (err) {
       console.log('err:', err.message);

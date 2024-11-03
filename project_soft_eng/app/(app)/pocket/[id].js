@@ -2,7 +2,7 @@ import { View, Text, ScrollView, Image, FlatList, TouchableOpacity, Modal, Butto
 import { myStyle } from '../../../style/pocket_style';
 import { LinearGradient } from 'expo-linear-gradient';
 import Textbox from '../../../components/textbox';
-
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import BottomBar from '../../../components/bottomBar';
 import { useNavigation } from '@react-navigation/native';
@@ -55,11 +55,33 @@ export default function Pocket() {
         
     
 
-    useEffect(() => {
-        setPockets_element(pockets?.map((pocket, index) => {
-            return <Textbox key={index} props={pocket} />
-        }))
-    }, [pockets])
+        useEffect(() => {
+          if (!pockets) return;
+    
+          // เรียงลำดับ pockets ตามวันที่จากใหม่ไปเก่า
+          const sortedPockets = [...pockets].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    
+          const groupedElements = [];
+          let lastDate = null;
+    
+          sortedPockets.forEach((pocket, index) => {
+              const currentDate = moment(pocket.created_at).format('YYYY-MM-DD');
+    
+              if (currentDate !== lastDate) {
+                  // หากวันที่ปัจจุบันไม่เท่ากับวันที่ก่อนหน้า ให้เพิ่ม divider
+                  groupedElements.push(
+                      <Text key={`date-${index}`} style={{  fontSize: 16, marginVertical: 10, textAlign: 'center' ,color: '#A9A9A9'}}>
+                          {currentDate}
+                      </Text>
+                  );
+                  lastDate = currentDate;
+              }
+    
+              groupedElements.push(<Textbox key={index} props={pocket} />);
+          });
+    
+          setPockets_element(groupedElements);
+      }, [pockets]);
 
     
 
@@ -76,7 +98,7 @@ export default function Pocket() {
             <View style={myStyle.top_bar}>
                 <View style={myStyle.top_bar_content}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Image   source={{ uri: pocket?.image }} style={{ width: 70, height: 70, borderRadius: 35 }} />
+                        <Image   source={pocket?.image?{ uri: pocket?.image }:(require("../../../assets/images/pocket.png"))} style={{ width: 70, height: 70, borderRadius: 35 }} />
                         <View style={{ flexDirection: 'colum', alignItems: 'center' }}>
                         <Text style={{ fontSize: 20, marginLeft: 10 }}>{pocket?.pocket_name}</Text>
                         <Text style={{ fontSize: 15, marginLeft: 10 }}>{pocket?.money}฿</Text>
@@ -125,14 +147,14 @@ export default function Pocket() {
 
             <View style={myStyle.separator} />
 
-            <TouchableOpacity style={myStyle.menuItem} onPress={() => alert('Transfer selected')}>
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => router.push({ pathname: "transfermoney", params: { pocketId: id } })}>
             <Image source={require("../../../assets/images/transfer.png")}  />
               <Text style={myStyle.menuText}>Transfer</Text>
             </TouchableOpacity>
 
             <View style={myStyle.separator} />
 
-            <TouchableOpacity style={myStyle.menuItem} onPress={() => alert('Setting selected')}>
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => {setModalVisible(false);router.push("/setting_pocket/" + id)}}>
             <Image source={require("../../../assets/images/setting.png")}  />
               <Text style={myStyle.menuText}>Setting</Text>
             </TouchableOpacity>

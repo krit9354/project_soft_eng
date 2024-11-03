@@ -10,12 +10,14 @@ const AuthContext = createContext<{
   signOut: () => void;
   session?: User | null;
   isLoading: boolean;
+  setSession: (value: User | null) => void;
 }>({
   signUp: () => null,
   signIn: () => null,
   signOut: () => null,
   session: null,
   isLoading: false,
+  setSession: () => {},
 });
 
 // This hook can be used to access the user info.
@@ -35,74 +37,55 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
   return (
     <AuthContext.Provider
-      value={{
-        signUp: async (email, username, password, confirm_password) => {
-          const res = await axios.post('http://' + ip + ':8080/register', {
-            email: email,
-            username: username,
-            password: password,
-            confirm_password: confirm_password
-          })
+  value={{
+    signUp: async (email, username, password, confirm_password) => {
+      const res = await axios.post('http://' + ip + ':8080/register', {
+        email: email,
+        username: username,
+        password: password,
+        confirm_password: confirm_password
+      });
 
-          setSession(res.data.user);
-          router.replace("/home");
-        },
-        signIn: async (email, password) => {
-          console.log("login ctx")
-          try{
-            const res = await axios.post('http://' + ip + ':8080/login', {
-              email: email,
-              password: password
-            });
-          console.log("res!",res.data.user);
-          setSession(res.data.user);
-          router.replace("/home");
-          console.log("pass")
-          }catch(err){
-            console.log(err);
-          }
-          
+      setSession(res.data); // ตั้งค่า session ใหม่
+      router.replace("/home");
+    },
+    signIn: async (email, password) => {
+      console.log("login ctx");
+      try {
+        const res = await axios.post('http://' + ip + ':8080/login', {
+          email: email,
+          password: password
+        });
+        console.log("user data in session:", res.data);
+        setSession(res.data); // ตั้งค่า session ใหม่
+        router.replace("/home");
+        console.log("pass");
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    signOut: () => {
+      setSession(null); // ลบ session
+      router.replace("/login");
+    },
+    session,
+    isLoading,
+    setSession,
+     // เพิ่ม setSession ใน value
+  }}
+>
+  {children}
+</AuthContext.Provider>
 
-          
-        },
-        signOut: () => {
-          setSession(null);
-          router.replace("/login");
-        },
-        session,
-        isLoading,
-      }}>
-      {children}
-    </AuthContext.Provider>
   );
 }
 
 export interface User {
-  id:                 string | null;
-  aud:                string | null;
-  role:               string | null;
-  email:              string | null;
-  email_confirmed_at: Date | null;
-  phone:              string | null;
-  confirmed_at:       Date | null;
-  last_sign_in_at:    Date | null;
-  app_metadata:       AppMetadata | null;
-  user_metadata:      UserMetadata | null;
-  identities:         any[] | null;
-  created_at:         Date | null;
-  updated_at:         Date | null;
-  is_anonymous:       boolean | null;
+  id: string | null;
+  updated_at: string | null; // เปลี่ยนเป็น string เนื่องจากข้อมูลที่ให้มาเป็น string
+  username: string | null; // เพิ่มฟิลด์ username
+  avatar_url: string | null; // เพิ่มฟิลด์ avatar_url
+  name_bank: string | null; // เพิ่มฟิลด์ name_bank
+  main_pocket: number | null; // เพิ่มฟิลด์ main_pocket
 }
 
-interface AppMetadata {
-  provider:  string | null;
-  providers: any[] | null;
-}
-
-interface UserMetadata {
-  email:          string | null;
-  email_verified: boolean | null;
-  phone_verified: boolean | null;
-  sub:            string | null;
-  username:       string | null;
-}

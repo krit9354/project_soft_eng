@@ -74,4 +74,13 @@ export const myStyle = StyleSheet.create({
     marginBottom: 8,
     fontWeight: "bold",
   },
+  rowcheckbox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  goallabel: {
+    fontSize: 16,
+    color: '#333',
+  },
 });

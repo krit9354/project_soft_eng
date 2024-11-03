@@ -88,7 +88,7 @@ export const myStyle = StyleSheet.create({
   main_content_box: {
     marginHorizontal: "auto",
     width: "80%",
-    height: "90%",
+    height: "100%",
     overflow: "visible",
     zIndex: 0,
     flex: 1
@@ -97,7 +97,7 @@ export const myStyle = StyleSheet.create({
     position: "relative",
     backgroundColor: "white",
     width: "100%",
-    height: "90%",
+    height: "100%",
     borderRadius: 20,
     flexDirection: "row",
     justifyContent: "space-around",
@@ -129,21 +129,21 @@ export const myStyle = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
-  bottom_barkub : {
-    width : '100%',
+  bottom_barkub: {
+    width: '100%',
     height: 70, // ความสูงของ bottom bar
     backgroundColor: 'white', // สีพื้นหลัง
-    flexDirection : 'row',
-    alignItems : "center",
-    justifyContent : "space-around",
-    shadowColor: '#000', 
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    shadowColor: '#000',
     shadowOffset: {
         width: 0,
-        height: -4,
+        height: 10, // ปรับให้เงาอยู่ใต้ element มากขึ้น
     },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 4, 
+    shadowOpacity: 1, // ลดความทึบของเงา
+    shadowRadius: 30, // เพิ่มรัศมีให้เงากระจายมากขึ้น
+    elevation: 8, // ใช้สำหรับ Android เพื่อเพิ่มมิติของเงา
 },
  
 });
