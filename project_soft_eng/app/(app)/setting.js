@@ -18,15 +18,13 @@ import axios from "axios";
 import { useSession } from "../../components/ctx";
 import { router, Redirect } from 'expo-router';
 import * as ImagePicker from "expo-image-picker";
-import { useStorageState } from "../../components/useStorageState";
+
 
 const Setting = () => {
-  const { signOut, session } = useSession();
-  const [, setSession] = useStorageState('session');
+  const { signOut, session , setSession } = useSession();
   const [username, setUsername] = useState(session.username);
   const [bankName, setBankName] = useState(session.name_bank ? session.name_bank : null);
   const [selectedImage, setSelectedImage] = useState(session.avatar_url ? { uri: session.avatar_url } : null);
-
   const pickImage = async () => {
     // console.log(selectedImage)
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -49,29 +47,36 @@ const Setting = () => {
       formData.append("userId", session.id)
 
 
-        formData.append("image",{
-          uri : selectedImage.uri,
-          type : selectedImage.mimeType,
-          name : "image.png",
-          fileName : "image"
+      if (selectedImage !== null) {
+        formData.append("image", {
+          uri: selectedImage.uri,
+          type: selectedImage.mimeType || "image/jpeg", // ใส่ประเภทไฟล์เริ่มต้นกรณีไม่เจอ
+          name: "image.png"
         });
-      
+      }
+
 
       const res = await axios.post(`http://${ip}:8080/edit_profile`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
       });
-      console.log("user data in session :",res.data);
-      
-      setSession(res.data.user);
-      console.log(session)
+      console.log("user data in session :", res.data);
+      if (res && res.data) {
+        setSession(res.data);
+        console.log("Session updated:", res.data);
+      } else {
+        console.error("No data received from API.");
+        Alert.alert("Error", "No data received from API.");
+      }
+      console.log(session);
 
-      
-      Alert.alert("Success", "แก้ไขข้อมูล");
+
+      Alert.alert("Success", "แก้ไขข้อมูลสำเร็จ");
+      // router.push("home");
     } catch (err) {
-      console.error("Error submitting data:", err.message);
-      Alert.alert("Error", "ไม่สามารถบันทึกข้อมูลได้");
+      console.error("Error submitting data:", err.response.data.error);
+      Alert.alert("ไม่สามารถบันทึกข้อมูลได้", err.response.data.error);
     }
   };
 
@@ -87,54 +92,54 @@ const Setting = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-      {/* main content */}
-      <ScrollView
-        style={myStyle.main_content_box}
-      >
-        <Text style={myStyle.bigtext}>การตั้งค่า</Text>
-        <Text style={myStyle.label}>รูปโปรไฟล์</Text>
-        <TouchableOpacity style={myStyle.imagePlaceholder} onPress={pickImage}>
-          <Image
-            source={
-              selectedImage
-                ? { uri: selectedImage.uri }
-                : require("../../assets/images/photoicon.png")
-            }
-            style={selectedImage ? myStyle.image : myStyle.image_icon}
+        {/* main content */}
+        <ScrollView
+          style={myStyle.main_content_box}
+        >
+          <Text style={myStyle.bigtext}>การตั้งค่า</Text>
+          <Text style={myStyle.label}>รูปโปรไฟล์</Text>
+          <TouchableOpacity style={myStyle.imagePlaceholder} onPress={pickImage}>
+            <Image
+              source={
+                selectedImage
+                  ? { uri: selectedImage.uri }
+                  : require("../../assets/images/photoicon.png")
+              }
+              style={selectedImage ? myStyle.image : myStyle.image_icon}
+            />
+          </TouchableOpacity>
+
+          <Text style={myStyle.label}>username</Text>
+          <TextInput
+            style={myStyle.input}
+            value={username}
+            onChangeText={setUsername}
+            placeholder="username"
           />
-        </TouchableOpacity>
 
-        <Text style={myStyle.label}>username</Text>
-        <TextInput
-          style={myStyle.input}
-          value={username}
-          onChangeText={setUsername}
-          placeholder="username"
-        />
+          <Text style={myStyle.label}>ชื่อในบัญชี (ไม่เอานามสกุล)</Text>
+          <TextInput
+            style={myStyle.input}
+            value={bankName}
+            onChangeText={setBankName}
+            placeholder="Bank name"
+          />
 
-        <Text style={myStyle.label}>ชื่อในบัญชี (ไม่เอานามสกุล)</Text>
-        <TextInput
-          style={myStyle.input}
-          value={bankName}
-          onChangeText={setBankName}
-          placeholder="Bank name"
-        />
+          <TouchableOpacity style={myStyle.save_button} onPress={Submit}>
+            <Text style={{ color: "white" }}>save</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={myStyle.save_button} onPress={Submit}>
-          <Text style={{ color: "white" }}>save</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={myStyle.logout_button} onPress={() => {
+            signOut();
+            router.push("login");
+          }}>
+            <Text style={{ color: "white" }}>logout</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={myStyle.logout_button} onPress={() => {
-          signOut();
-          router.push("login");
-        }}>
-          <Text style={{ color: "white" }}>logout</Text>
-        </TouchableOpacity>
+        </ScrollView>
 
-      </ScrollView>
+        {/* bottom bar */}
 
-      {/* bottom bar */}
-      
       </KeyboardAvoidingView>
       <BottomBar />
     </LinearGradient>

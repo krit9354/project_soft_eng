@@ -132,7 +132,7 @@ export default function Pocket() {
 
             <View style={myStyle.separator} />
 
-            <TouchableOpacity style={myStyle.menuItem} onPress={() => alert('Setting selected')}>
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => {setModalVisible(false);router.push("/setting_pocket/" + id)}}>
             <Image source={require("../../../assets/images/setting.png")}  />
               <Text style={myStyle.menuText}>Setting</Text>
             </TouchableOpacity>
