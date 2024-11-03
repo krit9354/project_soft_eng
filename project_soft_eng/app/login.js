@@ -17,14 +17,15 @@ export default function Login() {
   const { isLoading, session, signIn } = useSession();
 
   const [email, setEmail] = useState('');
+  
   const [password, setPassword] = useState('');
 
   async function login() {
     try {
       
-      await signIn(email, password);
+      const x = await signIn(email, password);
       
-
+      console.log(x)
     } catch (err) { 
       //  console.error(err.message);
      alert("Email or password is incorrect");

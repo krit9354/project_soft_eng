@@ -16,7 +16,7 @@ import moment from 'moment';
 
 export default function Transaction() {
    
-  const { signOut, session } = useSession();
+  const { signOut, session ,isLoading} = useSession();
 
 
     const [pockets, setPockets] = useState()

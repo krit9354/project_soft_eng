@@ -30,7 +30,6 @@ export default function Register() {
         Alert.alert("Register not successful");
       }
     };
-    
     return (
 
         <LinearGradient
@@ -106,26 +105,7 @@ export default function Register() {
 
 
 
-            <TextInput
-              value={email}
-              placeholder="email"
-              onChangeText={text => setEmail(text)}
-            />
-            <TextInput
-              value={username}
-              placeholder="Username"
-              onChangeText={text => setUsername(text)}
-            />
-            <TextInput
-              value={password}
-              placeholder="Password"
-              onChangeText={text => setPassword(text)}
-            />
-            <TextInput
-              value={confirm_password}
-              placeholder="confirm Password"
-              onChangeText={text => setConfirm_password(text)}
-            />
+           
              <View >
               <TouchableOpacity >
                 <Text onPress={register} >

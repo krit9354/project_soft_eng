@@ -1,9 +1,9 @@
-import { View, Text, ScrollView, Image, FlatList, TouchableOpacity, Modal, Button } from 'react-native';
+import { View, Text, ScrollView, Image, FlatList, TouchableOpacity, Modal, Button , ActivityIndicator} from 'react-native';
 import { myStyle } from '../../../style/pocket_style';
 import { LinearGradient } from 'expo-linear-gradient';
 import Textbox from '../../../components/textbox';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect, useState , useRef } from 'react';
 import BottomBar from '../../../components/bottomBar';
 import { useNavigation } from '@react-navigation/native';
 import { ip } from '../../../config';
@@ -12,11 +12,14 @@ import { useLocalSearchParams } from 'expo-router';
 import { router } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 export default function Pocket() {
+
+  const [isLoading, setIsLoading] = useState(false);
    
     const { id } = useLocalSearchParams();
 
+    const scrollViewRef = useRef(null);
 
     const [pockets, setPockets] = useState()
 
@@ -29,11 +32,14 @@ export default function Pocket() {
     useFocusEffect(
         useCallback(() => {
           fetchData();
+          
         }, [])
       );
 
-   
+
+      
         const fetchData = async () => {
+          setIsLoading(true)
             try {
                 const res = await axios.post('http://' + ip + ':8080/pocketpocket',{pocketid: id });
                 setPocket(res.data);
@@ -50,44 +56,73 @@ export default function Pocket() {
             } catch (err) {
                 console.log("err :", err.message)
             }
+            setIsLoading(false)
+            scrollViewRef.current.scrollToEnd({ animated: true });
         };
         
         
     
 
-        useEffect(() => {
+      
+      
+
+      useEffect(() => {
           if (!pockets) return;
-    
-          // เรียงลำดับ pockets ตามวันที่จากใหม่ไปเก่า
-          const sortedPockets = [...pockets].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    
+      
+          // เรียงลำดับ pockets ตามวันที่จากเก่าไปใหม่
+          const sortedPockets = [...pockets].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      
           const groupedElements = [];
           let lastDate = null;
-    
+      
           sortedPockets.forEach((pocket, index) => {
               const currentDate = moment(pocket.created_at).format('YYYY-MM-DD');
-    
+      
               if (currentDate !== lastDate) {
                   // หากวันที่ปัจจุบันไม่เท่ากับวันที่ก่อนหน้า ให้เพิ่ม divider
                   groupedElements.push(
-                      <Text key={`date-${index}`} style={{  fontSize: 16, marginVertical: 10, textAlign: 'center' ,color: '#A9A9A9'}}>
+                      <Text 
+                          key={`date-${index}`} 
+                          style={{ 
+                              fontWeight: 'bold', 
+                              fontSize: 16, 
+                              marginVertical: 10, 
+                              textAlign: 'center', 
+                              color: '#A9A9A9'  // ใช้สีเทาจาง
+                          }}
+                      >
                           {currentDate}
                       </Text>
                   );
                   lastDate = currentDate;
               }
-    
+      
               groupedElements.push(<Textbox key={index} props={pocket} />);
           });
-    
-          setPockets_element(groupedElements);
+      
+          setPockets_element(groupedElements); 
+         
       }, [pockets]);
+      
 
-    
+      useEffect(() => {
+        if (pockets_element && scrollViewRef.current) {
+            scrollViewRef.current.scrollToEnd({ animated: false });
+        }
+    }, [pockets_element]);
 
 
     return (
+      isLoading ?
+      <SafeAreaView style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+      }}>
 
+          <ActivityIndicator size="large" />
+      </SafeAreaView>
+      :
         <LinearGradient
             colors={['#CDFADB', '#38E298']}
             locations={[0.75, 1]}
@@ -112,7 +147,7 @@ export default function Pocket() {
             </View>
 
             {/* main content */}
-            <ScrollView showsVerticalScrollIndicator={false} style={myStyle.main_content_box}>
+            <ScrollView showsVerticalScrollIndicator={false} style={myStyle.main_content_box} ref={scrollViewRef} >
                 <View style={{ marginBottom: "5%" }} />
 
                 {pockets_element}
@@ -140,21 +175,21 @@ export default function Pocket() {
         >
           <View style={myStyle.modalContent}>
             
-            <TouchableOpacity style={myStyle.menuItem} onPress={() => router.push("/summary_pocket/" + id)}>
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => {setModalVisible(false);router.push("/summary_pocket/" + id)}}>
             <Image source={require("../../../assets/images/summary.png")}  />
               <Text style={myStyle.menuText}>Summary</Text>
             </TouchableOpacity>
 
             <View style={myStyle.separator} />
 
-            <TouchableOpacity style={myStyle.menuItem} onPress={() => router.push({ pathname: "transfermoney", params: { pocketId: id } })}>
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => {setModalVisible(false);router.push({ pathname: "transfermoney", params: { pocketId: id } })}}>
             <Image source={require("../../../assets/images/transfer.png")}  />
               <Text style={myStyle.menuText}>Transfer</Text>
             </TouchableOpacity>
 
             <View style={myStyle.separator} />
 
-            <TouchableOpacity style={myStyle.menuItem} onPress={() => {setModalVisible(false);router.push("/setting_pocket/" + id)}}>
+            <TouchableOpacity style={myStyle.menuItem} onPress={() => {setModalVisible(false);router.push("/setting_pocket/" + id)}} >
             <Image source={require("../../../assets/images/setting.png")}  />
               <Text style={myStyle.menuText}>Setting</Text>
             </TouchableOpacity>
