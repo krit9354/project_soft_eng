@@ -198,6 +198,23 @@ app.post('/transactionid', async (req, res) => {
   res.send(data)
 });
 
+
+app.post('/transaction_main_id', async (req, res) => {
+  const { pocketid } = req.body;
+
+  const { data, error } = await supabase
+    .from('transaction_with_user')
+    .select("*")
+    .eq("user_id", pocketid)
+
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.send(data)
+});
+
 app.post('/pockets', async (req, res) => {
   const { userId } = req.body;
   console.log(userId)
@@ -233,7 +250,7 @@ app.post('/login', async (req, res) => {
     password: req.body.password,
   })
   if (error) {
-    console.log(error);
+     console.log(error);
     // throw error
     return res.status(500)
   } else {
@@ -249,6 +266,9 @@ app.post('/login', async (req, res) => {
     }
     console.log("user_data", userdata.data)
     res.send(userdata.data[0])
+    console.log("user_data",userdata.data)
+    userdata.data[0]
+     res.send(userdata.data[0])
   }
 });
 
@@ -602,17 +622,40 @@ app.post('/summary_pocket', async (req, res) => {
 app.post('/pocketpocket', async (req, res) => {
   const { pocketid } = req.body;
   const { data, error } = await supabase
-    .from('pocket')
-    .select("*")
-    .eq("id", pocketid)
-    .single()
+  .from('pocket')
+  .select("*")
+  .eq("id",pocketid)
+  .single()
   if (error) {
     console.error("Error fetching data from Supabase:", error.message);
     return res.status(500).json({ error: error.message });
   }
-  console.log(pocketid)
   res.send(data)
 });
+
+
+
+app.post('/total_money', async (req, res) => {
+  const { pocketid } = req.body;
+  const { data, error } = await supabase
+  .from('pocket')
+  .select("money.sum()")
+  .eq("user_id",pocketid)
+  .single()
+  if (error) {
+    console.error("Error fetching data from Supabase:", error.message);
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.send(data)
+});
+
+
+
+
+
+
+
 
 
 

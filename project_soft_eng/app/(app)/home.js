@@ -45,6 +45,8 @@ export default function HomeScreen() {
         }))
     }, [pockets])
 
+    
+
     return (
         isLoading ?
             <SafeAreaView style={{
@@ -70,10 +72,10 @@ export default function HomeScreen() {
                             <Image style={myStyle.profile} source={session.avatar_url?{ uri: session.avatar_url }:(require("../../assets/images/avatar.png"))}/>
                             <Text style={{ fontSize: 20, marginLeft: 10 }}>{session.username ?? "ERROR"}</Text>
                         </View>
-                        <View style={{ alignItems: 'center' }} >
+                        <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => router.push({ pathname: "transection", params: { pocketId: session.id } })}>
                             <Image source={require("../../assets/images/history.png")} />
                             <Text>history</Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 {/* main content */}
