@@ -140,6 +140,7 @@ export default function Pocket() {
                         </View>
                     </View>                    
                     <TouchableOpacity  style={{alignItems :'center'}} onPress={() => setModalVisible(true)} >
+                      
                         <Image source={require("../../../assets/images/Vector.png")} style={{}} />
                         
                     </TouchableOpacity>

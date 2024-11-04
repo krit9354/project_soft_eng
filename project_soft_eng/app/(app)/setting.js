@@ -62,7 +62,7 @@ const Setting = () => {
         }
       });
       console.log("user data in session :", res.data);
-      if (res && res.data) {
+      if (res && res?.data) {
         setSession(res.data);
         console.log("Session updated:", res.data);
       } else {
