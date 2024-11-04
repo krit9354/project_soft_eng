@@ -26,7 +26,7 @@ const SettingPocket = () => {
     const { signOut, session } = useSession();
     const [pocketName, setPocketName] = useState();
     const [checked, setChecked] = useState(false);
-    const [goalAmount, setGoalAmount] = useState();
+    const [goalAmount, setGoalAmount] = useState(null);
     const [selectedImage, setSelectedImage] = useState({ uri: null });
 
 
@@ -61,11 +61,17 @@ const SettingPocket = () => {
 
     const Submit = async () => {
         try {
+            if ((checked && Number(goalAmount) == 0) || (checked && !goalAmount)) {
+                Alert.alert("กรุณากรอกจำนวนเป้าหมาย(ที่ไม่ใช่ 0)");
+                return;
+            }
             const formData = new FormData();
             formData.append("pocketId", id);
             formData.append("pocket_name", pocketName);
-            formData.append("target", Number(goalAmount));
-            formData.append("have_target", checked);
+            formData.append("have_target", checked)
+            if (checked) {
+                formData.append('target', Number(goalAmount));
+            }
             console.log(selectedImage)
             // ตรวจสอบว่ามีการเลือกภาพหรือไม่
             if (selectedImage.uri !== null) {

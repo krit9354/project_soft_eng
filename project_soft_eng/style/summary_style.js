@@ -30,7 +30,7 @@ export const myStyle = StyleSheet.create({
         position: "relative",
         backgroundColor: "white",
         width: "100%",
-        height: "93%",
+        height: "94%",
         borderRadius: 20,
         marginVertical: 25,
         shadowOffset: {
