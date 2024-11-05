@@ -66,7 +66,7 @@ export const myStyle = StyleSheet.create({
     borderColor: "#ccc",
     padding: 10,
     borderRadius: 20,
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: "#DDDDDD",
   },
   label: {

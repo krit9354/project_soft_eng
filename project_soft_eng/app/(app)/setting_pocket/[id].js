@@ -10,7 +10,7 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from "react-native";
-import { Checkbox } from "react-native-paper";
+import { CheckBox } from '@rneui/themed';
 import { myStyle } from "../../../style/setting_pocket_style";
 import { LinearGradient } from "expo-linear-gradient";
 import BottomBar from "../../../components/bottomBar";
@@ -147,10 +147,10 @@ const SettingPocket = () => {
                     />
 
                     <View style={myStyle.rowcheckbox}>
-                        <Checkbox
-                            status={checked ? "checked" : "unchecked"}
+                        <CheckBox
+                            checked={checked}
                             onPress={() => setChecked(!checked)}
-                            color="#4CAF50" // สีที่ต้องการ
+                            checkedColor="#4CAF50" // สีที่ต้องการ
                         />
                         <Text style={myStyle.goallabel}>ตั้งเป้าหมาย</Text>
                     </View>
