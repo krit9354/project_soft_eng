@@ -26,7 +26,7 @@ export const myStyle = StyleSheet.create({
 
     },
     main_pocket: {
-
+        paddingBottom : 20,
         position: "relative",
         backgroundColor: "white",
         width: "100%",
