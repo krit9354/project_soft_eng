@@ -134,12 +134,16 @@ export default function Pocket() {
                 <View style={myStyle.top_bar_content}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image   source={pocket?.image?{ uri: pocket?.image }:(require("../../../assets/images/pocket.png"))} style={{ width: 70, height: 70, borderRadius: 35 }} />
-                        <View style={{ flexDirection: 'colum', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'colum'}}>
                         <Text style={{ fontSize: 20, marginLeft: 10 }}>{pocket?.pocket_name}</Text>
-                        <Text style={{ fontSize: 15, marginLeft: 10 }}>{pocket?.money}฿</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 15, marginLeft: 10 }}>{pocket?.money}</Text>
+                        {pocket?.have_target? <Text> / {pocket.target}</Text> : null}
+                        <Text>฿</Text>
+                        </View>
                         </View>
                     </View>                    
-                    <TouchableOpacity  style={{alignItems :'center'}} onPress={() => setModalVisible(true)} >
+                    <TouchableOpacity  style={{alignItems :'center',width:30}} onPress={() => setModalVisible(true)} >
                         <Image source={require("../../../assets/images/Vector.png")} style={{}} />
                         
                     </TouchableOpacity>
