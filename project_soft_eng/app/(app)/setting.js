@@ -80,6 +80,54 @@ const Setting = () => {
     }
   };
 
+  const handleButtonPress = async () => {
+    Alert.alert(
+      "Confirm",
+      "ยืนยันที่ logout",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            signOut();
+            router.push("login");
+          }
+        }
+        ,
+        {
+          text: "Cancel",
+          onPress: () => console.log("Action canceled"),
+          style: "cancel"
+        }
+        
+      ],
+      { cancelable: true }
+    );
+  };
+const handleButtonPressSave = async () => {
+    Alert.alert(
+      "Confirm",
+      "ยืนยันที่จะแก้ไขข้อมูล Profile นี้",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            Submit();
+            
+          }
+        }
+        ,
+        {
+          text: "Cancel",
+          onPress: () => console.log("Action canceled"),
+          style: "cancel"
+        }
+        
+      ],
+      { cancelable: true }
+    );
+  };
+
+
   return (
     <LinearGradient
       colors={["#CDFADB", "#38E298"]}
@@ -125,13 +173,17 @@ const Setting = () => {
             placeholder="Bank name"
           />
 
-          <TouchableOpacity style={myStyle.save_button} onPress={Submit}>
+          {/* <TouchableOpacity style={myStyle.save_button} onPress={Submit}> */}
+          <TouchableOpacity style={myStyle.save_button} onPress={handleButtonPressSave}>
             <Text style={{ color: "white" }}>save</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={myStyle.logout_button} onPress={() => {
+          {/* <TouchableOpacity style={myStyle.logout_button} onPress={() => {
             signOut();
             router.push("login");
+          }}> */}
+          <TouchableOpacity style={myStyle.logout_button} onPress={() => {
+            handleButtonPress();
           }}>
             <Text style={{ color: "white" }}>logout</Text>
           </TouchableOpacity>

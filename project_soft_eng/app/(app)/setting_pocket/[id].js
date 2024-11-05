@@ -107,7 +107,52 @@ const SettingPocket = () => {
             console.log("Error deleting pocket:", err.message);
         }
     };
-
+    const handleButtonPress = async () => {
+        Alert.alert(
+          "Confirm",
+          "ยืนยันที่จะลบ Pocket นี้",
+          [
+            {
+              text: "Yes",
+              onPress: async () => {
+                await deletePocket();
+                router.push("home");
+              }
+            }
+            ,
+            {
+              text: "Cancel",
+              onPress: () => console.log("Action canceled"),
+              style: "cancel"
+            }
+            
+          ],
+          { cancelable: true }
+        );
+      };
+    const handleButtonPressSave = async () => {
+        Alert.alert(
+          "Confirm",
+          "ยืนยันที่จะแก้ไขข้อมูล Pocket นี้",
+          [
+            {
+              text: "Yes",
+              onPress: () => {
+                Submit();
+                
+              }
+            }
+            ,
+            {
+              text: "Cancel",
+              onPress: () => console.log("Action canceled"),
+              style: "cancel"
+            }
+            
+          ],
+          { cancelable: true }
+        );
+      };
 
     return (
         <LinearGradient
@@ -163,14 +208,19 @@ const SettingPocket = () => {
                             keyboardType="numeric"
                         />
                     )}
-
-                    <TouchableOpacity style={myStyle.save_button} onPress={Submit}>
+{/* 
+                    <TouchableOpacity style={myStyle.save_button} onPress={Submit}> */}
+                    <TouchableOpacity style={myStyle.save_button} onPress={handleButtonPressSave}>
                         <Text style={{ color: "white" }}>save</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={myStyle.logout_button} onPress={async () => {
+                    {/* <TouchableOpacity style={myStyle.logout_button} onPress={async () => {
                         await deletePocket();
                         router.push("home");
+                    }}> */}
+                    <TouchableOpacity style={myStyle.logout_button} onPress={() => {
+                        handleButtonPress()
+                        
                     }}>
                         <Text style={{ color: "white" }}>delete pocket</Text>
                     </TouchableOpacity>
