@@ -24,7 +24,7 @@ export const myStyle = StyleSheet.create({
     width : 100,
     height : 30,
     borderRadius : 20,
-    marginBottom : 10,
+    marginBottom : 40,
   },
   save_button: {
     backgroundColor: "#38E298",
