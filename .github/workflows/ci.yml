@@ -16,7 +16,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
 
       # ติดตั้ง dependencies ทั้งหมดของโครงการ
       - name: Install JS dependencies
@@ -41,10 +41,6 @@ jobs:
       - name: Run Detox Tests
         run: |
           cd project_soft_eng
-          npx detox test --configuration ios.debug --failFast || exit 1
+          npx detox test --configuration ios.debug  
 
-      - name: Upload Detox Logs
-        uses: actions/upload-artifact@v3
-        with:
-          name: Detox Logs
-          path: project_soft_eng/detox/test-artifacts
+      
