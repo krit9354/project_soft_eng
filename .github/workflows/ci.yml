@@ -18,7 +18,9 @@ jobs:
         with:
           node-version: '20'
 
-
+      - name: Install applesimutils
+        run: brew install applesimutils
+        
       # ติดตั้ง dependencies ทั้งหมดของโครงการ
       - name: Install JS dependencies
         run: |
