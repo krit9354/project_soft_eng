@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Configure NPM Registry
+        run: npm config set registry https://registry.npmjs.org/
+
       # ติดตั้ง dependencies ทั้งหมดของโครงการ
       - name: Install JS dependencies
         run: |
