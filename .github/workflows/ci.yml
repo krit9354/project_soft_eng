@@ -36,12 +36,12 @@ jobs:
       - name: Build iOS App
         run: |
           cd project_soft_eng
-          npx detox build --configuration ios.debug
+          npx detox build --configuration ios.sim.debug
 
       # รันเทส Detox
       - name: Run Detox Tests
         run: |
           cd project_soft_eng
-          npx detox test --configuration ios.debug  
+          npx detox test --configuration ios.sim.debug  
 
       
