@@ -41,4 +41,10 @@ jobs:
       - name: Run Detox Tests
         run: 
           cd project_soft_eng
-          npx detox test --configuration ios.debug
+          npx detox test --configuration ios.debug --failFast || exit 1
+
+      - name: Upload Detox Logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: Detox Logs
+          path: project_soft_eng/detox/test-artifacts
