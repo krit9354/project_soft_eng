@@ -33,8 +33,12 @@ jobs:
 
       # Build ด้วย detox config
       - name: Build iOS App
-        run: npx detox build --configuration ios.debug
+        run: 
+          cd project_soft_eng
+          npx detox build --configuration ios.debug
 
       # รันเทส Detox
       - name: Run Detox Tests
-        run: npx detox test --configuration ios.debug
+        run: 
+          cd project_soft_eng
+          npx detox test --configuration ios.debug
