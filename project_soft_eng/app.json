@@ -17,7 +17,8 @@
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "We need your permission to access the photo library",
         "NSCameraUsageDescription": "We need your permission to access the camera"
-      }
+      },
+      "bundleIdentifier": "com.hhj.projectsofteng"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +29,8 @@
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
-      ]
+      ],
+      "package": "com.hhj2520.project_soft_eng"
     },
     "web": {
       "bundler": "metro",

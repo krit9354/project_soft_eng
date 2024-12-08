@@ -109,9 +109,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.project_soft_eng'
+    namespace 'com.hhj2520.project_soft_eng'
     defaultConfig {
-        applicationId 'com.anonymous.project_soft_eng'
+        applicationId 'com.hhj2520.project_soft_eng'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

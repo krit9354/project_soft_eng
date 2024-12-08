@@ -1,0 +1,37 @@
+name: iOS Build and Test with Detox
+
+on: 
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_test_ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      # ติดตั้ง dependencies ทั้งหมดของโครงการ
+      - name: Install JS dependencies
+        run: npm install
+
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          pod install
+          cd ..
+
+      # Build ด้วย detox config
+      - name: Build iOS App
+        run: npx detox build --configuration ios.debug
+
+      # รันเทส Detox
+      - name: Run Detox Tests
+        run: npx detox test --configuration ios.debug

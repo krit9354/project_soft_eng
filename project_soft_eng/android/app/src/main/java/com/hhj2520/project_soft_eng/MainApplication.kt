@@ -1,4 +1,4 @@
-package com.anonymous.project_soft_eng
+package com.hhj2520.project_soft_eng
 
 import android.app.Application
 import android.content.res.Configuration
