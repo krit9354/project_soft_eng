@@ -20,12 +20,12 @@ jobs:
 
       # ติดตั้ง dependencies ทั้งหมดของโครงการ
       - name: Install JS dependencies
-        run: 
+        run: |
           cd project_soft_eng
           npm install
 
       - name: Install CocoaPods
-        run: 
+        run: |
           cd project_soft_eng
           cd ios
           pod install
@@ -33,13 +33,13 @@ jobs:
 
       # Build ด้วย detox config
       - name: Build iOS App
-        run: 
+        run: |
           cd project_soft_eng
           npx detox build --configuration ios.debug
 
       # รันเทส Detox
       - name: Run Detox Tests
-        run: 
+        run: |
           cd project_soft_eng
           npx detox test --configuration ios.debug --failFast || exit 1
 
