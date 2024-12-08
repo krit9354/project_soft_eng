@@ -25,7 +25,8 @@ jobs:
           npm install
 
       - name: Install CocoaPods
-        run: |
+        run: 
+          cd project_soft_eng
           cd ios
           pod install
           cd ..
