@@ -20,7 +20,9 @@ jobs:
 
       # ติดตั้ง dependencies ทั้งหมดของโครงการ
       - name: Install JS dependencies
-        run: npm install
+        run: 
+          cd project_soft_eng
+          npm install
 
       - name: Install CocoaPods
         run: |
